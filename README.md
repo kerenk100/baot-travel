@@ -5,4 +5,4 @@ The app includes integrations with relevant apps, such as Google Maps, WhatsApp,
 
 Technologies used: Nodejs, react, MongoDB
 
-This project is being developed as part of a group project for Baot's "30 Hours" program. 
+This project is being developed as part of a group project for Baot's "30 Hours" program.
