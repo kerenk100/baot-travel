@@ -1,0 +1,16 @@
+.vendorForm {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr); /* auto for the label, 1fr for the input */
+    gap: 10px; /* Adjust the space between grid items */
+    max-width: 500px; /* Or your desired form width */
+  }
+  
+  .vendorForm label {
+    text-align: right; /* Aligns the text of the label to the right */
+    padding-right: 10px; /* Optional: adds some space between the label and the input */
+  }
+  
+  .vendorForm input,
+  .vendorForm button {
+    grid-column: 2 / -1; /* Ensures inputs and buttons align to the end */
+  }
