@@ -20,13 +20,13 @@ function VendorForm() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setVendor({ ...vendor, [name]: value });
+    setVendor(vendor => ({ ...vendor, [name]: value }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Here, you would usually send the 'vendor' state to the backend or process it as needed.
-    console.log(vendor);
+    console.log('Form submitted:', vendor);
   };
 
   return (
