@@ -56,6 +56,7 @@ function App() {
   };
 
   return (
+    
     <div className="App">
       <SimpleVendorList vendors={vendors} onEdit={editVendor} onDelete={deleteVendor} />
       <VendorForm />
