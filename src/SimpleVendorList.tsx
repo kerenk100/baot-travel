@@ -1,6 +1,6 @@
-import React from 'react';
+import { Vendor } from './Types';
 
-function SimpleVendorList(props) {
+function SimpleVendorList(props: {vendors: Vendor[]}) {
   return (
     <ul className="vendors-list">
       {props.vendors.map((vendor, index) => (

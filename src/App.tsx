@@ -1,12 +1,11 @@
-import React from 'react';
 import VendorForm from './VendorForm';
 import SimpleVendorList from './SimpleVendorList';
+import { Vendor } from './Types';
 
 function App() {
-  return (
-    <div className="App">
-      <SimpleVendorList vendors={[
+  const vendors: Vendor[] = [
     {
+      id: '123456',
       name: 'Vendor 1',
       vendorType: 'Restaurants',
       site: 'https://example.com',
@@ -21,9 +20,11 @@ function App() {
       },
       photos: [],
       tags: ['Wedding', 'Buffet'],
-      rate: '2'
+      rate: 2,
+
     },
     {
+      id: '1234567',
       name: 'Vendor 2',
       vendorType: 'Hotels',
       site: 'https://example.com',
@@ -38,11 +39,14 @@ function App() {
       },
       photos: [],
       tags: ['Wedding', 'Buffet'],
-      rate: '5'
+      rate: 5
     }
     // Add more vendor objects here
-  ]}/>
-  <VendorForm />
+  ];
+  return (
+    <div className="App">
+      <SimpleVendorList vendors={vendors}/>
+      <VendorForm />
     </div>
     
   );
