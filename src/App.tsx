@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import VendorForm from './VendorForm';
 import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
 
 function App() {
-  const vendors: Vendor[] = [
+  const [vendors, setVendors] = useState<Vendor[]>([
     {
       id: '123456',
       name: 'Vendor 1',
@@ -21,7 +22,6 @@ function App() {
       photos: [],
       tags: ['Wedding', 'Buffet'],
       rate: 2,
-
     },
     {
       id: '1234567',
@@ -42,13 +42,24 @@ function App() {
       rate: 5
     }
     // Add more vendor objects here
-  ];
+  ]);
+
+  // Function to handle deleting a vendor
+  const deleteVendor = (id: string) => {
+    setVendors(vendors.filter(vendor => vendor.id !== id));
+  };
+
+  // Placeholder function for editing a vendor
+  const editVendor = (id: string) => {
+    console.log("Editing vendor with ID:", id);
+    // Implement the edit functionality here
+  };
+
   return (
     <div className="App">
-      <SimpleVendorList vendors={vendors}/>
+      <SimpleVendorList vendors={vendors} onEdit={editVendor} onDelete={deleteVendor} />
       <VendorForm />
     </div>
-    
   );
 }
 

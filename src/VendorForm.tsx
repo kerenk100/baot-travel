@@ -26,6 +26,7 @@ function VendorForm() {
     RESTAURANTS: 'Restaurants'
   };
 
+
   const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setVendor(vendor => ({ ...vendor, [name]: value }));
