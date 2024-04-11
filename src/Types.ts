@@ -1,8 +1,9 @@
 export type Vendor = {
-    id: string;
+    _id: object;
+    vendorId: string;
     name: string;
     vendorType: string;
-    site: string;
+    website: string;
     phoneNumber: string;
     email: string;
     coverPhoto: File | null;
@@ -17,4 +18,6 @@ export type Vendor = {
     vendorId: string;
     description: string;
     link: string;
+    start_date: string;
+    end_date: string;
   };

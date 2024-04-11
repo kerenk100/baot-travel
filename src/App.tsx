@@ -4,49 +4,60 @@ import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
 
 function App() {
+  //http://localhost:3000/vendors/
   const [vendors, setVendors] = useState<Vendor[]>([
     {
-      id: '123456',
-      name: 'Vendor 1',
-      vendorType: 'Restaurants',
-      site: 'https://example.com',
-      phoneNumber: '123-456-7890',
-      email: 'contact@example.com',
-      coverPhoto: null,
-      deal: {
-        id: 'deal1',
-        vendorId: 'v1',
-        description: 'Special Offer',
-        link: 'https://example.com/deals'
+      "_id": {
+        "$oid": "660dab50307e77a41b436e22"
       },
-      photos: [],
-      tags: ['Wedding', 'Buffet'],
-      rate: 2,
+      "vendorId": "1",
+      "name": "Baot Hotel",
+      "vendorType": "hotel",
+      "website": "baot-hotel.com",
+      "phoneNumber": "0543041234",
+      "email": "baothotelforever@walla.com",
+      "coverPhoto": null,
+      "deal": {
+        "id": "deal1",
+        "vendorId": "v1",
+        "description": "Special Offer",
+        "link": "https://example.com/deals",
+        "start_date": "01/01/2024",
+        "end_date": "01/01/2025"
+      },
+      "photos": [],
+      "tags": ["cool", "cheap", "seaside"],
+      "rate": 2
     },
     {
-      id: '1234567',
-      name: 'Vendor 2',
-      vendorType: 'Hotels',
-      site: 'https://example.com',
-      phoneNumber: '123-456-7890',
-      email: 'contact@example.com',
-      coverPhoto: null,
-      deal: {
-        id: 'deal1',
-        vendorId: 'v1',
-        description: 'Special Offer',
-        link: 'https://example.com/deals'
+      "_id": {
+        "$oid": "6617a7ce7d8af9d520257580"
       },
-      photos: [],
-      tags: ['Wedding', 'Buffet'],
-      rate: 5
+      "vendorId": "2",
+      "name": "Pizza Pizzi",
+      "vendorType": "restaurant",
+      "website": "pizzi.com",
+      "phoneNumber": "0543211234",
+      "email": "pz@mail.com",
+      "coverPhoto": null,
+      "deal": {
+        "id": "deal1",
+        "vendorId": "v1",
+        "description": "Special Offer",
+        "link": "https://example.com/deals",
+        "start_date": "02/02/2024",
+        "end_date": "02/02/2025"
+      },
+      "photos": [],
+      "tags": ["cool", "cheap", "pizza", "food"],
+      "rate": 3
     }
     // Add more vendor objects here
   ]);
 
   // Function to handle deleting a vendor
   const deleteVendor = (id: string) => {
-    setVendors(vendors.filter(vendor => vendor.id !== id));
+    setVendors(vendors.filter(vendor => vendor.vendorId !== id));
   };
 
   // Placeholder function for editing a vendor

@@ -4,4 +4,5 @@ server/dist/models/vendor.js
 server/dist/services/database.service.js
 server/dist/routes/vendors.router.js
 
-\node_modules
+/node_modules
+/server/node_modules
