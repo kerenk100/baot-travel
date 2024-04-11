@@ -1,8 +1,16 @@
+:root {
+  --cyan-blue: #59D5E0;
+  --mustard-yellow: #F5DD61;
+  --vibrant-orange: #FAA300;
+  --vivid-pink: #F4538A;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: var(--mustard-yellow); /* Example of using the yellow as a background */
 }
 
 .logo {
@@ -10,12 +18,15 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+  /* Example: Apply the Cyan-Blue as the logo base color via filter or another property */
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--cyan-blue)aa);
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em var(--vivid-pink)aa);
 }
 
 @keyframes logo-spin {
@@ -35,8 +46,10 @@
 
 .card {
   padding: 2em;
+  background-color: var(--vibrant-orange); /* Cards background set to vibrant orange */
+  color: #fff; /* Adjust text color for better contrast */
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--vivid-pink);
 }
