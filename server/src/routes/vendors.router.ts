@@ -10,8 +10,19 @@ export const vendorsRouter = express.Router();
 vendorsRouter.use(express.json());
 
 // GET
-vendorsRouter.get("/", async (req: Request, res: Response) => {
+vendorsRouter.get("/", async (_req: Request, res: Response) => {
+    try {
+       const vendors = (await collections.vendors?.find<Vendor>({}).toArray()) as Vendor[];
+
+        res.status(200).send(vendors);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+vendorsRouter.get("/:id", async (req: Request, res: Response) => {
     const id = req?.params?.id;
+
     try {
         
         const query = { _id: new ObjectId(id) };

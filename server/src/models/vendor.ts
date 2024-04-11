@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 // Class Implementation
 export default class Vendor {
     constructor(
+        public vendorId: string,
         public name: string, 
         public type: string, 
         public website: string, 
