@@ -1,33 +1,6 @@
 import "./App.css";
-import Map from "./components/utilities/Map";
-import Calendar from "./components/utilities/Calendar/calendar";
-import { Event } from "./components/utilities/Calendar/Event";
 
-const events: Event[] = [
-  {
-    summary: "Event 1", // Adding summary property
-    start: {
-      dateTime: "2024-04-15T09:00:00",
-      timeZone: "UTC+2",
-    },
-    end: {
-      dateTime: "2024-04-15T10:00:00",
-      timeZone: "UTC+2",
-    },
-  },
-  {
-    summary: "Event 2", // Adding summary property
-    start: {
-      dateTime: "2024-04-16T10:00:00",
-      timeZone: "UTC+2",
-    },
-    end: {
-      dateTime: "2024-04-16T12:00:00",
-      timeZone: "UTC+2",
-    },
-  },
-];
-function App() {
+export const App = () => {
   return (
     <>
       <h1>Baot travel</h1>
@@ -36,5 +9,3 @@ function App() {
     </>
   );
 }
-
-export default App;
