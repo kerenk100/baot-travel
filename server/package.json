@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-        "prestart": "npm run build",
-        "start": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "format": "prettier . --write"
+    "prestart": "npm run build",
+    "start": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier . --write"
   },
   
   "author": "einavk",
