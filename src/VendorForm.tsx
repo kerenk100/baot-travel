@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Vendor } from './Types';
 
-function VendorForm() {
-  const [vendor, setVendor] = useState<Vendor>({
+interface VendorFormProps {
+  initialVendor: Vendor;
+  onSave: (vendor: Vendor) => void;
+}
+
+const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
+  const [vendor, setVendor] = useState<Vendor>(initialVendor);
+  /*const [vendor, setVendor] = useState<Vendor>({
     id: '',
     name: '',
     vendorType: '',
@@ -14,16 +20,18 @@ function VendorForm() {
       id: '',
       vendorId: '',
       description: '',
-      link: ''
+      link: '',
+      end_date: '',
+      start_date:''
     },
     photos: [],
     tags: [],
     rate: 0
-  });
+  });*/
 
   const VendorTypes = {
-    HOTELS: 'Hotels',
-    RESTAURANTS: 'Restaurants'
+    HOTELS: 'Hotel',
+    RESTAURANTS: 'Restaurant'
   };
 
 
@@ -56,6 +64,7 @@ function VendorForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    onSave(vendor);
     console.log('Form submitted:', vendor);
   };
 
@@ -111,7 +120,7 @@ function VendorForm() {
       <div>
         <label>
           Site:
-          <input type="url" name="site" value={vendor.site} onChange={handleSimpleChange} />
+          <input type="url" name="website" value={vendor.website} onChange={handleSimpleChange} />
         </label>
       </div>
       <div>
