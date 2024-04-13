@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { AddTrips } from './components/trips/AddTrips.tsx';
 
-
 const router = createBrowserRouter([
   {
     path: "/",
