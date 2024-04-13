@@ -1,7 +1,7 @@
+
 import './App.css'
 
-function App() {
-
+export const App = () => {
   return (
     <>
       <h1>
@@ -10,5 +10,3 @@ function App() {
     </>
   )
 }
-
-export default App
