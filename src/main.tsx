@@ -6,7 +6,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { AddTrips } from './components/trips/AddTrips.tsx';
+import { AddTrips } from './pages/trips/AddTrip/AddTrips.tsx';
 
 const router = createBrowserRouter([
   {
