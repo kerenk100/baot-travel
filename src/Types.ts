@@ -1,8 +1,7 @@
 export type Vendor = {
-    _id: object;
-    vendorId: string;
+    _id: string;
     name: string;
-    vendorType: string;
+    type: string;
     website: string;
     phoneNumber: string;
     email: string;
@@ -11,13 +10,14 @@ export type Vendor = {
     photos: File[];
     tags: string[];
     rate: number;
+    location: string;
   };
   
   type Deal = {
-    id: string;
+    _id: object;
     vendorId: string;
     description: string;
     link: string;
-    start_date: string;
-    end_date: string;
+    startDate: string;
+    endDate: string;
   };

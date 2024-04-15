@@ -13,10 +13,10 @@ const SimpleVendorList: React.FC<SimpleVendorListProps> = ({ vendors, onEdit, on
   return (
     <div>
       {vendors.map((vendor) => (
-        <div key={vendor.vendorId}>
-          {vendor.name} - {vendor.vendorType} - {vendor.website}
-          <button onClick={() => onEdit(vendor.vendorId)}>Edit</button>
-          <button onClick={() => onDelete(vendor.vendorId)}>Delete</button>
+        <div>
+          {vendor.name} - {vendor.type} - {vendor.website}
+          <button onClick={() => onEdit(vendor._id)}>Edit</button>
+          <button onClick={() => onDelete(vendor._id)}>Delete</button>
         </div>
       ))}
     </div>

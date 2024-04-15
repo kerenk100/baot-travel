@@ -1,60 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import VendorForm from './VendorForm';
 import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
 
 function App() {
-  //http://localhost:3000/vendors/
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
-  const [vendors, setVendors] = useState<Vendor[]>([
-    // {
-    //   "_id": {
-    //     "$oid": "660dab50307e77a41b436e22"
-    //   },
-    //   "vendorId": "1",
-    //   "name": "Baot Hotel",
-    //   "vendorType": "hotel",
-    //   "website": "baot-hotel.com",
-    //   "phoneNumber": "0543041234",
-    //   "email": "baothotelforever@walla.com",
-    //   "coverPhoto": null,
-    //   "deal": {
-    //     "id": "deal1",
-    //     "vendorId": "v1",
-    //     "description": "Special Offer",
-    //     "link": "https://example.com/deals",
-    //     "start_date": "01/01/2024",
-    //     "end_date": "01/01/2025"
-    //   },
-    //   "photos": [],
-    //   "tags": ["cool", "cheap", "seaside"],
-    //   "rate": 2
-    // },
-    // {
-    //   "_id": {
-    //     "$oid": "6617a7ce7d8af9d520257580"
-    //   },
-    //   "vendorId": "2",
-    //   "name": "Pizza Pizzi",
-    //   "vendorType": "restaurant",
-    //   "website": "pizzi.com",
-    //   "phoneNumber": "0543211234",
-    //   "email": "pz@mail.com",
-    //   "coverPhoto": null,
-    //   "deal": {
-    //     "id": "deal1",
-    //     "vendorId": "v1",
-    //     "description": "Special Offer",
-    //     "link": "https://example.com/deals",
-    //     "start_date": "02/02/2024",
-    //     "end_date": "02/02/2025"
-    //   },
-    //   "photos": [],
-    //   "tags": ["cool", "cheap", "pizza", "food"],
-    //   "rate": 3
-    // }
-    // Add more vendor objects here
-  ]);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   useEffect(() => {
     fetch('http://localhost:3000/vendors/')
         .then(response => {
@@ -68,104 +19,119 @@ function App() {
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
-            //setError(error.message);
         });
-}, []); // The empty array ensures this effect only runs once after the initial render
+}, []);
 
   // Function to handle deleting a vendor
-  const deleteVendor = (id: string) => {
-    setVendors(vendors.filter(vendor => vendor.vendorId !== id));
-    //DELETE request
-  };
-
-  // Placeholder function for editing a vendor
-  const editVendor = (id: string) => {
-    const vendor: Vendor | undefined = vendors.find(vendor => vendor.vendorId == id)
-    if (vendor) {
-      console.log(vendor);
-      setCurrVendor(vendor);
-    }
-    console.log("Editing vendor with ID:", id);
-    // Implement the edit functionality here
-  };
-
-  const saveVendor = (updatedVendor: Vendor) => {
-    console.log('updated vendor', updatedVendor)
-    const updatedVendors = vendors.map(vendor => {
-      if (vendor.vendorId === updatedVendor.vendorId) {
-        //if vendor id is 0 --> post otherwise (edit) --> put
-        //fetch with updatedVendor
-      //   fetch(`http://localhost:3000/vendors/${updatedVendor.vendorId}`, {
-      //     method: 'PUT', // or 'POST' if you are creating a new vendor
-      //     headers: {
-      //         'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(updatedVendor)
-      // })
-      // .then(response => {
-      //     if (!response.ok) {
-      //         throw new Error('Network response was not ok');
-      //     }
-      //     return response.json();
-      // })
-      // .then(data => {
-      //     console.log('Success:', data);
-      //     // Update state only after confirmation of successful network operation
-      //     const updatedVendors = vendors.map(vendor => {
-      //         if (vendor.vendorId === updatedVendor.vendorId) {
-      //             return updatedVendor; // Use the possibly modified vendor returned from the server
-      //         }
-      //         return vendor;
-      //     });
-  
-      //     setVendors(updatedVendors);
-      //     setCurrVendor(null);
-      // })
-      // .catch(error => {
-      //     console.error('Error:', error);
-      // });
-        return updatedVendor;  // Return the updated vendor object
-      }
-      return vendor;  // Return the original vendor object
-    });
+  const deleteVendor = async (id: string) => {
     
-    setVendors(updatedVendors); 
+    try {
+      // Send DELETE request to the server
+      const response = await fetch(`http://localhost:3000/vendors/${id}`, {
+        method: 'DELETE'
+      });
+  
+      // Check if the DELETE was actually successful
+      if (!response.ok) {
+        // If the DELETE was not successful, handle the error
+        const message = await response.text(); // or response.json() if the server sends JSON
+        console.error(`Failed to delete vendor: ${message}`);
+        throw new Error(message); // Re-throw to handle it outside or for further error handling logic
+      } else {
+        setVendors(vendors.filter(vendor => vendor._id !== id));
+        console.log(`Vendor deleted successfully with ID: ${id}`);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error making DELETE request:', error.message);
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
+  };
+
+  const enterEditVendorMode = async (id: string) => {
+    const vendor: Vendor | undefined = vendors.find(vendor => vendor._id == id)
+    if (!vendor) {
+      console.error("Vendor not found with ID:", id);
+      return; // Early return if the vendor is not found
+    }
+    setCurrVendor(vendor);
+  };
+
+  const saveVendor = async (updatedVendor: Vendor) => {
+    console.log('updated vendor', updatedVendor);
+  
+    const newVendor: boolean = updatedVendor._id === "";
+    // Determine the method based on whether the vendor is new or existing
+    const method = newVendor ? 'POST' : 'PUT';
+    const url = newVendor ? 'http://localhost:3000/vendors/' : `http://localhost:3000/vendors/${updatedVendor._id}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedVendor)
+      });
+  
+      if (response.ok) {
+        const message = await response.text();
+
+        // Update the local state accordingly
+        if (newVendor) {
+                    // If new vendor, add it to the list with a new ID (assumed returned by server or managed client-side)
+          setVendors([...vendors, {...updatedVendor, _id: message.split(' ')[7]}]); // Extract ID from message
+        } else {
+          // If updating, modify the existing vendor in the list
+          setVendors(vendors.map(vendor => vendor._id === updatedVendor._id ? updatedVendor : vendor));
+        }
+      } else {
+        const error = await response.text();
+        throw new Error(`Failed to save vendor: ${error}`);
+      }
+    } catch (error) {
+      console.error('Error saving vendor:', error instanceof Error ? error.message : 'An unknown error occurred');
+    }
+
     setCurrVendor(null);
-  }
+  };
 
 
   function onCreateNew(): void {
     const newVendor: Vendor = {
-      _id: new Object(), // Assuming MongoDB's ObjectId for new entities; handle this on your server if needed.
-      vendorId: '0',
+      _id: "",
       name: '',
-      vendorType: '',
+      type: '',
       website: '',
       phoneNumber: '',
+      location: '',
       email: '',
       coverPhoto: null,
       deal: {
-        id: '',
+        _id: new Object(),
         vendorId: '',
         description: '',
         link: '',
-        start_date: '',
-        end_date: ''
+        startDate: '',
+        endDate: ''
       },
       photos: [],
       tags: [],
       rate: 0
     };
-    setVendors([...vendors, newVendor]);
+
     setCurrVendor(newVendor);
   }
 
   return (
     
     <div className="App">
-      {!currVendor && <SimpleVendorList vendors={vendors} onEdit={editVendor} onDelete={deleteVendor} />}
-      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
+      {!currVendor && <SimpleVendorList vendors={vendors} onEdit={enterEditVendorMode} onDelete={deleteVendor} />}
       {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
+
+      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
     </div>
   );
 }

@@ -92,7 +92,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
   };
 
   const handleVendorTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setVendor({ ...vendor, vendorType: event.target.value });
+    setVendor({ ...vendor, type: event.target.value });
   };
 
   const handleRemoveTag = (index: number) => {
@@ -110,7 +110,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
       <div>
         <label>
           Vendor Type
-          <select value={vendor.vendorType} onChange={handleVendorTypeChange} required>
+          <select value={vendor.type} onChange={handleVendorTypeChange} required>
             <option value="">Select Type</option>
             <option value={VendorTypes.HOTELS}>{VendorTypes.HOTELS}</option>
             <option value={VendorTypes.RESTAURANTS}>{VendorTypes.RESTAURANTS}</option>
@@ -121,6 +121,12 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
         <label>
           Site:
           <input type="url" name="website" value={vendor.website} onChange={handleSimpleChange} />
+        </label>
+      </div>
+      <div>
+        <label>
+          Site:
+          <input type="text" name="location" value={vendor.location} onChange={handleSimpleChange} />
         </label>
       </div>
       <div>

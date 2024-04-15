@@ -40,6 +40,7 @@ vendorsRouter.get("/:id", async (req: Request, res: Response) => {
 vendorsRouter.post("/", async (req: Request, res: Response) => {
     try {
         const newVendor = req.body as Vendor;
+        delete newVendor._id;
         const result = await collections.vendors?.insertOne(newVendor);
 
         result
@@ -55,11 +56,14 @@ vendorsRouter.post("/", async (req: Request, res: Response) => {
 vendorsRouter.put("/:id", async (req: Request, res: Response) => {
     const id = req?.params?.id;
 
+    console.log(id);
     try {
         const updatedVendor: Vendor = req.body as Vendor;
+        delete updatedVendor._id;
         const query = { _id: new ObjectId(id) };
       
         const result = await collections.vendors?.updateOne(query, { $set: updatedVendor });
+        console.log(result);
 
         result
             ? res.status(200).send(`Successfully updated vendor with id ${id}`)

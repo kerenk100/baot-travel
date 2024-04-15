@@ -1,10 +1,10 @@
 // External dependencies
 import { ObjectId } from "mongodb";
+import Deal from "./deal";
 
 // Class Implementation
 export default class Vendor {
     constructor(
-        public vendorId: string,
         public name: string, 
         public rate: number, 
         public type: string, 
@@ -15,6 +15,7 @@ export default class Vendor {
         public coverPhoto: string,
         public photos: string[],
         public location: string,
-        public id?: ObjectId
+        public deal: Deal,
+        public _id?: ObjectId
     ) {}
 }
