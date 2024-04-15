@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { connectToDatabase } from "./services/database.service";
 import { vendorsRouter } from "./routes/vendors.router";
+import { dealsRouter } from "./routes/deals.router";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
  connectToDatabase()
     .then(() => {
         app.use("/vendors", vendorsRouter);
+        app.use("/deals", dealsRouter);
 
         app.listen(port, () => {
             console.log(`Server started at http://localhost:${port}`);// move up and catch if theres an err

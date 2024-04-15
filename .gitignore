@@ -5,3 +5,4 @@ server/dist/services/database.service.js
 server/dist/routes/vendors.router.js
 
 \node_modules
+server/dist/routes/deals.router.js

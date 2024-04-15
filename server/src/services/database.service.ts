@@ -3,7 +3,7 @@ import * as mongoDB from "mongodb";
 import * as dotenv from "dotenv";
 
 // Global Variables
-export const collections: { vendors?: mongoDB.Collection } = {}
+export const collections: { vendors?: mongoDB.Collection, deals?:mongoDB.Collection } = {}
 
 // Initialize Connection
 export async function connectToDatabase () {
@@ -16,8 +16,10 @@ export async function connectToDatabase () {
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
  
   const vendorsCollection: mongoDB.Collection = db.collection(process.env.VENDORS_COLLECTION_NAME!);
+  const dealsCollection: mongoDB.Collection = db.collection(process.env.DEALS_COLLECTION_NAME!);
 
   collections.vendors = vendorsCollection; 
+  collections.deals = dealsCollection; 
      
-  console.log(`Successfully connected to database: ${db.databaseName} and collection: ${vendorsCollection.collectionName}`);
+  console.log(`Successfully connected to database: ${db.databaseName} and collections: ${vendorsCollection.collectionName}, ${dealsCollection.collectionName}`);
 }

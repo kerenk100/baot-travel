@@ -14,6 +14,7 @@ export default class Vendor {
         public tags: string[],
         public coverPhoto: string,
         public photos: string[],
+        public location: string,
         public id?: ObjectId
     ) {}
 }
