@@ -75,6 +75,7 @@ function App() {
   // Function to handle deleting a vendor
   const deleteVendor = (id: string) => {
     setVendors(vendors.filter(vendor => vendor.vendorId !== id));
+    //DELETE request
   };
 
   // Placeholder function for editing a vendor
@@ -92,6 +93,7 @@ function App() {
     console.log('updated vendor', updatedVendor)
     const updatedVendors = vendors.map(vendor => {
       if (vendor.vendorId === updatedVendor.vendorId) {
+        //if vendor id is 0 --> post otherwise (edit) --> put
         //fetch with updatedVendor
       //   fetch(`http://localhost:3000/vendors/${updatedVendor.vendorId}`, {
       //     method: 'PUT', // or 'POST' if you are creating a new vendor
