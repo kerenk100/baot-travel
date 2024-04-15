@@ -5,8 +5,10 @@ export interface Event {
   description?: string;
   start: {
     dateTime: string;
+    timeZone: string;
   };
   end: {
     dateTime: string;
+    timeZone: string;
   };
 }

@@ -6,8 +6,8 @@ const gapi = (window as any).gapi;
 const Calendar: React.FC<CalendarProps> = ({ events }) => {
   useEffect(() => {
     const handleClientLoad = () => {
-      const CLIENT_ID = "1";
-      const API_KEY = "2";
+      const CLIENT_ID = "6";
+      const API_KEY = "A";
       const DISCOVERY_URL =
         "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest";
 
@@ -35,16 +35,40 @@ const Calendar: React.FC<CalendarProps> = ({ events }) => {
       .signIn()
       .then(() => {
         // Loop through the events and insert each event to Google Calendar
-        events.forEach((event: Event) => {
-          const request = gapi.client.calendar.events.insert({
-            calendarId: "primary",
-            resource: event,
-          });
+        events.forEach((eventDetails: any) => {
+          const parsedStartDate: string = new Date()
+            .toISOString()
+            .replace(/\.\d+/, "")
+            .replace(" ", "T");
+          const parsedEndDate: string = new Date()
+            .toISOString()
+            .replace(/\.\d+/, "")
+            .replace(" ", "T");
 
-          request.execute((event: any) => {
-            console.log(event);
-            window.open(event.htmlLink);
-          });
+          gapi.client.calendar.events
+            .insert({
+              calendarId: "primary",
+              resource: {
+                summary: eventDetails.summary,
+                description: eventDetails.description,
+                start: {
+                  dateTime: parsedStartDate,
+                  timeZone: "UTC+2",
+                },
+                end: {
+                  dateTime: parsedEndDate,
+                  timeZone: "UTC+2",
+                },
+              },
+            })
+            .then((response: any) => {
+              console.log("Event added:", response);
+              alert("Event added to Google Calendar!");
+            })
+            .catch((error: any) => {
+              console.error("Error adding event:", error);
+              alert("Error adding event to Google Calendar.");
+            });
         });
       });
   };
