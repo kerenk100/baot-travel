@@ -6,3 +6,4 @@ server/dist/routes/vendors.router.js
 
 /node_modules
 /server/node_modules
+server/dist/routes/deals.router.js
