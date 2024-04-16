@@ -1,5 +1,5 @@
 import "./App.css";
-import Map from "./components/utilities/map";
+import Map from "./components/utilities/Map";
 import Calendar from "./components/utilities/Calendar/calendar";
 import { Event } from "./components/utilities/Calendar/Event";
 
@@ -32,8 +32,6 @@ function App() {
     <>
       <h1>Baot travel</h1>
       <div style={{ height: 300, width: 300 }}>
-        <Map lat={7.2905715} lng={80.6337262}></Map>
-        <Calendar events={events}></Calendar>
       </div>
     </>
   );
