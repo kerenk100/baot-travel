@@ -1,9 +1,11 @@
-import "./App.css";
+import './App.css'
 
 export const App = () => {
   return (
     <>
-      <h1>Baot travel</h1>
+      <h1>
+          Baot travel
+      </h1>
     </>
   );
 }

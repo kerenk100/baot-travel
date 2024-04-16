@@ -6,13 +6,14 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Checkbox,
 } from "@mui/material";
 import { Country } from "country-state-city";
 import { useMemo } from "react";
 import styles from "./AddTrips.module.scss";
-import { MultipleSelectTags } from "../../../components/Tags/Tags";
+import { MultipleSelectTags } from "../../../../components/Tags/Tags";
 
-const TRIP_TAGS_OPTIONS = [
+export const TRIP_TAGS_OPTIONS = [
   "Families",
   "Friends",
   "Romantic",
@@ -21,13 +22,9 @@ const TRIP_TAGS_OPTIONS = [
   "Expensive",
   "Low Budget",
 ];
-export interface TripFormValues {
-  name: string;
-  description: string;
-  tags: string[];
-  country: string;
-}
+
 export const AddTrips = () => {
+  
 
   const countriesMenuItems = useMemo(() => {
     return Country.getAllCountries().map((icountry) => (
@@ -39,11 +36,11 @@ export const AddTrips = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
-        <form action="/somewhere" className={styles.form}>
+        <form action="http://localhost:80/trips" className={styles.form}>
           <FormControl>
-            <FormLabel>Enter your name:</FormLabel>
+            <FormLabel>Enter trip's name:</FormLabel>
             <TextField name="name" />
           </FormControl>
           <FormControl>
@@ -67,6 +64,11 @@ export const AddTrips = () => {
             label={"Tags"}
             options={TRIP_TAGS_OPTIONS}
           />
+          <p>Public post: <Checkbox name="is_public"/></p>
+          {/* TODO: replace date picker to mui */}
+          <p>Please enter your budget: <input name="budget" type="number" /></p>
+          <p>Please enter your start date: <input name="startDate" type="date"/></p>
+          <p>Please enter your end date: <input name="endDate" type="date"/></p>
           <Button type="submit" variant="contained">
             Submit
           </Button>

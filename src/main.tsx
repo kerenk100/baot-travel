@@ -6,7 +6,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { AddTrips } from './pages/trips/AddTrip/AddTrips.tsx';
+import { AddTrips } from './pages/trips/components/AddTrip/AddTrips.tsx';
+import { Trips } from './pages/trips/Trips.tsx';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,11 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/add-trips",
+    path:"/trips",
+    element:<Trips />
+  },
+  {
+    path: "/trips/add-trips",
     element: <AddTrips />,
   }
 ]);
