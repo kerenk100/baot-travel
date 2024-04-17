@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { AddTrips } from './pages/trips/components/AddTrip/AddTrips.tsx';
 import { Trips } from './pages/trips/Trips.tsx';
+import VendorManager from './VendorManager.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path:"/trips",
     element:<Trips />
+  },
+  {
+    path:"/vendors",
+    element:<VendorManager />
   },
   {
     path: "/trips/add-trips",
