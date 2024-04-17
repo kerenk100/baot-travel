@@ -125,7 +125,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
       </div>
       <div>
         <label>
-          Site:
+          Location:
           <input type="text" name="location" value={vendor.location} onChange={handleSimpleChange} />
         </label>
       </div>

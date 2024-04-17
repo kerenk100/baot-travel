@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 
 const cors = require('cors');
 app.use(cors({
-    origin: 'http://127.0.0.1:5173' // Only allow this origin to access your API
+    origin: 'http://127.0.0.1:5174' // Only allow this origin to access your API
 }));
 
 app.get("/", (req: Request, res: Response) => {
