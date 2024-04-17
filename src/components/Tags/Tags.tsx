@@ -5,7 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import styles from "./Tags.module.scss";
 
 export interface MultipleSelectTagsProps {
   options: string[];
@@ -28,7 +27,7 @@ export const MultipleSelectTags: React.FC<MultipleSelectTagsProps> = ({
   };
 
   return (
-    <FormControl className={styles.tags}>
+    <FormControl>
       <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
       <Select
         label={label}
@@ -40,7 +39,7 @@ export const MultipleSelectTags: React.FC<MultipleSelectTagsProps> = ({
         onChange={handleChange}
         input={<OutlinedInput id="select-multiple-chip" label="Tag" />}
         renderValue={(selected) => (
-          <div className={styles.tagsContainer}>
+          <div>
             {selected.map((value) => (
               <Chip key={value} label={value} />
             ))}
