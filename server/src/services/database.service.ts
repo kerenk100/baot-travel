@@ -27,7 +27,7 @@ export async function connectToDatabase() {
   collections.trips = tripsCollection;
 
   const usersCollection: mongoDB.Collection = db.collection(
-    process.env.COLLECTION_NAME
+    process.env.USERS_COLLECTION_NAME
   );
 
   collections.users = usersCollection;
