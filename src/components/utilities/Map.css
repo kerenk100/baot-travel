@@ -1,0 +1,8 @@
+.autocomplete-container {
+    width: 100%;
+    display: flex;
+}
+
+.autocomplete-container input {
+    flex: 1;
+}

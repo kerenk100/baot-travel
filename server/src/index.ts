@@ -7,6 +7,7 @@ import { vendorsRouter } from "./routes/vendors.router";
 import { tripsRouter } from "./routes/trips.router";
 
 dotenv.config();
+
 const app: Express = express();
 
 app.use(bodyParser.json());

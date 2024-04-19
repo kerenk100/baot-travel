@@ -33,6 +33,7 @@ export async function connectToDatabase() {
     process.env.USERS_COLLECTION_NAME
   );
 
+
   collections.vendors = vendorsCollection; 
   collections.deals = dealsCollection; 
   collections.trips = tripsCollection;
