@@ -4,8 +4,10 @@ import * as dotenv from "dotenv";
 
 // Global Variables
 export const collections: {
-  trips?: mongoDB.Collection;
-  users?: mongoDB.Collection;
+  vendors?: mongoDB.Collection,
+  deals?:mongoDB.Collection,
+  trips?: mongoDB.Collection,
+  users?: mongoDB.Collection
 } = {};
 
 // Initialize Connection
@@ -20,18 +22,26 @@ export async function connectToDatabase() {
 
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
+  const vendorsCollection: mongoDB.Collection = db.collection(
+    process.env.VENDORS_COLLECTION_NAME!);
+  const dealsCollection: mongoDB.Collection = db.collection(
+    process.env.DEALS_COLLECTION_NAME!);
   const tripsCollection: mongoDB.Collection = db.collection(
     process.env.TRIPS_COLLECTION_NAME
-  );
-
-  collections.trips = tripsCollection;
-
+  ); 
   const usersCollection: mongoDB.Collection = db.collection(
     process.env.USERS_COLLECTION_NAME
   );
 
+  collections.vendors = vendorsCollection; 
+  collections.deals = dealsCollection; 
+  collections.trips = tripsCollection;
   collections.users = usersCollection;
 
   console.log(`Successfully connected to database: ${db.databaseName} 
-    and collection: ${usersCollection.collectionName}`);
+  and collections:
+  ${vendorsCollection.collectionName},
+  ${dealsCollection.collectionName}, 
+  ${tripsCollection.collectionName},);
+  ${usersCollection.collectionName}`);
 }
