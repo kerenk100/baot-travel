@@ -1,7 +1,7 @@
 import {TextField, Button} from '@mui/material';
 import './UserRegistration.css';
 import {ChangeEvent, useState} from 'react';
-import {validateEmail} from "../utilities/validations.tsx";
+import {validateEmail} from "../../utils/validations.tsx";
 
 const UserRegistration = () => {
     const [firstName, setFirstName] = useState("");
