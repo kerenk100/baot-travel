@@ -9,6 +9,7 @@ import {
 import { AddTrips } from './pages/trips/components/AddTrip/AddTrips.tsx';
 import { Trips } from './pages/trips/Trips.tsx';
 import VendorManager from './VendorManager.tsx';
+import UserRegistration from './components/userRegistration/UserRegistration.tsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/trips/add-trips",
     element: <AddTrips />,
+  },
+  {
+    path: "/users/register",
+    element: <UserRegistration />
   }
 ]);
 
