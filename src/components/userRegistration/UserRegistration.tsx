@@ -4,14 +4,14 @@ import {ChangeEvent, useState} from 'react';
 import {validateEmail} from "../utilities/validations.tsx";
 
 const UserRegistration = () => {
-    const [firstName, setFirstName] = useState("Ortal");
-    const [lastName, setLastName] = useState("Baot");
-    const [email, setEmail] = useState("Ortal@gmail.com");
-    const [dateOfBirth, setDateOfBirth] = useState("2022-02-22");
-    const [address, setAddress] = useState("Golda 1");
-    const [city, setCity] = useState("Tel-Aviv");
-    const [country, setCountry] = useState("Israel");
-    const [password, setPassword] = useState("123");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [country, setCountry] = useState("");
+    const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({})
 
 
