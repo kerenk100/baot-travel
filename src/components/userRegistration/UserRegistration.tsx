@@ -92,7 +92,7 @@ const UserRegistration = () => {
 
     if (isRegistered) {
         return <div className="registrationSuccess">
-            <h2>succeeded!</h2>
+            <h2>Registration succeeded!</h2>
             <p>Welcome, {user.firstName}!</p>
             <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
         </div>;
