@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import { collections } from "../services/database.service";
 import { User } from "../models/user";
 import crypto from "crypto";
+import { ObjectId } from 'mongodb';
+
 
 export const userRouter = express.Router();
 
@@ -53,3 +55,36 @@ userRouter.post("/register", async (req: Request, res: Response) => {
     res.status(400).send(error.details[0].message);
   }
 });
+
+userRouter.get("/:userId/edit", async (req: Request, res: Response) => {
+  try {
+    const user = await collections.users.findOne({ _id: new ObjectId(req.params.userId) });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+userRouter.post("/:userId/edit", async (req: Request, res: Response) => {
+  try {
+    // Update user data in the database
+    const result = await collections.users.updateOne(
+      { _id: new ObjectId(req.params.userId) },
+      { $set: req.body } // Send entire req.body to update all fields
+    );
+
+    if (result.modifiedCount === 1) {
+      res.status(200).send("User data updated successfully");
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+
