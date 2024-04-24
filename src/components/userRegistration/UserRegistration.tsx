@@ -50,7 +50,7 @@ const UserRegistration = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (user.errors.email || user.errors.emailExists) {
+        if (user.errors.email) {
             console.error("Form submission blocked due to validation errors.");
             return;
         }
@@ -73,17 +73,17 @@ const UserRegistration = () => {
             });
 
             if (!response.ok) {
-                if (response.status === 409) {
+                if (response.status === 400) {
                     const errorMsg = await response.text();
                     setUser(prevState => ({
                         ...prevState,
-                        errors: { ...prevState.errors, emailExists: errorMsg }
+                        errors: { ...prevState.errors, emailExists: 'Email already exists!' }
                     }));
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
             } else {
-                setIsRegistered(true); // Set registration success state to true
+                setIsRegistered(true);
             }
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -92,7 +92,7 @@ const UserRegistration = () => {
 
     if (isRegistered) {
         return <div className="registrationSuccess">
-            <h2>Registration succeeded!</h2>
+            <h2>Registration Succeeded!</h2>
             <p>Welcome, {user.firstName}!</p>
             <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
         </div>;
