@@ -14,6 +14,7 @@ interface UserRegistrationState {
     password: string;
     errors: {
         email?: string;
+        emailExists?: string;
     };
 }
 
@@ -29,6 +30,9 @@ const UserRegistration = () => {
         password: "",
         errors: {}
     });
+
+    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success
+
 
     const handleChange = (prop: keyof UserRegistrationState) => (event: ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [prop]: event.target.value });
@@ -46,7 +50,7 @@ const UserRegistration = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (user.errors.email) {
+        if (user.errors.email || user.errors.emailExists) {
             console.error("Form submission blocked due to validation errors.");
             return;
         }
@@ -67,22 +71,32 @@ const UserRegistration = () => {
                     password: user.password
                 })
             });
-            
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            } else {
-                try {
-                    const data = await response.text();
-                    console.log("User registered successfully", data);
-                    // Proceed with any follow-up actions
-                } catch (error) {
-                    throw new Error('Failed to parse JSON. ');
+                if (response.status === 409) {
+                    const errorMsg = await response.text();
+                    setUser(prevState => ({
+                        ...prevState,
+                        errors: { ...prevState.errors, emailExists: errorMsg }
+                    }));
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+            } else {
+                setIsRegistered(true); // Set registration success state to true
             }
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
         }
     };
+
+    if (isRegistered) {
+        return <div className="registrationSuccess">
+            <h2>succeeded!</h2>
+            <p>Welcome, {user.firstName}!</p>
+            <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
+        </div>;
+    }
 
     return (
         <>
@@ -93,7 +107,8 @@ const UserRegistration = () => {
                 <TextField id="lastName" label="Last Name" variant="outlined" color="secondary"
                     value={user.lastName} onChange={handleChange('lastName')} required />
                 <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
-                    value={user.email} error={!!user.errors.email} helperText={user.errors.email}
+                    value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
+                    helperText={user.errors.email || user.errors.emailExists}
                     onChange={handleEmailChange} required />
                 <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
                     value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} required />
