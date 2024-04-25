@@ -9,19 +9,25 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Country } from "country-state-city";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import styles from "./AddTrips.module.scss";
 import { MultipleSelectTags } from "../../../../components/Tags/Tags";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 
+export interface Trip {
+  title: string;
+  country: string;
+  description: string;
+  tags: string[];
+  isPublic: boolean;
+  budget: number;
+  startDate: string;
+  endDate: string;
+}
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -34,8 +40,20 @@ export const TRIP_TAGS_OPTIONS = [
 ];
 
 export const AddTrips = () => {
-  const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
-  const [endDate, setEndDate] = React.useState<Dayjs | null>(null);
+  const initialState : Trip = {
+    title: "",
+    country: "",
+    description: "",
+    tags: [],
+    isPublic: false,
+    budget: 0,
+    startDate: "",
+    endDate: "",
+  };
+  
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [trip, setTrip] = useState(initialState);  
 
   const countriesMenuItems = useMemo(() => {
     return Country.getAllCountries().map((icountry) => (
@@ -46,17 +64,42 @@ export const AddTrips = () => {
     ));
   }, []);
 
-  const [editorState, setEditorState] = useState(
-    () => EditorState.createEmpty(),
-  );
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    await fetch('http://localhost:8080/trips', {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        ...trip 
+      })
+    });
+
+    setTrip(initialState);
+  };
+
+  const handleChange = (event: any) => {
+    setTrip({
+      ...trip,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTrip({
+      ...trip,
+      isPublic: event.target.checked
+    });
+  };
 
   return (
     <div>
       <header className="App-header">
-        <form action="http://localhost:80/trips" className={styles.form}>
+        <form className={styles.form}>
           <FormControl>
             <FormLabel>Enter trip's name:</FormLabel>
-            <TextField name="name" />
+            <TextField value={trip.title} name="title" onChange={handleChange} />
           </FormControl>
           <FormControl>
             <InputLabel>Country</InputLabel>
@@ -65,25 +108,25 @@ export const AddTrips = () => {
               placeholder="Select country"
               name="country"
               defaultValue={""}
+              onChange={handleChange}
+              value={trip.country}
             >
               {countriesMenuItems}
             </Select>
           </FormControl>
-          {/* <TextField
+          <TextField
             label={"Description"}
             name="description"
             placeholder="Enter a short description of your trip..."
             multiline
-            maxRows={8}
-          /> */}
-          <Editor
-            editorState={editorState}
-            onEditorStateChange={setEditorState}
-          />
+            maxRows={6}
+          /> 
           <MultipleSelectTags
             name={"tags"}
             label={"Tags"}
             options={TRIP_TAGS_OPTIONS}
+            saveState={handleChange}
+            tags={trip.tags}
           />
           <p>Public post: <Checkbox name="is_public" /></p>
           {/* TODO: replace date picker to mui */}
