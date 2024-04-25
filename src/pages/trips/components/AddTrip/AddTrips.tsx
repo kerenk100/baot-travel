@@ -2,6 +2,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {
   FormControl,
+  FormControlLabel,
   FormLabel,
   Select,
   MenuItem,
@@ -129,8 +130,15 @@ export const AddTrips = () => {
             saveState={handleChange}
             tags={trip.tags}
           />
-          <p>Public post: <Checkbox name="isPublic" onChange={handleChecked} checked={trip.isPublic}/></p>
-          {/* TODO: replace date picker to mui */}
+          <FormControlLabel 
+            control={<Checkbox
+                      checked={trip.isPublic}
+                      onChange={handleChecked}
+                      name="isPublic"
+                    />}
+            label="Public post">
+          </FormControlLabel>
+              
           <p>Please enter your budget: <input name="budget" type="number" /></p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your start date: " value={startDate} onChange={(newValue) => setStartDate(newValue)} />
