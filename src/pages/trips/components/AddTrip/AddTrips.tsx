@@ -119,7 +119,9 @@ export const AddTrips = () => {
             name="description"
             placeholder="Enter a short description of your trip..."
             multiline
+            onChange={handleChange}
             maxRows={6}
+            value={trip.description}
           /> 
           <MultipleSelectTags
             name={"tags"}
@@ -128,7 +130,7 @@ export const AddTrips = () => {
             saveState={handleChange}
             tags={trip.tags}
           />
-          <p>Public post: <Checkbox name="is_public" /></p>
+          <p>Public post: <Checkbox name="isPublic" onChange={handleChecked} checked={trip.isPublic}/></p>
           {/* TODO: replace date picker to mui */}
           <p>Please enter your budget: <input name="budget" type="number" /></p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -137,7 +139,7 @@ export const AddTrips = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your start date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           </LocalizationProvider>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </form>
