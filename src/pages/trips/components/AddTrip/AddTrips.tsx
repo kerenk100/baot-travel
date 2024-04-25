@@ -12,6 +12,16 @@ import { Country } from "country-state-city";
 import { useMemo } from "react";
 import styles from "./AddTrips.module.scss";
 import { MultipleSelectTags } from "../../../../components/Tags/Tags";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dayjs } from 'dayjs';
+import * as React from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { EditorState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -24,7 +34,8 @@ export const TRIP_TAGS_OPTIONS = [
 ];
 
 export const AddTrips = () => {
-  
+  const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = React.useState<Dayjs | null>(null);
 
   const countriesMenuItems = useMemo(() => {
     return Country.getAllCountries().map((icountry) => (
@@ -34,6 +45,10 @@ export const AddTrips = () => {
       </MenuItem>
     ));
   }, []);
+
+  const [editorState, setEditorState] = useState(
+    () => EditorState.createEmpty(),
+  );
 
   return (
     <div>
@@ -54,21 +69,31 @@ export const AddTrips = () => {
               {countriesMenuItems}
             </Select>
           </FormControl>
-          <TextField
+          {/* <TextField
             label={"Description"}
             name="description"
             placeholder="Enter a short description of your trip..."
+            multiline
+            maxRows={8}
+          /> */}
+          <Editor
+            editorState={editorState}
+            onEditorStateChange={setEditorState}
           />
           <MultipleSelectTags
             name={"tags"}
             label={"Tags"}
             options={TRIP_TAGS_OPTIONS}
           />
-          <p>Public post: <Checkbox name="is_public"/></p>
+          <p>Public post: <Checkbox name="is_public" /></p>
           {/* TODO: replace date picker to mui */}
           <p>Please enter your budget: <input name="budget" type="number" /></p>
-          <p>Please enter your start date: <input name="startDate" type="date"/></p>
-          <p>Please enter your end date: <input name="endDate" type="date"/></p>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Please enter your start date: " value={startDate} onChange={(newValue) => setStartDate(newValue)} />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Please enter your start date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
+          </LocalizationProvider>
           <Button type="submit" variant="contained">
             Submit
           </Button>
