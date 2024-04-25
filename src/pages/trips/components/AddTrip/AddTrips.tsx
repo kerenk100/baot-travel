@@ -16,6 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import UploadWidget from "../../../../components/utilities/UploadWidget/UploadWidget";
 
 
 export interface Trip {
@@ -69,11 +70,9 @@ export const AddTrips = () => {
     await fetch('http://localhost:8080/trips', {
       method: "POST",
       headers: {
-        "content-type": "application/json"
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...trip 
-      })
+      body: JSON.stringify(trip)
     });
 
     setTrip(initialState);
