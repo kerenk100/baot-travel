@@ -16,6 +16,7 @@ interface UserRegistrationState {
         email?: string;
         emailExists?: string;
     };
+    connectedUsers: string[];
 }
 
 const UserRegistration = () => {
@@ -28,7 +29,8 @@ const UserRegistration = () => {
         city: "",
         country: "",
         password: "",
-        errors: {}
+        errors: {},
+        connectedUsers: []
     });
 
     const [isRegistered, setIsRegistered] = useState(false); // State to track registration success
@@ -68,7 +70,8 @@ const UserRegistration = () => {
                     address: user.address,
                     city: user.city,
                     country: user.country,
-                    password: user.password
+                    password: user.password,
+                    connectUsers: user.connectedUsers
                 })
             });
 
@@ -98,6 +101,15 @@ const UserRegistration = () => {
         </div>;
     }
 
+
+    const handleConnectedUsersChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const emails = event.target.value.split(',').map(email => email.trim()); // Split by comma and trim whitespace
+        setUser({
+            ...user,
+            connectedUsers: emails
+        });
+    };
+
     return (
         <>
             <h3>User Registration</h3>
@@ -111,15 +123,17 @@ const UserRegistration = () => {
                     helperText={user.errors.email || user.errors.emailExists}
                     onChange={handleEmailChange} required />
                 <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
-                    value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} required />
+                    value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
-                    value={user.address} onChange={handleChange('address')} required />
+                    value={user.address} onChange={handleChange('address')} />
                 <TextField id="city" label="City" variant="outlined" color="secondary"
-                    value={user.city} onChange={handleChange('city')} required />
+                    value={user.city} onChange={handleChange('city')} />
                 <TextField id="country" label="Country" variant="outlined" color="secondary"
-                    value={user.country} onChange={handleChange('country')} required />
+                    value={user.country} onChange={handleChange('country')} />
                 <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
                     value={user.password} onChange={handleChange('password')} required />
+                <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
+                    value={user.connectedUsers} onChange={handleConnectedUsersChange} />
                 <Button type="submit" variant="contained">Register</Button>
             </form>
         </>

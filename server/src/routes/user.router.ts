@@ -5,6 +5,7 @@ import crypto from "crypto";
 import { ObjectId } from 'mongodb';
 
 
+
 export const userRouter = express.Router();
 
 userRouter.use(express.json());
@@ -23,6 +24,7 @@ userRouter.post("/register", async (req: Request, res: Response) => {
       email: req.body.email,
     });
 
+
     if (existUser) {
       return res.status(400).send("User already exists. Please sign in");
     }
@@ -37,6 +39,9 @@ userRouter.post("/register", async (req: Request, res: Response) => {
       req.body.state,
       req.body.country
     );
+
+    newUser.connectedUsers = req.body.connectUsers;
+
 
     newUser.salt = crypto.randomBytes(16).toString("hex");
     newUser.hash = crypto
@@ -56,7 +61,7 @@ userRouter.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.get("/:userId/edit", async (req: Request, res: Response) => {
+userRouter.get("/:userId", async (req: Request, res: Response) => {
   try {
     const user = await collections.users.findOne({ _id: new ObjectId(req.params.userId) });
     if (user) {
@@ -72,6 +77,7 @@ userRouter.get("/:userId/edit", async (req: Request, res: Response) => {
 userRouter.post("/:userId/edit", async (req: Request, res: Response) => {
   try {
     // Update user data in the database
+    delete req.body._id;
     const result = await collections.users.updateOne(
       { _id: new ObjectId(req.params.userId) },
       { $set: req.body } // Send entire req.body to update all fields
@@ -80,11 +86,10 @@ userRouter.post("/:userId/edit", async (req: Request, res: Response) => {
     if (result.modifiedCount === 1) {
       res.status(200).send("User data updated successfully");
     } else {
-      res.status(404).send("User not found");
+      res.status(404).send("User was not updated");
     }
   } catch (error) {
     res.status(500).send(error.message);
   }
 });
-
 

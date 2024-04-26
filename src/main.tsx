@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/users/edit/:userId',
-    element: <EditUser match={{ params: { userId: '' } }} />, 
+    element: <EditUser />, 
   },
 
 
