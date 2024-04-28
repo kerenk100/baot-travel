@@ -31,6 +31,7 @@ interface Trip {
   image: string;
   budget: number;
   destination: string;
+  id: string;
 }
 
 
@@ -133,6 +134,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: "Image",
+  },
+   {
+    id: "id",
+    numeric: true,
+    disablePadding: false,
+    label: "id",
   },
 ];
 
@@ -371,8 +378,7 @@ useEffect(() => {
               rowCount={trips.length}
             />
             <TableBody>
-              {visibleRows.map((trip: {title: any; 
-}, index: any) => {
+              {visibleRows.map((trip:any, index: any) => {
                 const isItemSelected = isSelected(trip.title);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -383,7 +389,7 @@ useEffect(() => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={trip.title}
+                    key={trip.id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
