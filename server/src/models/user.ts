@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export class User {
   constructor(
     public firstName: string,
@@ -9,6 +11,7 @@ export class User {
     public state: string,
     public country: string,
     public hash?: string,
-    public salt?: string
+    public salt?: string,
+    public connectedUsers: string[] = [] // new field to store connected users
   ) {}
 }

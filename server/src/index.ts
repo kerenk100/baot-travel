@@ -15,7 +15,7 @@ const port = process.env.port || 8080; // default port to listen
 
 const cors = require('cors');
 app.use(cors({
-    origin: 'http://127.0.0.1:5174' // Only allow this origin to access your API
+    origin: 'http://127.0.0.1:5173' // Only allow this origin to access your API
 }));
 
 app.get("/", (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ connectToDatabase()
   .then(() => {
     app.use("/vendors", vendorsRouter);
     app.use("/trips", tripsRouter);
-    app.use("/user", userRouter);
+    app.use("/users", userRouter);
 
     app.get("/", (req, res) => {
       res.send("hello");

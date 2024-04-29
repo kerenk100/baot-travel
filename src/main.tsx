@@ -10,6 +10,7 @@ import { AddTrips } from './pages/trips/components/AddTrip/AddTrips.tsx';
 import { Trips } from './pages/trips/Trips.tsx';
 import VendorManager from './VendorManager.tsx';
 import UserRegistration from './components/userRegistration/UserRegistration.tsx';
+import EditUser from './components/userEdit/EditUser.tsx';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,13 @@ const router = createBrowserRouter([
   {
     path: "/users/register",
     element: <UserRegistration />
-  }
+  },
+  {
+    path: '/users/edit/:userId',
+    element: <EditUser />, 
+  },
+
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
