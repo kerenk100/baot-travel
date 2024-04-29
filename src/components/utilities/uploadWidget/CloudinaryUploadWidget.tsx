@@ -1,15 +1,33 @@
 import { createContext, useEffect, useState } from "react";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage, responsive, placeholder } from "@cloudinary/react";
+import { Button } from '@mui/material';
+import './uploadWidget.css';
 
 // Create a context to manage the script loading state
-const CloudinaryScriptContext = createContext({ loaded: false});
+const CloudinaryScriptContext = createContext({ loaded: false });
+
 
 const uwConfig = {
-  cloudName: '', //TODO: use from .env
-  uploadPreset: ''
+  cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '',
+  uploadPreset: import.meta.env.VITE_CLOUDINARY_PRESET || ''
 }
 
-function CloudinaryUploadWidget({ setPublicId }) {
+interface CLoudinaryUploadWidgetProps {
+  setPublicId: (publicId: string) => void;
+}
+
+function CloudinaryUploadWidget({ setPublicId } : CLoudinaryUploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
+  const [publicId, setPublicIdInner] = useState('');
+
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: uwConfig.cloudName
+    }
+  });
+
+  const image = cld.image(publicId);
 
   useEffect(() => {
     // Check if the script is already loaded
@@ -32,29 +50,38 @@ function CloudinaryUploadWidget({ setPublicId }) {
 
   const initializeCloudinaryWidget = () => {
     if (loaded) {
-      var myWidget = (window as any).cloudinary.createUploadWidget(
+      var widget = (window as any).cloudinary.createUploadWidget(
         uwConfig,
         (error: any, result: any) => {
           if (!error && result && result.event === "success") {
             console.log("Done! Here is the image info: ", result.info);
-            setPublicId(result.info.public_id);
+            const publicId = result.info.public_id;
+            setPublicIdInner(publicId);
+            setPublicId(publicId);
           }
         }
       );
 
-      myWidget.open();
+      widget.open();
     }
   };
 
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
-      <button
+      <Button
         id="upload_widget"
         className="cloudinary-button"
         onClick={initializeCloudinaryWidget}
       >
         Upload
-      </button>
+      </Button>
+      <div style={{display: !publicId ? 'none' : 'block'}} className="thumbnail">
+        <AdvancedImage
+          style={{ maxWidth: "100%" }}
+          cldImg={image}
+          plugins={[responsive(), placeholder()]}
+        />
+      </div>
     </CloudinaryScriptContext.Provider>
   );
 }
