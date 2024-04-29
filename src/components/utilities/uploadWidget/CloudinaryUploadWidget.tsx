@@ -1,9 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage, responsive, placeholder } from "@cloudinary/react";
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import './uploadWidget.css';
-
+import { Close } from "@mui/icons-material";
 // Create a context to manage the script loading state
 const CloudinaryScriptContext = createContext({ loaded: false });
 
@@ -17,7 +17,7 @@ interface CLoudinaryUploadWidgetProps {
   setPublicId: (publicId: string) => void;
 }
 
-function CloudinaryUploadWidget({ setPublicId } : CLoudinaryUploadWidgetProps) {
+function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
   const [publicId, setPublicIdInner] = useState('');
 
@@ -66,21 +66,32 @@ function CloudinaryUploadWidget({ setPublicId } : CLoudinaryUploadWidgetProps) {
     }
   };
 
+  const onRemove = () => {
+    setPublicIdInner('');
+    setPublicId('');
+  }
+
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
-      <Button
-        id="upload_widget"
-        className="cloudinary-button"
-        onClick={initializeCloudinaryWidget}
-      >
-        Upload
-      </Button>
-      <div style={{display: !publicId ? 'none' : 'block'}} className="thumbnail">
-        <AdvancedImage
-          style={{ maxWidth: "100%" }}
-          cldImg={image}
-          plugins={[responsive(), placeholder()]}
-        />
+      <div className='widget-container'>
+        <Button
+          id="upload_widget"
+          className="cloudinary-button"
+          onClick={initializeCloudinaryWidget}
+        >
+          Upload
+        </Button>
+        <div style={{ display: !publicId ? 'none' : 'flex' }} className="thumbnail">
+          <AdvancedImage
+            style={{ maxWidth: "100%" }}
+            cldImg={image}
+            plugins={[responsive(), placeholder()]}
+          />
+
+         <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
+          <Close />
+        </IconButton> 
+        </div>
       </div>
     </CloudinaryScriptContext.Provider>
   );
