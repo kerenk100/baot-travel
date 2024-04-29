@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Vendor } from './Types';
+import { Button, FormControl, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 interface VendorFormProps {
   initialVendor: Vendor;
@@ -28,6 +29,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
     tags: [],
     rate: 0
   });*/
+  
 
   const VendorTypes = {
     HOTELS: 'Hotel',
@@ -35,7 +37,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
   };
 
 
-  const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setVendor(vendor => ({ ...vendor, [name]: value }));
   };
@@ -91,7 +93,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
     }
   };
 
-  const handleVendorTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleVendorTypeChange = (event: SelectChangeEvent) => {
     setVendor({ ...vendor, type: event.target.value });
   };
 
@@ -100,92 +102,107 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          Name:
-          <input type="text" name="name" value={vendor.name} onChange={handleSimpleChange} required />
-        </label>
-      </div>
-      <div>
-        <label>
-          Vendor Type
-          <select value={vendor.type} onChange={handleVendorTypeChange} required>
-            <option value="">Select Type</option>
-            <option value={VendorTypes.HOTELS}>{VendorTypes.HOTELS}</option>
-            <option value={VendorTypes.RESTAURANTS}>{VendorTypes.RESTAURANTS}</option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <label>
-          Site:
-          <input type="url" name="website" value={vendor.website} onChange={handleSimpleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Location:
-          <input type="text" name="location" value={vendor.location} onChange={handleSimpleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Phone Number:
-          <input type="number" name="phoneNumber" value={vendor.phoneNumber} onChange={handleSimpleChange}  min="100000000" max="9999999999"/>
-        </label>
-      </div>
-      <div>
-        <label>
-          Email:
-          <input type="email" name="email" value={vendor.email} onChange={handleSimpleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Cover Photo:
-          <input type="file" name="coverPhoto" onChange={handleCoverPhotoChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Deal Description:
-          <input type="text" name="deal.description" value={vendor.deal.description} onChange={handleDealChange}/>
-        </label>
-      </div>
-      <div>
-        <label>
-          Deal Link:
-          <input type="url" name="deal.link" value={vendor.deal.link} onChange={handleDealChange}/>
-        </label>
-      </div>
-      <div>
-        <label>
-          Photos:
-          <input type="file" name="photos" multiple onChange={handlePhotosChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Tags:
-          <input type="text" onKeyDown={handleTagInputKeyDown}placeholder="Type tag and press Enter"/>
-        </label>
-        <ul>{vendor.tags.map((tag, index) => (<li key={index}>{tag}<button onClick={() => handleRemoveTag(index)}>Delete</button> {}
-      </li>
-    ))}
-  </ul>
-      </div>
-      <div>
-        <label>Rate:</label>
-        {[...Array(6).keys()].map((value) => (
-          <label key={value}>
-            {value}
-            <input type="radio" name="rate" value={value} checked={vendor.rate === value} onChange={handleRateChange}/>
-          </label>
-        ))}
-      </div>
-      <div></div>
-      <button type="submit">Submit</button>
+    <form onSubmit={handleSubmit} className='form-vendor'>
+      <FormControl>
+
+        <TextField
+          label="Vendor name"
+          name="name"
+          type="text"
+          value={vendor.name} 
+          onChange={handleSimpleChange} 
+          required
+        />
+
+        <Select  
+          label="Vendor type" 
+          value={vendor.type}
+          onChange={handleVendorTypeChange}
+          required
+          >
+            <MenuItem value={VendorTypes.HOTELS}>HOTEL</MenuItem>
+            <MenuItem value={VendorTypes.RESTAURANTS}>RESTAURANT</MenuItem>
+        </Select>
+
+        <TextField
+          label="Website url" 
+          name="website"
+          type="url"
+          value={vendor.website}
+          onChange={handleSimpleChange}      
+        />
+  
+        <TextField
+          label="Location" 
+          name="location"
+          type="text"
+          value={vendor.location}
+          onChange={handleSimpleChange}      
+        />
+ 
+        <TextField
+          label="Phone number" 
+          name="phoneNumber"
+          type="number"
+          value={vendor.phoneNumber}
+          onChange={handleSimpleChange}      
+        />
+   
+        <TextField
+          label="Email" 
+          name="Email"
+          type="email"
+          value={vendor.email}
+          onChange={handleSimpleChange}      
+        />
+     
+        <TextField
+          label="Deal description" 
+          name="dealDes"
+          type="text"
+          value={vendor.deal.description}
+          onChange={handleDealChange}      
+        />
+      
+        <TextField
+          label="Deal url" 
+          name="dealLink"
+          type="url"
+          value={vendor.deal.link}
+          onChange={handleDealChange}      
+        />
+      
+        <TextField
+          label="Type tag and press Enter" 
+          name="tags"
+          type="text"
+          onChange={handleDealChange}  
+          onKeyDown={handleTagInputKeyDown}    
+        />
+          
+        <ul>
+          {vendor.tags.map((tag, index) => (
+            <li key={index}>{tag}
+              <Button type="submit" onClick={() => handleRemoveTag(index)} variant="contained">Delete</Button>
+            </li>
+          ))}
+        </ul> 
+
+        <Button variant="outlined" component="label">
+          Upload cover photo
+          <input type="file" onChange={handleCoverPhotoChange} />
+        </Button>
+
+        <Button variant="outlined" component="label">
+          Upload photos
+          <input type="file" multiple onChange={handleCoverPhotoChange} />
+        </Button>
+
+        <Button type="submit" variant="contained">
+            Submit
+        </Button> 
+      
+      </FormControl>
     </form>
   );
 }
