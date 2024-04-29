@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import { Vendor } from './Types';
 import { Button, FormControl, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
@@ -37,23 +37,20 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
   };
 
 
-  const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  //const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  //  const { name, value } = event.target;
+  //  setVendor(vendor => ({ ...vendor, [name]: value }));
+  //};
+
+  const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setVendor(vendor => ({ ...vendor, [name]: value }));
-  };
-
-  const handleRateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numericValue = parseInt(event.target.value, 10);
-    setVendor(vendor => ({ ...vendor, rate: numericValue }));
   };
 
   const handleDealChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const field = name.replace("deal.", ""); // Assuming name is "deal.description" or "deal.link"
-    setVendor(vendor => ({
-      ...vendor,
-      deal: { ...vendor.deal, [field]: value }
-    }));
+    setVendor(vendor => ({...vendor, deal: { ...vendor.deal, [field]: value }}));
   };
 
   const handleAddTag = (tag: string) => {
@@ -147,10 +144,10 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
           value={vendor.phoneNumber}
           onChange={handleSimpleChange}      
         />
-   
+
         <TextField
-          label="Email" 
-          name="Email"
+          label="E-mail" 
+          name="email"
           type="email"
           value={vendor.email}
           onChange={handleSimpleChange}      
@@ -158,7 +155,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
      
         <TextField
           label="Deal description" 
-          name="dealDes"
+          name="deal.description"
           type="text"
           value={vendor.deal.description}
           onChange={handleDealChange}      
@@ -166,7 +163,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
       
         <TextField
           label="Deal url" 
-          name="dealLink"
+          name="deal.link"
           type="url"
           value={vendor.deal.link}
           onChange={handleDealChange}      
@@ -175,8 +172,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
         <TextField
           label="Type tag and press Enter" 
           name="tags"
-          type="text"
-          onChange={handleDealChange}  
+          type="text"  
           onKeyDown={handleTagInputKeyDown}    
         />
           
@@ -195,7 +191,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
 
         <Button variant="outlined" component="label">
           Upload photos
-          <input type="file" multiple onChange={handleCoverPhotoChange} />
+          <input type="file" multiple onChange={handlePhotosChange} />
         </Button>
 
         <Button type="submit" variant="contained">
