@@ -12,6 +12,7 @@ import UserRegistration from './components/userRegistration/UserRegistration.tsx
 import Trips from './pages/trips/Trips.tsx';
 
 
+import EditUser from './components/userEdit/EditUser.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,13 @@ const router = createBrowserRouter([
   {
     path: "/users/register",
     element: <UserRegistration />
-  }
+  },
+  {
+    path: '/users/edit/:userId',
+    element: <EditUser />, 
+  },
+
+
 ]);
 
 
