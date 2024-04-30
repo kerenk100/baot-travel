@@ -1,0 +1,26 @@
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    color: black;
+    background: var(--cyan-blue);
+    margin-top: 64px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.sidebar li {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar a {
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
