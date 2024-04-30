@@ -36,12 +36,6 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave}) => {
     RESTAURANTS: 'Restaurant'
   };
 
-
-  //const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.ChangeEvent<HTMLSelectElement>) => {
-  //  const { name, value } = event.target;
-  //  setVendor(vendor => ({ ...vendor, [name]: value }));
-  //};
-
   const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setVendor(vendor => ({ ...vendor, [name]: value }));
