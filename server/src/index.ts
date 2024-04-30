@@ -5,6 +5,7 @@ import { connectToDatabase } from "./services/database.service";
 import { userRouter } from "./routes/user.router";
 import { vendorsRouter } from "./routes/vendors.router";
 import { tripsRouter } from "./routes/trips.router";
+import { tagsRouter } from "./routes/tags.router";
 
 dotenv.config();
 
@@ -26,7 +27,8 @@ connectToDatabase()
   .then(() => {
     app.use("/vendors", vendorsRouter);
     app.use("/trips", tripsRouter);
-    app.use("/users", userRouter);
+    app.use("/user", userRouter);
+    app.use("/tags", tagsRouter);
 
     app.get("/", (req, res) => {
       res.send("hello");

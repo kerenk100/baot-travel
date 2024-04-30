@@ -8,6 +8,7 @@ export const collections: {
   deals?:mongoDB.Collection,
   trips?: mongoDB.Collection,
   users?: mongoDB.Collection
+  tags?: mongoDB.Collection
 } = {};
 
 // Initialize Connection
@@ -32,17 +33,22 @@ export async function connectToDatabase() {
   const usersCollection: mongoDB.Collection = db.collection(
     process.env.USERS_COLLECTION_NAME
   );
+  const tagsCollection: mongoDB.Collection = db.collection(
+    process.env.TAGS_COLLECTION_NAME
+  );
 
 
   collections.vendors = vendorsCollection; 
   collections.deals = dealsCollection; 
   collections.trips = tripsCollection;
   collections.users = usersCollection;
+  collections.tags = tagsCollection;
 
   console.log(`Successfully connected to database: ${db.databaseName} 
   and collections:
   ${vendorsCollection.collectionName},
   ${dealsCollection.collectionName}, 
   ${tripsCollection.collectionName},);
-  ${usersCollection.collectionName}`);
+  ${usersCollection.collectionName},
+  ${tagsCollection.collectionName}`);
 }
