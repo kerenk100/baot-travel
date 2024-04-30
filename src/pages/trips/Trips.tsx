@@ -135,12 +135,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Image",
   },
-   {
-    id: "id",
-    numeric: true,
-    disablePadding: false,
-    label: "id",
-  },
 ];
 
 interface EnhancedTableProps {
@@ -356,7 +350,7 @@ useEffect(() => {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, trips]
   );
 
   return (
@@ -405,12 +399,13 @@ useEffect(() => {
                     <TableCell
                       component="th"
                       id={labelId}
+                      key={trip.id}
                       scope="trip"
                       padding="none"
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell align="right">{trip.description}</TableCell>
+                    <TableCell key={trip.description} align="right">{trip.description}</TableCell>
                     <TableCell align="right">{trip.destination}</TableCell>
                     <TableCell align="right">{trip.category}</TableCell>
                     <TableCell align="right">{trip.startDate}</TableCell>
