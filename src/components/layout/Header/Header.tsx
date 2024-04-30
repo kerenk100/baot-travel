@@ -6,10 +6,11 @@ import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Routes } from "../../../routes/routes";
+import { Logo } from "./components/Logo/Logo";
+import styles from './Header.module.scss'
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -61,7 +62,7 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <AppBar position={'fixed'}>
+    <AppBar position={'fixed'} className={styles.header}>
       <Toolbar
         style={{
           display: "flex",
@@ -76,22 +77,7 @@ export const Header: React.FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href={Routes.HOME}
-            sx={{
-              fontFamily: "fantasy",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            BaoTravel
-          </Typography>
+          <Logo onClick={()=>navigate(Routes.HOME)}/>
         </div>
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

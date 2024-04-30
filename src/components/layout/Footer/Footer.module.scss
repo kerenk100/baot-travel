@@ -1,0 +1,9 @@
+.footer {
+  &[class*="MuiAppBar"] {
+    text-align: center;
+    background-color: var(--cyan);
+    border-top: 2px solid var(--orange);
+    box-shadow: none;
+    color: black;
+  }
+}

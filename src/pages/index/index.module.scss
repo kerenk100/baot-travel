@@ -1,0 +1,24 @@
+.layout {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  .pagesCards {
+    align-self: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    .pageCard {
+      cursor: pointer;
+      width: 300px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 1px solid var(--cyan);
+      text-transform: capitalize;
+    }
+  }
+}
