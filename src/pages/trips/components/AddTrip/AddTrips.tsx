@@ -17,7 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import UploadWidget from "../../../../components/utilities/UploadWidget/UploadWidget";
+import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
 
 
 export interface Trip {
@@ -56,6 +56,7 @@ export const AddTrips = () => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [trip, setTrip] = useState(initialState);  
+  const [publicId, setPublicId] = useState("");
 
   const countriesMenuItems = useMemo(() => {
     return Country.getAllCountries().map((icountry) => (
@@ -96,6 +97,7 @@ export const AddTrips = () => {
   return (
     <div>
       <header className="App-header">
+        <CloudinaryUploadWidget setPublicId={setPublicId}/>
         <form className={styles.form}>
           <FormControl>
             <FormLabel>Enter trip's name:</FormLabel>
@@ -138,8 +140,14 @@ export const AddTrips = () => {
                     />}
             label="Public post">
           </FormControlLabel>
-              
-          <p>Please enter your budget: <input name="budget" type="number" /></p>
+          <TextField
+            label={"Budget"}
+            name="budget"
+            placeholder="Enter a number for the budget"
+            onChange={handleChange}
+            maxRows={6}
+            value={trip.budget}
+          />           
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your start date: " value={startDate} onChange={(newValue) => setStartDate(newValue)} />
           </LocalizationProvider>
