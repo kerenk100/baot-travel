@@ -4,8 +4,8 @@ import { createContext, useEffect, useState } from "react";
 const CloudinaryScriptContext = createContext({ loaded: false});
 
 const uwConfig = {
-  cloudName: 'da127ahf2', //TODO: use from .env
-  uploadPreset: 'lq0csing'
+  cloudName: '', //TODO: use from .env
+  uploadPreset: ''
 }
 
 function CloudinaryUploadWidget({ setPublicId }) {
