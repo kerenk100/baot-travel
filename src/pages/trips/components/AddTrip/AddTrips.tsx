@@ -17,7 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
+import CloudinaryUploadWidget from '../../../../components/utilities/uploadWidget/CloudinaryUploadWidget';
 
 
 export interface Trip {
