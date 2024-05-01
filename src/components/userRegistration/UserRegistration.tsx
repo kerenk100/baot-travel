@@ -1,133 +1,143 @@
-import {TextField, Button} from '@mui/material';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { TextField, Button } from '@mui/material';
 import './UserRegistration.css';
-import {ChangeEvent, useState} from 'react';
-import {validateEmail} from "../../utils/validations.tsx";
+import { validateEmail } from "../../utils/validations";
+
+interface UserRegistrationState {
+    firstName: string;
+    lastName: string;
+    email: string;
+    dateOfBirth: string;
+    address: string;
+    city: string;
+    country: string;
+    password: string;
+    errors: {
+        email?: string;
+        emailExists?: string;
+    };
+    connectedUsers: string[];
+}
 
 const UserRegistration = () => {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [address, setAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [country, setCountry] = useState("");
-    const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState({})
+    const [user, setUser] = useState<UserRegistrationState>({
+        firstName: "",
+        lastName: "",
+        email: "",
+        dateOfBirth: "",
+        address: "",
+        city: "",
+        country: "",
+        password: "",
+        errors: {},
+        connectedUsers: []
+    });
+
+    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success
 
 
-    const handleSubmit = async (event: any) => {
-        event.preventDefault();
-        await fetch('http://localhost:5050/users/register', {
-            method: "POST",
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                firstName,
-                lastName,
-                email,
-                dateOfBirth,
-                address,
-                city,
-                country,
-                password
-            })
+    const handleChange = (prop: keyof UserRegistrationState) => (event: ChangeEvent<HTMLInputElement>) => {
+        setUser({ ...user, [prop]: event.target.value });
+    };
+
+    const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const email = event.target.value;
+        const isValid = validateEmail(email);
+        setUser({
+            ...user,
+            email,
+            errors: { ...user.errors, email: isValid ? undefined : 'Email format is incorrect!' }
         });
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setDateOfBirth("");
-        setAddress("");
-        setCity("");
-        setCountry("");
-        setErrors({});
-        setPassword("");
+    };
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (user.errors.email) {
+            console.error("Form submission blocked due to validation errors.");
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:3000/users/register', {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    dateOfBirth: user.dateOfBirth,
+                    address: user.address,
+                    city: user.city,
+                    country: user.country,
+                    password: user.password,
+                    connectUsers: user.connectedUsers
+                })
+            });
+
+            if (!response.ok) {
+                if (response.status === 400) {
+                    const errorMsg = await response.text();
+                    setUser(prevState => ({
+                        ...prevState,
+                        errors: { ...prevState.errors, emailExists: 'Email already exists!' }
+                    }));
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            } else {
+                setIsRegistered(true);
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    };
+
+    if (isRegistered) {
+        return <div className="registrationSuccess">
+            <h2>Registration Succeeded!</h2>
+            <p>Welcome, {user.firstName}!</p>
+            <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
+        </div>;
     }
 
-    const handleEmailChanged = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setEmail(value);
-        const isValid = validateEmail(value);
-        setErrors({...errors, email: !isValid});
+
+    const handleConnectedUsersChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const emails = event.target.value.split(',').map(email => email.trim()); // Split by comma and trim whitespace
+        setUser({
+            ...user,
+            connectedUsers: emails
+        });
     };
 
     return (
         <>
             <h3>User Registration</h3>
-            <form className="registrationForm">
-                <TextField id="firstName"
-                           label="First Name"
-                           variant="outlined"
-                           color="secondary"
-                           value={firstName}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setFirstName(event.target.value)}
-                           required
-                />
-                <TextField id="lastName"
-                           label="Last Name"
-                           variant="outlined"
-                           color="secondary"
-                           value={lastName}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setLastName(event.target.value)}
-                           required
-                />
-                <TextField id="email"
-                           label="Email"
-                           variant="outlined"
-                           color="secondary"
-                           type="email"
-                           value={email}
-                           error={errors?.email}
-                           helperText={errors?.email ? 'Email format is incorrect!': ''}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => handleEmailChanged(event)}
-                           required
-                />
-                <TextField id="dateOfBirth"
-                           label="Date of Birth"
-                           variant="outlined"
-                           color="secondary"
-                           type="date"
-                           value={dateOfBirth}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setDateOfBirth(event.target.value)}
-                           required
-                />
-                <TextField id="address"
-                           label="Address"
-                           variant="outlined"
-                           color="secondary"
-                           value={address}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setAddress(event.target.value)}
-                           required
-                />
-                <TextField id="city"
-                           label="City"
-                           variant="outlined"
-                           color="secondary"
-                           value={city}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setCity(event.target.value)}
-                           required
-                />
-                <TextField id="country"
-                           label="Country"
-                           variant="outlined"
-                           color="secondary"
-                           value={country}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setCountry(event.target.value)}
-                           required
-                />
-                <TextField id="password"
-                           label="Password"
-                           variant="outlined"
-                           color="secondary"
-                           type="password"
-                           value={password}
-                           onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                           required
-                />
-                <Button variant="contained" onClick={handleSubmit}>Register</Button>
+            <form className="registrationForm" onSubmit={handleSubmit}>
+                <TextField id="firstName" label="First Name" variant="outlined" color="secondary"
+                    value={user.firstName} onChange={handleChange('firstName')} required />
+                <TextField id="lastName" label="Last Name" variant="outlined" color="secondary"
+                    value={user.lastName} onChange={handleChange('lastName')} required />
+                <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
+                    value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
+                    helperText={user.errors.email || user.errors.emailExists}
+                    onChange={handleEmailChange} required />
+                <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
+                    value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
+                <TextField id="address" label="Address" variant="outlined" color="secondary"
+                    value={user.address} onChange={handleChange('address')} />
+                <TextField id="city" label="City" variant="outlined" color="secondary"
+                    value={user.city} onChange={handleChange('city')} />
+                <TextField id="country" label="Country" variant="outlined" color="secondary"
+                    value={user.country} onChange={handleChange('country')} />
+                <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
+                    value={user.password} onChange={handleChange('password')} required />
+                <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
+                    value={user.connectedUsers} onChange={handleConnectedUsersChange} />
+                <Button type="submit" variant="contained">Register</Button>
             </form>
         </>
-    )
-}
+    );
+};
 
 export default UserRegistration;
