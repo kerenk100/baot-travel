@@ -1,0 +1,11 @@
+.thumbnail {
+    height: 100px;
+    width: 100px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.widget-container {
+    display: flex;
+    flex-direction: column;
+}
