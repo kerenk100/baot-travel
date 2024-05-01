@@ -2,8 +2,8 @@ import Trips from "../pages/trips/Trips";
 import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
-import UserRegistration from "../components/userRegistration/UserRegistration";
-import EditUser from "../components/userEdit/EditUser";
+import UserRegistration from "../pages/users/userRegistration/UserRegistration";
+import EditUser from "../pages/users/userEdit/EditUser";
 
 export enum Routes {
   HOME = "/",

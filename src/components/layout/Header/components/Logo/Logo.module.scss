@@ -3,6 +3,10 @@
     max-width: 150px;
     }
     &:hover{
+        background-color: white !important;
+    }
+    &:focus{
+        outline:none ;
         background-color: white;
     }
 }
