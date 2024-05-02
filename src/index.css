@@ -1,51 +1,28 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #fff;
+:root{
+  --blue: #1e90ff;
+  --cyan:#59D5DF;
+  --pink:#F35389;
+  --yellow:#F5DD61;
+  --orange:#FAA200;
+  font-family: Arial, Helvetica, sans-serif;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
-*/
-a {
-  font-weight: 500;
-  color: #59D5E0; /* Cyan-Blue for links */
-  text-decoration: inherit;
+body{
+  height:100vh;
+  margin:0;
+  padding:0;
 }
-a:hover {
-  color: #F4538A; /* Vivid-Pink for hover state */
+#root{
+  width:100%;
+  height: 100%;
+  overflow: hidden;
 }
-
-form {
-  margin-left: 20px;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 .MuiFormControl-root {
   display: flex;
   flex-direction: column;
   gap:16px;
   width:100%;
 }
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-  color:#000
-}
-
 button {
   background-color: #FAA300; /* Vibrant-Orange for buttons */
   color: #ffffff; /* White text for better contrast */
@@ -56,10 +33,6 @@ button {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.25s, color 0.25s;
-}
-button:hover {
-  background-color: #F5DD61; /* Mustard-Yellow for hover state */
-  color: #242424; /* Darker text color for contrast */
 }
 button:focus,
 button:focus-visible {

@@ -23,6 +23,10 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
 import { Order, getComparator, stableSort } from "../../components/utilities/sortUtils";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "../../routes/routes";
+
 
 interface Trip {
   title: string;
@@ -319,8 +323,10 @@ useEffect(() => {
     [order, orderBy, page, rowsPerPage, trips]
   );
 
+  const navigate = useNavigate()
   return (
     <Box sx={{ width: "100%" }}>
+      <Button onClick={()=>navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</Button>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>

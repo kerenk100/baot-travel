@@ -1,0 +1,7 @@
+.header {
+  &[class*="MuiAppBar"] {
+    background-color: white;
+    border-bottom: 2px solid var(--orange);
+    box-shadow: none;
+  }
+}

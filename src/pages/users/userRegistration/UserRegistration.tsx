@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import './UserRegistration.css';
-import { validateEmail } from "../../utils/validations";
+import { validateEmail } from "../../../utils/validations";
 
 interface UserRegistrationState {
     firstName: string;
