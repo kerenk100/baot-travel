@@ -4,6 +4,7 @@ import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
+import { Settings } from "../pages/settings/Settings";
 
 export enum Routes {
   HOME = "/",
@@ -47,9 +48,9 @@ export const publicRoutes = [
 ];
 export const privateRoutes = [
   {
-    path: Routes.SETTINGS,
-    name: "settings",
-    element: <div>Settings page</div>,
+    path:Routes.SETTINGS,
+    name:"settings",
+    element:<Settings />
   },
 ];
 
