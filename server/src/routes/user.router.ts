@@ -37,10 +37,10 @@ userRouter.post("/register", async (req: Request, res: Response) => {
       req.body.address,
       req.body.city,
       req.body.state,
-      req.body.country
+      req.body.country,
+      req.body.connectedUsers,
+      req.body.partnerSearch,
     );
-
-    newUser.connectedUsers = req.body.connectUsers;
 
 
     newUser.salt = crypto.randomBytes(16).toString("hex");
