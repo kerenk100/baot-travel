@@ -57,10 +57,10 @@ const UserRegistration = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/users/register', {
+            const response = await fetch('http://localhost:8080/user/register', {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     firstName: user.firstName,

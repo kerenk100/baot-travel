@@ -3,7 +3,7 @@ import { collections } from "../services/database.service";
 import { User } from "../models/user";
 import crypto from "crypto";
 import { ObjectId } from 'mongodb';
-
+import { generateToken } from "../utils/auth";
 
 
 export const userRouter = express.Router();
@@ -18,6 +18,41 @@ userRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
+
+userRouter.post("/login", async (req: Request, res: Response) => {
+  // try {
+  // res.status(200).send('Login route hit');
+  // }
+  // catch (error) {
+  //   console.error(error);
+  //   res.status(400).send(error.details[0].message);
+  // }
+  try {
+  const { email, password } = req.body;
+  const user = await collections.users.findOne({email});
+
+  const verifyPassword = (password: string, storedHash: string, storedSalt: string) => {
+    const hash = crypto.pbkdf2Sync(password, storedSalt, 1000, 64, 'sha512').toString('hex');
+    return hash === storedHash;
+};
+
+  if (user && (verifyPassword(password, user.hash, user.salt))) {
+    generateToken(res, user._id.toString());
+    res.send('Login successful');
+    // res.status(201).json({
+    //   id: user._id,
+    //   name: user.name,
+    //   email: user.email,
+    // })
+  } else {
+    res.status(401).send({ message: "User not found / password incorrect" });
+  }
+} catch (error) {
+  res.status(500).send(error.message);
+}
+});
+
+
 userRouter.post("/register", async (req: Request, res: Response) => {
   try {
     const existUser = await collections.users.findOne({
@@ -28,6 +63,8 @@ userRouter.post("/register", async (req: Request, res: Response) => {
     if (existUser) {
       return res.status(400).send("User already exists. Please sign in");
     }
+
+    console.log('req.body', req.body);
 
     let newUser = new User(
       req.body.firstName,

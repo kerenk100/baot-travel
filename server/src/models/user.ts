@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import crypto from "crypto";
 
 export class User {
   constructor(
@@ -13,5 +14,6 @@ export class User {
     public hash?: string,
     public salt?: string,
     public connectedUsers: string[] = [] // new field to store connected users
-  ) {}
+  ) {};
+
 }
