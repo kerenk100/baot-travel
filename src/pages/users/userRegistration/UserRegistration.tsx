@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
@@ -35,8 +35,7 @@ const UserRegistration = () => {
         partnerSearch: ""
     });
 
-    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success
-
+    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success;
 
     const handleChange = (prop: keyof UserRegistrationState) => (event: ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [prop]: event.target.value });
@@ -73,7 +72,7 @@ const UserRegistration = () => {
                     city: user.city,
                     country: user.country,
                     password: user.password,
-                    connectUsers: user.connectedUsers,
+                    connectedUsers: user.connectedUsers,
                     partnerSearch: user.partnerSearch
                 })
             });
