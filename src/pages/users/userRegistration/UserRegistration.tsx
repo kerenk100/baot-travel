@@ -140,7 +140,7 @@ const UserRegistration = () => {
                     value={user.password} onChange={handleChange('password')} required />
                 <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
                     value={user.connectedUsers} onChange={handleConnectedUsersChange} />
-                <InputLabel id="partnerSearch">Partner Search</InputLabel>
+                <InputLabel id="partnerSearch">Partner Search (Show your email to potentials travel partners)</InputLabel>
                 <Select
                     id="partnerSearch"
                     label="Partner Search"
