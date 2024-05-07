@@ -1,33 +1,17 @@
 import { useEffect, useState } from 'react';
-import VendorForm from './VendorForm';
-import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
+import VendorList from './VendorList';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  useEffect(() => {
-    fetch('http://localhost:3000/vendors/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setVendors(data); // Set fetched data into state
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}, []);
-
+  
   // Function to handle deleting a vendor
   const deleteVendor = async (id: string) => {
     
     try {
       // Send DELETE request to the server
-      const response = await fetch(`http://localhost:3000/vendors/${id}`, {
+      const response = await fetch(`http://localhost:8080/vendors/${id}`, {
         method: 'DELETE'
       });
   
@@ -65,7 +49,7 @@ function VendorManager() {
     const newVendor: boolean = updatedVendor._id === "";
     // Determine the method based on whether the vendor is new or existing
     const method = newVendor ? 'POST' : 'PUT';
-    const url = newVendor ? 'http://localhost:3000/vendors/' : `http://localhost:3000/vendors/${updatedVendor._id}`;
+    const url = newVendor ? 'http://localhost:8080/vendors/' : `http://localhost:8080/vendors/${updatedVendor._id}`;
   
     try {
       const response = await fetch(url, {
@@ -128,10 +112,8 @@ function VendorManager() {
   return (
     
     <div className="App">
-      {!currVendor && <SimpleVendorList vendors={vendors} onEdit={enterEditVendorMode} onDelete={deleteVendor} />}
       {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
-
-      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
+      {!currVendor && <VendorList />}
     </div>
   );
 }
