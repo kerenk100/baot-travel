@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Vendor } from './Types';
 import VendorList from './VendorList';
+import VendorForm from './VendorForm';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
@@ -112,6 +113,8 @@ function VendorManager() {
   return (
     
     <div className="App">
+
+      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
       {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
       {!currVendor && <VendorList />}
     </div>
