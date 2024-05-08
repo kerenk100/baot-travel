@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
-import './UserRegistration.css';
-import { validateEmail } from "../../../utils/validations";
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { TextField, Button, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { validateEmail } from "../../../utils/validations"; // Make sure this path is correct
 
-interface UserRegistrationState {
+interface UserFormState {
     firstName: string;
     lastName: string;
     email: string;
@@ -20,8 +20,8 @@ interface UserRegistrationState {
     partnerSearch: string;
 }
 
-const UserRegistration = () => {
-    const [user, setUser] = useState<UserRegistrationState>({
+const UserForm = () => {
+    const [user, setUser] = useState<UserFormState>({
         firstName: "",
         lastName: "",
         email: "",
@@ -35,9 +35,21 @@ const UserRegistration = () => {
         partnerSearch: ""
     });
 
-    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success;
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const { userId } = useParams();
+    const navigate = useNavigate();
 
-    const handleChange = (prop: keyof UserRegistrationState) => (event: ChangeEvent<HTMLInputElement>) => {
+    // Load user data if userId is present
+    useEffect(() => {
+        if (!userId) return;
+
+        fetch(`http://localhost:3000/users/${userId}`)
+            .then(response => response.json())
+            .then(data => setUser(data))
+            .catch(error => console.error('Error fetching user data:', error));
+    }, [userId]);
+
+    const handleChange = (prop: keyof UserFormState) => (event: ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [prop]: event.target.value });
     };
 
@@ -51,61 +63,8 @@ const UserRegistration = () => {
         });
     };
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (user.errors.email) {
-            console.error("Form submission blocked due to validation errors.");
-            return;
-        }
-        try {
-            const response = await fetch('http://localhost:3000/users/register', {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    dateOfBirth: user.dateOfBirth,
-                    address: user.address,
-                    city: user.city,
-                    country: user.country,
-                    password: user.password,
-                    connectedUsers: user.connectedUsers,
-                    partnerSearch: user.partnerSearch
-                })
-            });
-
-            if (!response.ok) {
-                if (response.status === 400) {
-                    const errorMsg = await response.text();
-                    setUser(prevState => ({
-                        ...prevState,
-                        errors: { ...prevState.errors, emailExists: 'Email already exists!' }
-                    }));
-                } else {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-            } else {
-                setIsRegistered(true);
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
-    };
-
-    if (isRegistered) {
-        return <div className="registrationSuccess">
-            <h2>Registration Succeeded!</h2>
-            <p>Welcome, {user.firstName}!</p>
-            <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
-        </div>;
-    }
-
-
     const handleConnectedUsersChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const emails = event.target.value.split(',').map(email => email.trim()); // Split by comma and trim whitespace
+        const emails = event.target.value.split(',').map(email => email.trim());
         setUser({
             ...user,
             connectedUsers: emails
@@ -116,18 +75,65 @@ const UserRegistration = () => {
         setUser({ ...user, partnerSearch: event.target.value });
     };
 
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!userId && user.errors.email) {
+            console.error("Form submission blocked due to validation errors.");
+            return;
+        }
+
+        const endpoint = userId ? `http://localhost:3000/users/${userId}/edit` : 'http://localhost:3000/users/register';
+        const method = userId ? "PUT" : "POST";
+
+        try {
+            const response = await fetch(endpoint, {
+                method: method,
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify(user)
+            });
+
+            const resultText = await response.text();
+            if (!response.ok) {
+                // Handling specific error based on the text response
+                if (resultText.toLowerCase().includes('user already exists')) {
+                    setUser(prevState => ({
+                        ...prevState,
+                        errors: { ...prevState.errors, emailExists: 'Email already exists!' }
+                    }));
+                }
+                throw new Error(resultText); // Use the text from the response in the error
+            }
+            console.log('Success:', resultText);
+            setIsSubmitted(true);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    };
+
+    if (isSubmitted) {
+        const message = userId ? `Updated user, ${user.email}!` : `Welcome, ${user.firstName}!`;
+        return <div className="userFormSuccess">
+            <h2>{userId ? 'Updated User Succeeded!' : 'Registration Succeeded!'}</h2>
+            <p>{message}</p>
+            <Button variant="contained" onClick={() => navigate('/')}>Go Back</Button>
+        </div>;
+    }
+
     return (
         <>
-            <h3>User Registration</h3>
-            <form className="registrationForm" onSubmit={handleSubmit}>
+            <h3>{userId ? 'Edit User Data' : 'User Registration'}</h3>
+            <form className="userForm" onSubmit={handleSubmit}>
+                {/* Common form fields for registration and edit */}
                 <TextField id="firstName" label="First Name" variant="outlined" color="secondary"
                     value={user.firstName} onChange={handleChange('firstName')} required />
                 <TextField id="lastName" label="Last Name" variant="outlined" color="secondary"
                     value={user.lastName} onChange={handleChange('lastName')} required />
-                <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
+                { !userId && <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
                     value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
                     helperText={user.errors.email || user.errors.emailExists}
-                    onChange={handleEmailChange} required />
+                    onChange={handleEmailChange} required />}
                 <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
                     value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
@@ -136,25 +142,26 @@ const UserRegistration = () => {
                     value={user.city} onChange={handleChange('city')} />
                 <TextField id="country" label="Country" variant="outlined" color="secondary"
                     value={user.country} onChange={handleChange('country')} />
-                <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
-                    value={user.password} onChange={handleChange('password')} required />
+                { !userId && <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
+                    value={user.password} onChange={handleChange('password')} required />}
                 <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
                     value={user.connectedUsers} onChange={handleConnectedUsersChange} />
-                <InputLabel id="partnerSearch">Partner Search (Show your email to potentials travel partners)</InputLabel>
+                <InputLabel id="partnerSearch">Partner Search</InputLabel>
                 <Select
                     id="partnerSearch"
                     label="Partner Search"
                     variant="outlined"
                     color="secondary"
                     value={user.partnerSearch}
-                    onChange={handlePartnerSearchChange} // Added onChange handler
+                    onChange={handlePartnerSearchChange}
                 >
                     <MenuItem value={"yes"}>Yes</MenuItem>
                     <MenuItem value={"no"}>No</MenuItem>
                 </Select>
-                <Button type="submit" variant="contained">Register</Button>
+                <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
             </form>
         </>
     );
 };
-export default UserRegistration;
+
+export default UserForm;

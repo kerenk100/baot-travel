@@ -3,7 +3,6 @@ import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
-import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 
@@ -15,7 +14,7 @@ export enum Routes {
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
   PARTNER_SEARCH = "/users/partners-search",
-  USERS_EDIT = "/users/register/:userId"
+  USERS_EDIT = "/users/:userId"
 }
 
 export const publicRoutes = [
@@ -49,7 +48,7 @@ export const publicRoutes = [
   },
   {
     path: Routes.USERS_EDIT,
-    element: <EditUser />, 
+    element: <UserRegistration />, 
   },
 ];
 export const privateRoutes = [
