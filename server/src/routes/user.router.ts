@@ -18,6 +18,15 @@ userRouter.get("/", async (req: Request, res: Response) => {
   }
 });
 
+userRouter.get("/partners-search", async (req: Request, res: Response) => {
+  try {
+    const partnerUsers = (await collections.users.find<User>({ partnerSearch: "yes" }, { projection: { email: 1, firstName: 1, lastName: 1, _id: 0 } }).toArray());
+    res.status(200).send(partnerUsers);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
 userRouter.post("/register", async (req: Request, res: Response) => {
   try {
     const existUser = await collections.users.findOne({
@@ -37,10 +46,10 @@ userRouter.post("/register", async (req: Request, res: Response) => {
       req.body.address,
       req.body.city,
       req.body.state,
-      req.body.country
+      req.body.country,
+      req.body.connectedUsers,
+      req.body.partnerSearch,
     );
-
-    newUser.connectedUsers = req.body.connectUsers;
 
 
     newUser.salt = crypto.randomBytes(16).toString("hex");

@@ -10,8 +10,9 @@ export class User {
     public city: string,
     public state: string,
     public country: string,
+    public connectedUsers: string[] = [], // new field to store connected users
+    public partnerSearch: string,
     public hash?: string,
     public salt?: string,
-    public connectedUsers: string[] = [] // new field to store connected users
   ) {}
 }
