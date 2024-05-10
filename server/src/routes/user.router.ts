@@ -31,7 +31,6 @@ userRouter.post("/login", async (req: Request, res: Response) => {
 
   if (user && (verifyPassword(password, user.hash, user.salt))) {
     generateToken(res, user._id.toString());
-    // res.send('Login successful');
     res.status(201).json({
       id: user._id,
       name: user.name,

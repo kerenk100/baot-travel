@@ -17,7 +17,6 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const {isLoggedIn, logout, user} = useAppContext();
-  console.log('user', user);
 
   const USER_MENU = [
     {
