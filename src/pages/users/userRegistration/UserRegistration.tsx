@@ -1,5 +1,5 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 
@@ -17,6 +17,7 @@ interface UserRegistrationState {
         emailExists?: string;
     };
     connectedUsers: string[];
+    partnerSearch: string;
 }
 
 const UserRegistration = () => {
@@ -30,11 +31,11 @@ const UserRegistration = () => {
         country: "",
         password: "",
         errors: {},
-        connectedUsers: []
+        connectedUsers: [],
+        partnerSearch: ""
     });
 
-    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success
-
+    const [isRegistered, setIsRegistered] = useState(false); // State to track registration success;
 
     const handleChange = (prop: keyof UserRegistrationState) => (event: ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [prop]: event.target.value });
@@ -71,7 +72,8 @@ const UserRegistration = () => {
                     city: user.city,
                     country: user.country,
                     password: user.password,
-                    connectUsers: user.connectedUsers
+                    connectedUsers: user.connectedUsers,
+                    partnerSearch: user.partnerSearch
                 })
             });
 
@@ -110,6 +112,10 @@ const UserRegistration = () => {
         });
     };
 
+    const handlePartnerSearchChange = (event: SelectChangeEvent<string>) => {
+        setUser({ ...user, partnerSearch: event.target.value });
+    };
+
     return (
         <>
             <h3>User Registration</h3>
@@ -134,10 +140,21 @@ const UserRegistration = () => {
                     value={user.password} onChange={handleChange('password')} required />
                 <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
                     value={user.connectedUsers} onChange={handleConnectedUsersChange} />
+                <InputLabel id="partnerSearch">Partner Search (Show your email to potentials travel partners)</InputLabel>
+                <Select
+                    id="partnerSearch"
+                    label="Partner Search"
+                    variant="outlined"
+                    color="secondary"
+                    value={user.partnerSearch}
+                    onChange={handlePartnerSearchChange} // Added onChange handler
+                >
+                    <MenuItem value={"yes"}>Yes</MenuItem>
+                    <MenuItem value={"no"}>No</MenuItem>
+                </Select>
                 <Button type="submit" variant="contained">Register</Button>
             </form>
         </>
     );
 };
-
 export default UserRegistration;
