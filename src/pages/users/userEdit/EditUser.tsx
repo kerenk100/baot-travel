@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import './EditUser.css'; // You can style this component as needed
 import { useParams } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ interface User {
         emailExists?: string;
     };
     connectedUsers: string[];
+    partnerSearch: string;
 }
 
 
@@ -31,7 +32,8 @@ const EditUser = () => {
         country: "",
         password: "",
         errors: {},
-        connectedUsers: []
+        connectedUsers: [],
+        partnerSearch: ""
     });
 
     const [isUpdatedUser, setIsUpdatedUser] = useState<boolean | undefined>(undefined); // State to track registration success
@@ -76,6 +78,10 @@ const EditUser = () => {
         }
     };
 
+    const handlePartnerSearchChange = (event: SelectChangeEvent<string>) => {
+        setUser({ ...user, partnerSearch: event.target.value });
+    };
+
     if (isUpdatedUser == undefined) {
         return (
             <>
@@ -99,6 +105,18 @@ const EditUser = () => {
                         value={user.country} onChange={handleChange('country')}/>
                     <TextField id="connectedUsers" label="Connected Users" variant="outlined" color="secondary"
                         value={user.connectedUsers} onChange={handleChange('connectedUsers')}/>
+                    <InputLabel id="partnerSearch">Partner Search</InputLabel>
+                    <Select
+                        id="partnerSearch"
+                        label="Partner Search"
+                        variant="outlined"
+                        color="secondary"
+                        value={user.partnerSearch}
+                        onChange={handlePartnerSearchChange} // Added onChange handler
+                    >
+                        <MenuItem value={"yes"}>Yes</MenuItem>
+                        <MenuItem value={"no"}>No</MenuItem>
+                    </Select>
                     <Button type="submit" variant="contained">Update</Button>
                 </form>
             </>
