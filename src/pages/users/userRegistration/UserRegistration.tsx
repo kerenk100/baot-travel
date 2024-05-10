@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
+import { Link } from 'react-router-dom';
 
 interface UserRegistrationState {
     firstName: string;
@@ -97,7 +98,7 @@ const UserRegistration = () => {
         return <div className="registrationSuccess">
             <h2>Registration Succeeded!</h2>
             <p>Welcome, {user.firstName}!</p>
-            <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
+            <Link to="/login">LOGIN</Link>
         </div>;
     }
 

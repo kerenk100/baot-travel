@@ -11,10 +11,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../../App.context";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {login} = useAppContext();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -24,11 +28,15 @@ const Login = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email, password })
-      });
+      })
 
-      console.log('response', response);
+      const data = await response.json();
+
+      login(JSON.stringify(data));
+      return true;
     } catch (error) {
       console.error('Error:', error);
+      return false;
     }
   };
 
@@ -79,7 +87,13 @@ const Login = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleLogin}
+              onClick={async () => {
+                const success = await handleLogin();
+                if(success) {    
+                  console.log('hereeee');           
+                  navigate("/");
+                }
+              }}
             >
               Login
             </Button>

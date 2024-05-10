@@ -6,18 +6,18 @@ import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Routes } from "../../../routes/routes";
 import { Logo } from "./components/Logo/Logo";
 import styles from './Header.module.scss'
+import { useAppContext } from "../../../App.context";
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const handleLogout = () => {
-    console.log("log out");
-  };
+  const {isLoggedIn, logout, user} = useAppContext();
+  console.log('user', user);
 
   const USER_MENU = [
     {
@@ -26,7 +26,11 @@ export const Header: React.FC = () => {
     },
     {
       name: "Log out",
-      onClick: handleLogout,
+      onClick: () => {
+        logout();
+        navigate("/");
+        setIsMenuOpen(false);
+      },
     },
   ];
 
@@ -79,11 +83,13 @@ export const Header: React.FC = () => {
         >
           <Logo onClick={()=>navigate(Routes.HOME)}/>
         </div>
+        {isLoggedIn ? 
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
           </IconButton>
         </Tooltip>
+       : <Link to="/login">LOGIN</Link> }
         {DropdownMenu}
       </Toolbar>
     </AppBar>
