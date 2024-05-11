@@ -5,10 +5,12 @@ import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
+import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
 
 export enum Routes {
   HOME = "/",
   TRIPS = "/trips",
+  TRIP = "/trips/:tripId",
   TRIPS_ADD_TRIP = "/trips/add-trips",
   VENDORS = "/vendors",
   SETTINGS = "/settings",
@@ -26,6 +28,11 @@ export const publicRoutes = [
     path: Routes.TRIPS,
     name: "trips",
     element: <Trips />,
+  },
+  {
+    path: Routes.TRIP,
+    name:"trip",
+    element:<ViewTrip />
   },
   {
     path: Routes.VENDORS,
