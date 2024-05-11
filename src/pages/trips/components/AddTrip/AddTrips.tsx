@@ -17,8 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CloudinaryUploadWidget from '../../../../components/utilities/uploadWidget/CloudinaryUploadWidget';
-import country from "country-state-city/lib/country";
+
 import { Trip } from "../../types";
 
 export const TRIP_TAGS_OPTIONS = [
@@ -85,13 +84,19 @@ export const AddTrips = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <header className="App-header">
-        <CloudinaryUploadWidget setPublicId={setPublicId}/>
+        <h2>Add a new trip:</h2>
         <form className={styles.form}>
           <FormControl>
-            <FormLabel>Enter trip's name:</FormLabel>
-            <TextField value={trip.title} name="title" onChange={handleChange} />
+            <TextField
+                label="Trip's Name"
+                name="title"
+                multiline
+                onChange={handleChange}
+                value={trip.title}
+                required
+            />
           </FormControl>
           <FormControl>
             <InputLabel>Country</InputLabel>
@@ -102,18 +107,20 @@ export const AddTrips = () => {
               defaultValue={""}
               onChange={handleChange}
               value={trip.country}
+              required
             >
               {countriesMenuItems}
             </Select>
           </FormControl>
           <TextField
-            label={"Description"}
+            label="Description"
             name="description"
             placeholder="Enter a short description of your trip..."
             multiline
             onChange={handleChange}
             maxRows={6}
             value={trip.description}
+            required
           /> 
           <MultipleSelectTags
             name={"tags"}
@@ -137,13 +144,15 @@ export const AddTrips = () => {
             onChange={handleChange}
             maxRows={6}
             value={trip.budget}
+            required
           />           
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your start date: " value={startDate} onChange={(newValue) => setStartDate(newValue)} />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Please enter your start date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
+            <DatePicker label="Please enter your end date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           </LocalizationProvider>
+          {/*<CloudinaryUploadWidget setPublicId={setPublicId}/>*/}
           <Button type="submit" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>

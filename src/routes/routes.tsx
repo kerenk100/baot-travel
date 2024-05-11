@@ -6,6 +6,7 @@ import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
 import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
+import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 
 export enum Routes {
   HOME = "/",
@@ -15,6 +16,7 @@ export enum Routes {
   VENDORS = "/vendors",
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
+  PARTNER_SEARCH = "/users/partners-search",
   USERS_EDIT = "/users/register/:userId"
 }
 
@@ -47,6 +49,10 @@ export const publicRoutes = [
   {
     path: Routes.USERS_REGISTER,
     element: <UserRegistration />
+  },
+  {
+    path: Routes.PARTNER_SEARCH,
+    element: <PartnerSearch />
   },
   {
     path: Routes.USERS_EDIT,
