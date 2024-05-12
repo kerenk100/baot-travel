@@ -9,14 +9,15 @@ import {
   InputLabel,
   Checkbox,
 } from "@mui/material";
-import { Country } from "country-state-city";
-import { useMemo, useState } from "react";
+
+import { useState } from "react";
 import styles from "./AddTrips.module.scss";
 import { MultipleSelectTags } from "../../../../components/Tags/Tags";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocationFormItem } from "../../../../components/utilities/formUtils/LocationFromItem/LocationFormItem";
 
 import { Trip } from "../../types";
 import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
@@ -49,14 +50,6 @@ export const AddTrips = () => {
   const [trip, setTrip] = useState(initialState);  
   const [publicId, setPublicId] = useState("");
 
-  const countriesMenuItems = useMemo(() => {
-    return Country.getAllCountries().map((icountry) => (
-      <MenuItem value={icountry.isoCode} key={icountry.isoCode}>
-        <span>{icountry.flag}</span>
-        <span>{icountry.name}</span>
-      </MenuItem>
-    ));
-  }, []);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -104,20 +97,7 @@ export const AddTrips = () => {
                 required
             />
           </FormControl>
-          <FormControl>
-            <InputLabel>Country</InputLabel>
-            <Select
-              label="country"
-              placeholder="Select country"
-              name="country"
-              defaultValue={""}
-              onChange={handleChange}
-              value={trip.country}
-              required
-            >
-              {countriesMenuItems}
-            </Select>
-          </FormControl>
+          <LocationFormItem type="country" value={trip.country} handleChange={handleChange}/>
           <TextField
             label="Description"
             name="description"
