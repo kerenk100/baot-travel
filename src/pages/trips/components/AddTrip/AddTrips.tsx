@@ -17,18 +17,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import CloudinaryUploadWidget from '../../../../components/utilities/uploadWidget/CloudinaryUploadWidget';
 
-export interface Trip {
-  title: string;
-  country: string;
-  description: string;
-  tags: string[];
-  isPublic: boolean;
-  budget: number;
-  startDate: string;
-  endDate: string;
-}
+import { Trip } from "../../types";
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
