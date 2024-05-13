@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import crypto from "crypto";
 
 export class User {
   constructor(

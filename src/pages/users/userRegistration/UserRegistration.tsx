@@ -1,7 +1,8 @@
-import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { TextField, Button, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
-import { validateEmail } from "../../../utils/validations"; // Make sure this path is correct
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
+import './UserRegistration.css';
+import { validateEmail } from "../../../utils/validations";
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 interface UserFormState {
     firstName: string;
@@ -89,7 +90,7 @@ const UserForm = () => {
             const response = await fetch(endpoint, {
                 method: method,
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(user)
             });
@@ -118,6 +119,7 @@ const UserForm = () => {
             <h2>{userId ? 'Updated User Succeeded!' : 'Registration Succeeded!'}</h2>
             <p>{message}</p>
             <Button variant="contained" onClick={() => navigate('/')}>Go Back</Button>
+            {!userId && <Link to="/login">LOGIN</Link>}
         </div>;
     }
 
