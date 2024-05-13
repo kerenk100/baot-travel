@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
+import { Link } from 'react-router-dom';
 
 interface UserRegistrationState {
     firstName: string;
@@ -58,10 +59,10 @@ const UserRegistration = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/users/register', {
+            const response = await fetch('http://localhost:8080/user/register', {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     firstName: user.firstName,
@@ -99,7 +100,7 @@ const UserRegistration = () => {
         return <div className="registrationSuccess">
             <h2>Registration Succeeded!</h2>
             <p>Welcome, {user.firstName}!</p>
-            <Button variant="contained" onClick={() => setIsRegistered(false)}>Go Back</Button>
+            <Link to="/login">LOGIN</Link>
         </div>;
     }
 
