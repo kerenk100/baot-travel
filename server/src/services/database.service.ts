@@ -24,17 +24,17 @@ export async function connectToDatabase() {
   const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
   const vendorsCollection: mongoDB.Collection = db.collection(
-    process.env.VENDORS_COLLECTION_NAME!);
+    process.env.VENDORS_COLLECTION_NAME || 'vendors');
   const dealsCollection: mongoDB.Collection = db.collection(
-    process.env.DEALS_COLLECTION_NAME!);
+    process.env.DEALS_COLLECTION_NAME || 'deals');
   const tripsCollection: mongoDB.Collection = db.collection(
-    process.env.TRIPS_COLLECTION_NAME
+    process.env.TRIPS_COLLECTION_NAME || 'trips'
   ); 
   const usersCollection: mongoDB.Collection = db.collection(
-    process.env.USERS_COLLECTION_NAME
+    process.env.USERS_COLLECTION_NAME || 'users'
   );
   const tagsCollection: mongoDB.Collection = db.collection(
-    process.env.TAGS_COLLECTION_NAME
+    process.env.TAGS_COLLECTION_NAME || 'tags'
   );
 
 

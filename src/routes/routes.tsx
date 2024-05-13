@@ -6,11 +6,13 @@ import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
 import Login from "../pages/users/login/login";
+import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 
 export enum Routes {
   HOME = "/",
   TRIPS = "/trips",
+  TRIP = "/trips/:tripId",
   TRIPS_ADD_TRIP = "/trips/add-trips",
   VENDORS = "/vendors",
   SETTINGS = "/settings",
@@ -30,6 +32,11 @@ export const publicRoutes = [
     path: Routes.TRIPS,
     name: "trips",
     element: <Trips />,
+  },
+  {
+    path: Routes.TRIP,
+    name:"trip",
+    element:<ViewTrip />
   },
   {
     path: Routes.VENDORS,
