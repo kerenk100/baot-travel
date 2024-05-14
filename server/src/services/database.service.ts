@@ -14,7 +14,6 @@ export const collections: {
 // Initialize Connection
 export async function connectToDatabase() {
   dotenv.config();
-
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
     process.env.DB_CONN_STRING
   );
