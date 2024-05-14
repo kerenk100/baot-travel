@@ -13,8 +13,8 @@ export type Vendor = {
     location: string;
   };
   
-  type Deal = {
-    _id: object;
+export type Deal = {
+    _id: string;
     vendorId: string;
     description: string;
     link: string;
