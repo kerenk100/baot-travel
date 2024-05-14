@@ -2,6 +2,7 @@ import React, { ChangeEventHandler, useState } from "react";
 import { Vendor } from "./Types";
 import "./VendorForm.css";
 import TagInput from "../../components/Tags/TagInput";
+import CloudinaryUploadWidget from "../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 import {
   Button,
   FormControl,
@@ -16,6 +17,7 @@ import {
   TextField,
 } from "@mui/material";
 
+
 interface VendorFormProps {
   initialVendor: Vendor;
   onSave: (vendor: Vendor) => void;
@@ -23,6 +25,7 @@ interface VendorFormProps {
 
 const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
   const [vendor, setVendor] = useState<Vendor>(initialVendor);
+  const [publicId, setPublicId] = useState("");
   /*const [vendor, setVendor] = useState<Vendor>({
     id: '',
     name: '',
@@ -230,16 +233,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
           />
         </div>
 
-        <div className="uploadButtonContainer">
-          <Button variant="outlined" component="label">
-            Upload cover photo
-            <input
-              type="file"
-              onChange={handleCoverPhotoChange}
-              style={{ display: "none" }}
-            />
-          </Button>
-        </div>
+        <CloudinaryUploadWidget setPublicId={setPublicId}/>
         <Button variant="outlined" component="label">
           Upload photos
           <input type="file" multiple onChange={handlePhotosChange} />
