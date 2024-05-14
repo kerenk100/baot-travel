@@ -25,27 +25,17 @@ interface VendorFormProps {
 
 const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
   const [vendor, setVendor] = useState<Vendor>(initialVendor);
-  const [publicId, setPublicId] = useState("");
-  /*const [vendor, setVendor] = useState<Vendor>({
-    id: '',
-    name: '',
-    vendorType: '',
-    site: '',
-    phoneNumber: '',
-    email: '',
-    coverPhoto: null,
-    deal: {
-      id: '',
-      vendorId: '',
-      description: '',
-      link: '',
-      end_date: '',
-      start_date:''
-    },
-    photos: [],
-    tags: [],
-    rate: 0
-  });*/
+  const [coverPhotoPublicId, setCoverPhotoPublicId] = useState<string>();
+  const [additionalPhotosPublicIds, setAdditionalPhotosPublicIds] = useState<string>();
+
+  
+
+  if (coverPhotoPublicId) {
+      vendor.coverPhoto = coverPhotoPublicId;
+  }
+   if (additionalPhotosPublicIds) {
+      vendor.photos = additionalPhotosPublicIds;
+  }
 
   const VendorTypes = {
     HOTELS: "Hotel",
@@ -84,25 +74,6 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
     //TODO- add the tags state- to the vendor
     onSave(vendor);
     console.log("Form submitted:", vendor);
-  };
-
-  const handleCoverPhotoChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      setVendor((prevVendor) => ({ ...prevVendor, coverPhoto: file }));
-    }
-  };
-
-  const handlePhotosChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
-      setVendor((prevVendor) => ({
-        ...prevVendor,
-        photos: [...prevVendor.photos, ...files],
-      }));
-    }
   };
 
   const handleTagInputKeyDown = (
@@ -232,12 +203,8 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
             onRemoveTag={handleRemoveTag}
           />
         </div>
-
-        <CloudinaryUploadWidget setPublicId={setPublicId}/>
-        <Button variant="outlined" component="label">
-          Upload photos
-          <input type="file" multiple onChange={handlePhotosChange} />
-        </Button>
+        <CloudinaryUploadWidget setPublicId={setCoverPhotoPublicId} buttonLabel="Upload cover photo" />
+        <CloudinaryUploadWidget setPublicId={setAdditionalPhotosPublicIds} buttonLabel="Upload photos" />
 
         <Button type="submit" variant="contained">
           Submit

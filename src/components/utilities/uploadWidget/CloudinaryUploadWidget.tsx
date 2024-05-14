@@ -15,9 +15,10 @@ const uwConfig = {
 
 interface CLoudinaryUploadWidgetProps {
   setPublicId: (publicId: string) => void;
+  buttonLabel?: string; // Optional button label prop
 }
 
-function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
+function CloudinaryUploadWidget({ setPublicId,  buttonLabel = 'Upload' }: CLoudinaryUploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
   const [publicId, setPublicIdInner] = useState('');
 
@@ -48,7 +49,8 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
     }
   }, [loaded]);
 
-  const initializeCloudinaryWidget = () => {
+  const initializeCloudinaryWidget = (e: Event) => {
+    e.preventDefault();
     if (loaded) {
       var widget = (window as any).cloudinary.createUploadWidget(
         uwConfig,
@@ -79,7 +81,7 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
           className="cloudinary-button"
           onClick={initializeCloudinaryWidget}
         >
-          Upload
+           {buttonLabel} {/* Use the prop value as the button label */}
         </Button>
         <div style={{ display: !publicId ? 'none' : 'flex' }} className="thumbnail">
           <AdvancedImage
