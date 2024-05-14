@@ -19,6 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { Trip } from "../../types";
+import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -35,6 +36,7 @@ export const AddTrips = () => {
     title: "",
     country: "",
     description: "",
+    image: "",
     tags: [],
     isPublic: false,
     budget: 0,
@@ -58,12 +60,16 @@ export const AddTrips = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    let data = trip;
+    if (publicId) {
+      data.image = publicId;
+    }
     await fetch('http://localhost:8080/trips', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(trip)
+      body: JSON.stringify(data)
     });
 
     setTrip(initialState);
@@ -152,7 +158,7 @@ export const AddTrips = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your end date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           </LocalizationProvider>
-          {/*<CloudinaryUploadWidget setPublicId={setPublicId}/>*/}
+          <CloudinaryUploadWidget setPublicId={setPublicId}/>
           <Button type="submit" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
