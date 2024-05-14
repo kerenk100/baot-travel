@@ -117,7 +117,7 @@ userRouter.get("/:userId", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.post("/:userId/edit", async (req: Request, res: Response) => {
+userRouter.put("/:userId/edit", async (req: Request, res: Response) => {
   try {
     // Update user data in the database
     delete req.body._id;
