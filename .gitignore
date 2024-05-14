@@ -10,3 +10,4 @@ server/dist/routes/deals.router.js
 .DS_STORE
 .env
 dist
+/server/node_modules
