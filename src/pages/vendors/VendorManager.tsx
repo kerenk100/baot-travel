@@ -3,11 +3,12 @@ import VendorForm from './VendorForm';
 import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
 import Snackbar from '@mui/material/Snackbar';
-import { center } from '@cloudinary/url-gen/qualifiers/textAlignment';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [snackBarOpen,setSnackBarOpen] = useState(false)
+  const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
   useEffect(() => {
     fetch('http://localhost:3000/vendors/')
         .then(response => {
@@ -133,9 +134,6 @@ function VendorManager() {
 
     setCurrVendor(newVendor);
   }
-
-  const [snackBarOpen,setSnackBarOpen] = useState(false)
-  const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
 
   return (
     
