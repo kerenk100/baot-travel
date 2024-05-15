@@ -46,7 +46,7 @@ const UserForm = () => {
     useEffect(() => {
         if (!userId) return;
 
-        fetch(`http://localhost:3000/users/${userId}`)
+        fetch(`http://localhost:8080/users/${userId}`)
             .then(response => response.json())
             .then(data => setUser(data))
             .catch(error => console.error('Error fetching user data:', error));
@@ -85,7 +85,7 @@ const UserForm = () => {
             return;
         }
 
-        const endpoint = userId ? `http://localhost:3000/users/${userId}/edit` : 'http://localhost:3000/users/register';
+        const endpoint = userId ? `http://localhost:8080/users/${userId}/edit` : 'http://localhost:8080/users/register';
         const method = userId ? "PUT" : "POST";
 
         try {
