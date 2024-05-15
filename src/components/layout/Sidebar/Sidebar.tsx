@@ -3,6 +3,7 @@ import SidebarListItem from './SidebarListItem.tsx';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
 import { ReactElement } from 'react';
 
@@ -24,6 +25,10 @@ const SidebarMenuItems: SidebarMenuItem[] = [{
     icon: <AssignmentIndOutlinedIcon />,
     to: '/vendors',
     title: 'Vendors'
+}, {
+    icon: <Diversity3Icon />,
+    to: '/users/partners-search',
+    title: 'Partner search'
 }, {
     icon: <SettingsOutlinedIcon />,
     to: '/settings',

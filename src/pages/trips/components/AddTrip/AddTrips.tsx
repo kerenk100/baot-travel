@@ -17,18 +17,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CloudinaryUploadWidget from '../../../../components/utilities/UploadWidget/CloudinaryUploadWidget';
 
-export interface Trip {
-  title: string;
-  country: string;
-  description: string;
-  tags: string[];
-  isPublic: boolean;
-  budget: number;
-  startDate: string;
-  endDate: string;
-}
+import { Trip } from "../../types";
+import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -45,6 +36,7 @@ export const AddTrips = () => {
     title: "",
     country: "",
     description: "",
+    image: "",
     tags: [],
     isPublic: false,
     budget: 0,
@@ -68,12 +60,16 @@ export const AddTrips = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    let data = trip;
+    if (publicId) {
+      data.image = publicId;
+    }
     await fetch('http://localhost:8080/trips', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(trip)
+      body: JSON.stringify(data)
     });
 
     setTrip(initialState);
@@ -94,13 +90,19 @@ export const AddTrips = () => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <header className="App-header">
-        <CloudinaryUploadWidget setPublicId={setPublicId}/>
+        <h2>Add a new trip:</h2>
         <form className={styles.form}>
           <FormControl>
-            <FormLabel>Enter trip's name:</FormLabel>
-            <TextField value={trip.title} name="title" onChange={handleChange} />
+            <TextField
+                label="Trip's Name"
+                name="title"
+                multiline
+                onChange={handleChange}
+                value={trip.title}
+                required
+            />
           </FormControl>
           <FormControl>
             <InputLabel>Country</InputLabel>
@@ -111,18 +113,20 @@ export const AddTrips = () => {
               defaultValue={""}
               onChange={handleChange}
               value={trip.country}
+              required
             >
               {countriesMenuItems}
             </Select>
           </FormControl>
           <TextField
-            label={"Description"}
+            label="Description"
             name="description"
             placeholder="Enter a short description of your trip..."
             multiline
             onChange={handleChange}
             maxRows={6}
             value={trip.description}
+            required
           /> 
           <MultipleSelectTags
             name={"tags"}
@@ -146,13 +150,15 @@ export const AddTrips = () => {
             onChange={handleChange}
             maxRows={6}
             value={trip.budget}
+            required
           />           
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Please enter your start date: " value={startDate} onChange={(newValue) => setStartDate(newValue)} />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Please enter your start date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
+            <DatePicker label="Please enter your end date: " value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           </LocalizationProvider>
+          <CloudinaryUploadWidget setPublicId={setPublicId}/>
           <Button type="submit" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
