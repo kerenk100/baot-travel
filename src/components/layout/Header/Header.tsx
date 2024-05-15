@@ -18,6 +18,9 @@ export const Header: React.FC = () => {
   const handleLogout = () => {
     console.log("log out");
   };
+  let userId:string;
+  //const {user} = useAppContext(); // wait till 'load'?
+  // const userId = user.userId;
 
   const USER_MENU = [
     {
@@ -28,6 +31,14 @@ export const Header: React.FC = () => {
       name: "Log out",
       onClick: handleLogout,
     },
+    {
+      name: "Edit user",
+      onClick: () => navigate(`/users/register/${userId || '66389a4d500395bf2c8d0563'}` , {
+        state: {
+          userId: '66389a4d500395bf2c8d0563',
+        }
+      }),
+    }
   ];
 
   const handleOpenUserMenu = () => {

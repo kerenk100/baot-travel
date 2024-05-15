@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Routes } from "../../routes/routes";
-import { Card } from "@mui/material";
+import { Card, Container } from "@mui/material";
 import styles from "./index.module.scss";
 
 export const Index = () => {

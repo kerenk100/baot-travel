@@ -5,11 +5,13 @@ import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
+import TripMap from "../pages/trips/components/TripMap/TripMap";
 
 export enum Routes {
   HOME = "/",
   TRIPS = "/trips",
   TRIPS_ADD_TRIP = "/trips/add-trips",
+  TRIPS_TRIP_MAP = "/trips/:tripId/tripMap",
   VENDORS = "/vendors",
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
@@ -45,6 +47,10 @@ export const publicRoutes = [
     path: Routes.USERS_EDIT,
     element: <EditUser />, 
   },
+  {
+    path: Routes.TRIPS_TRIP_MAP,
+    element: <TripMap location={"Israel"}  />, 
+  }
 ];
 export const privateRoutes = [
   {
