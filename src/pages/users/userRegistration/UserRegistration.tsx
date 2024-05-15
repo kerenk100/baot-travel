@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
+import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent, Snackbar } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -39,6 +39,8 @@ const UserForm = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { userId } = useParams();
     const navigate = useNavigate();
+    const [snackBarOpen,setSnackBarOpen] = useState(false)
+    const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
 
     // Load user data if userId is present
     useEffect(() => {
@@ -103,13 +105,19 @@ const UserForm = () => {
                         ...prevState,
                         errors: { ...prevState.errors, emailExists: 'Email already exists!' }
                     }));
+                    setSnackBarOpen(true);
+                    setSnackBarText("Ops! user is already exists!");
                 }
                 throw new Error(resultText); // Use the text from the response in the error
             }
             console.log('Success:', resultText);
             setIsSubmitted(true);
+            setSnackBarOpen(true);
+            setSnackBarText("The user was added succesfully!");
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
+            setSnackBarOpen(true);
+            setSnackBarText("Error! There was a problem! Please try again");
         }
     };
 
@@ -161,6 +169,14 @@ const UserForm = () => {
                     <MenuItem value={"no"}>No</MenuItem>
                 </Select>
                 <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
+
+                <Snackbar
+                    open={snackBarOpen}
+                    autoHideDuration={5000}
+                    onClose={()=>{setSnackBarOpen(false)}}
+                    message={snackBarText}
+                />
+                
             </form>
         </>
     );
