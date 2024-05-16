@@ -20,7 +20,7 @@ export enum Routes {
   USERS_REGISTER = "/users/register",
   LOGIN = "/login",
   PARTNER_SEARCH = "/users/partners-search",
-  USERS_EDIT = "/users/:userId"
+  USER_EDIT = "/users/userEdit"
 }
 
 export const publicRoutes = [
@@ -58,7 +58,7 @@ export const publicRoutes = [
     element: <PartnerSearch />
   },
   {
-    path: Routes.USERS_EDIT,
+    path: Routes.USER_EDIT,
     element: <UserRegistration />, 
   },
   {

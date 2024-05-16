@@ -1,8 +1,9 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../../App.context';
 
 interface UserFormState {
     firstName: string;
@@ -36,15 +37,16 @@ const UserForm = () => {
         partnerSearch: ""
     });
 
+    const env = import.meta.env;
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const { userId } = useParams();
     const navigate = useNavigate();
+    const userId = useAppContext().user?.id;
 
     // Load user data if userId is present
     useEffect(() => {
         if (!userId) return;
 
-        fetch(`http://localhost:3000/users/${userId}`)
+        fetch(`http://localhost:${env.VITE_SERVER_PORT}/users/${userId}`)
             .then(response => response.json())
             .then(data => setUser(data))
             .catch(error => console.error('Error fetching user data:', error));
@@ -83,7 +85,10 @@ const UserForm = () => {
             return;
         }
 
-        const endpoint = userId ? `http://localhost:3000/users/${userId}/edit` : 'http://localhost:3000/users/register';
+        const endpoint = 
+        userId ? 
+        `http://localhost:${env.VITE_SERVER_PORT}/users/${userId}/edit` 
+        : `http://localhost:${env.VITE_SERVER_PORT}/users/register`;
         const method = userId ? "PUT" : "POST";
 
         try {

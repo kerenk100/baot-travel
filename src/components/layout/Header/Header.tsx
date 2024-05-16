@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
     },
     {
       name: "Edit user",
-      onClick: () => navigate(`/users/register/${user?.id}` , {}),
+      onClick: () => navigate(Routes.USER_EDIT , {}),
     }
   ];
 
