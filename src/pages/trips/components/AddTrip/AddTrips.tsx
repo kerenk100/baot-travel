@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { Trip } from "../../types";
-import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
+import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",

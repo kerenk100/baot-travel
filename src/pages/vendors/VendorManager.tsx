@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import VendorForm from './VendorForm';
 import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
-import Snackbar from '@mui/material/Snackbar';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  const [snackBarOpen,setSnackBarOpen] = useState(false)
-  const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
+
   useEffect(() => {
     fetch('http://localhost:3000/vendors/')
         .then(response => {
@@ -91,18 +89,12 @@ function VendorManager() {
           setVendors(vendors.map(vendor => vendor._id === updatedVendor._id ? updatedVendor : vendor));
         }
 
-        setSnackBarOpen(true);
-        setSnackBarText("Thank you! The vendor was successfully added :)");
-
       } else {
         const error = await response.text();
         throw new Error(`Failed to save vendor: ${error}`);
       }
     } catch (error) {
       console.error('Error saving vendor:', error instanceof Error ? error.message : 'An unknown error occurred');
-
-      setSnackBarOpen(true);
-      setSnackBarText("Ops! please try again :( ");
     }
 
     setCurrVendor(null);
@@ -142,13 +134,6 @@ function VendorManager() {
       {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
 
       {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
-
-      <Snackbar
-          open={snackBarOpen}
-          autoHideDuration={5000}
-          onClose={()=>{setSnackBarOpen(false)}}
-          message={snackBarText}
-      />
     </div>
   );
 }

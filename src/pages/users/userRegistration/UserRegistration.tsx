@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
+import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent, Snackbar } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -40,13 +40,15 @@ const UserForm = () => {
     const env = import.meta.env;
     const [isSubmitted, setIsSubmitted] = useState(false);
     const navigate = useNavigate();
+    const [snackBarOpen,setSnackBarOpen] = useState(false)
+    const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
     const userId = useAppContext().user?.id;
 
     // Load user data if userId is present
     useEffect(() => {
         if (!userId) return;
 
-        fetch(`http://localhost:${env.VITE_SERVER_PORT}/users/${userId}`)
+        fetch(`http://localhost:8080/users/${userId}`)
             .then(response => response.json())
             .then(data => setUser(data))
             .catch(error => console.error('Error fetching user data:', error));
@@ -85,10 +87,7 @@ const UserForm = () => {
             return;
         }
 
-        const endpoint = 
-        userId ? 
-        `http://localhost:${env.VITE_SERVER_PORT}/users/${userId}/edit` 
-        : `http://localhost:${env.VITE_SERVER_PORT}/users/register`;
+        const endpoint = userId ? `http://localhost:8080/users/${userId}/edit` : 'http://localhost:8080/users/register';
         const method = userId ? "PUT" : "POST";
 
         try {
@@ -108,13 +107,19 @@ const UserForm = () => {
                         ...prevState,
                         errors: { ...prevState.errors, emailExists: 'Email already exists!' }
                     }));
+                    setSnackBarOpen(true);
+                    setSnackBarText("Ops! user is already exists!");
                 }
                 throw new Error(resultText); // Use the text from the response in the error
             }
             console.log('Success:', resultText);
             setIsSubmitted(true);
+            setSnackBarOpen(true);
+            setSnackBarText("The user was added succesfully!");
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
+            setSnackBarOpen(true);
+            setSnackBarText("Error! There was a problem! Please try again");
         }
     };
 
@@ -166,6 +171,14 @@ const UserForm = () => {
                     <MenuItem value={"no"}>No</MenuItem>
                 </Select>
                 <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
+
+                <Snackbar
+                    open={snackBarOpen}
+                    autoHideDuration={5000}
+                    onClose={()=>{setSnackBarOpen(false)}}
+                    message={snackBarText}
+                />
+                
             </form>
         </>
     );
