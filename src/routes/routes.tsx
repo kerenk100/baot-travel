@@ -67,7 +67,7 @@ export const publicRoutes = [
   },
   {
     path: Routes.TRIPS_TRIP_MAP,
-    element: <TripMap location={"Israel"}  />, 
+    element: <TripMap  />, 
   }
 ];
 export const privateRoutes = [
