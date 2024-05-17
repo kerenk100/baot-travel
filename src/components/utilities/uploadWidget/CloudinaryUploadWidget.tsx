@@ -48,7 +48,7 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
     }
   }, [loaded]);
 
-  const initializeCloudinaryWidget = (e: Event) => {
+  const initializeCloudinaryWidget = (e: any) => {
     e.preventDefault();
     if (loaded) {
       var widget = (window as any).cloudinary.createUploadWidget(
@@ -75,11 +75,7 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
   return (
     <CloudinaryScriptContext.Provider value={{ loaded }}>
       <div className='widget-container'>
-        <Button
-          id="upload_widget"
-          className="cloudinary-button"
-          onClick={initializeCloudinaryWidget}
-        >
+        <Button onClick={initializeCloudinaryWidget}>
           Upload
         </Button>
         <div style={{ display: !publicId ? 'none' : 'flex' }} className="thumbnail">
@@ -89,9 +85,9 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
             plugins={[responsive(), placeholder()]}
           />
 
-         <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
-          <Close />
-        </IconButton> 
+          <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
+            <Close />
+          </IconButton>
         </div>
       </div>
     </CloudinaryScriptContext.Provider>
