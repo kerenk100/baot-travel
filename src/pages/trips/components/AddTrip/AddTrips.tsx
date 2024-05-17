@@ -18,7 +18,6 @@ import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { LocationFormItem } from "../../../../components/utilities/formUtils/LocationFromItem/LocationFormItem";
-
 import { Trip } from "../../types";
 import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
 
