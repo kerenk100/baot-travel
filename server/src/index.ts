@@ -30,7 +30,7 @@ connectToDatabase()
   .then(() => {
     app.use("/vendors", vendorsRouter);
     app.use("/trips", tripsRouter);
-    app.use("/user", userRouter);
+    app.use("/users", userRouter);
     app.use("/tags", tagsRouter);
     app.use("/deals", dealsRouter);
 

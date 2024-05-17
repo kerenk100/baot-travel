@@ -49,7 +49,8 @@ function CloudinaryUploadWidget({ setPublicId,  buttonLabel = 'Upload' }: CLoudi
     }
   }, [loaded]);
 
-  const initializeCloudinaryWidget = (e: Event) => {
+
+  const initializeCloudinaryWidget = (e: any) => {
     e.preventDefault();
     if (loaded) {
       var widget = (window as any).cloudinary.createUploadWidget(
@@ -90,9 +91,9 @@ function CloudinaryUploadWidget({ setPublicId,  buttonLabel = 'Upload' }: CLoudi
             plugins={[responsive(), placeholder()]}
           />
 
-         <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
-          <Close />
-        </IconButton> 
+          <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
+            <Close />
+          </IconButton>
         </div>
       </div>
     </CloudinaryScriptContext.Provider>

@@ -7,6 +7,22 @@ function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
   
+  useEffect(() => {
+    fetch('http://localhost:3000/vendors/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setVendors(data); // Set fetched data into state
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}, []);
+
   // Function to handle deleting a vendor
   const deleteVendor = async (id: string) => {
     
@@ -46,12 +62,12 @@ function VendorManager() {
 
   const saveVendor = async (updatedVendor: Vendor) => {
     console.log('updated vendor', updatedVendor);
-  
+
     const newVendor: boolean = updatedVendor._id === "";
     // Determine the method based on whether the vendor is new or existing
     const method = newVendor ? 'POST' : 'PUT';
     const url = newVendor ? 'http://localhost:8080/vendors/' : `http://localhost:8080/vendors/${updatedVendor._id}`;
-  
+ 
     try {
       const response = await fetch(url, {
         method: method,
@@ -72,6 +88,7 @@ function VendorManager() {
           // If updating, modify the existing vendor in the list
           setVendors(vendors.map(vendor => vendor._id === updatedVendor._id ? updatedVendor : vendor));
         }
+
       } else {
         const error = await response.text();
         throw new Error(`Failed to save vendor: ${error}`);
