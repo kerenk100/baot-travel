@@ -11,3 +11,5 @@ server/dist/routes/deals.router.js
 .env
 dist
 /server/node_modules
+server/package-lock.json
+package-lock.json
