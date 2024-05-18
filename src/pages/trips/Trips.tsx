@@ -377,7 +377,7 @@ useEffect(() => {
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell key={trip.description} align="right">{trip.description}</TableCell>
+                    <TableCell align="right">{trip.description && trip.description.substring(0, 50)}</TableCell>
                     <TableCell align="right">{trip.destination}</TableCell>
                     <TableCell align="right">{trip.category}</TableCell>
                     <TableCell align="right">{trip.startDate}</TableCell>
