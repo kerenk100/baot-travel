@@ -8,7 +8,6 @@ import { Country } from "country-state-city";
 
 const env = import.meta.env;
 const API_KEY = env.VITE_GOOGLE_API_KEY;
-const SRV_PORT = env.VITE_SERVER_PORT;
 const MAP_ID = env.VITE_TRIP_MAP_ID;
 
 const TripMap = () => {
@@ -19,7 +18,7 @@ const TripMap = () => {
 
   useEffect(() => {
     window.addEventListener('load', ()=> {
-    fetch(`http://localhost:${SRV_PORT}/trips/${tripId}`, {
+    fetch(`http://localhost:8080/trips/${tripId}`, {
       method: "GET",
       headers: {
         "content-type": "application/json"
