@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import VendorForm from './VendorForm';
-import SimpleVendorList from './SimpleVendorList';
 import { Vendor } from './Types';
+import VendorList from './VendorList';
+import VendorForm from './VendorForm';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
-
+  
   useEffect(() => {
     fetch('http://localhost:3000/vendors/')
         .then(response => {
@@ -28,7 +28,7 @@ function VendorManager() {
     
     try {
       // Send DELETE request to the server
-      const response = await fetch(`http://localhost:3000/vendors/${id}`, {
+      const response = await fetch(`http://localhost:8080/vendors/${id}`, {
         method: 'DELETE'
       });
   
@@ -66,8 +66,8 @@ function VendorManager() {
     const newVendor: boolean = updatedVendor._id === "";
     // Determine the method based on whether the vendor is new or existing
     const method = newVendor ? 'POST' : 'PUT';
-    const url = newVendor ? 'http://localhost:3000/vendors/' : `http://localhost:3000/vendors/${updatedVendor._id}`;
-
+    const url = newVendor ? 'http://localhost:8080/vendors/' : `http://localhost:8080/vendors/${updatedVendor._id}`;
+ 
     try {
       const response = await fetch(url, {
         method: method,
@@ -130,10 +130,10 @@ function VendorManager() {
   return (
     
     <div className="App">
-      {!currVendor && <SimpleVendorList vendors={vendors} onEdit={enterEditVendorMode} onDelete={deleteVendor} />}
-      {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
 
       {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
+      {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
+      {!currVendor && <VendorList />}
     </div>
   );
 }

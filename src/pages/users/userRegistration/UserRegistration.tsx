@@ -2,7 +2,8 @@ import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent, Snackbar } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
 import { useAppContext } from '../../../App.context';
 
 interface UserFormState {
@@ -37,7 +38,6 @@ const UserForm = () => {
         partnerSearch: ""
     });
 
-    const env = import.meta.env;
     const [isSubmitted, setIsSubmitted] = useState(false);
     const navigate = useNavigate();
     const [snackBarOpen,setSnackBarOpen] = useState(false)
@@ -150,10 +150,8 @@ const UserForm = () => {
                     value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
                     value={user.address} onChange={handleChange('address')} />
-                <TextField id="city" label="City" variant="outlined" color="secondary"
-                    value={user.city} onChange={handleChange('city')} />
-                <TextField id="country" label="Country" variant="outlined" color="secondary"
-                    value={user.country} onChange={handleChange('country')} />
+                <LocationFormItem type='country' id='country' value={user.country} handleChange={handleChange('country')}/>
+                <LocationFormItem type='city' id='city' value={user.city} handleChange={handleChange('city')} parentLocation={user.country}/>
                 { !userId && <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
                     value={user.password} onChange={handleChange('password')} required />}
                 <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
