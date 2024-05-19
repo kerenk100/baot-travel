@@ -6,15 +6,17 @@ import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Favorite from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Routes } from "../../../routes/routes";
 import { Logo } from "./components/Logo/Logo";
-import styles from './Header.module.scss'
+import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const handleLogout = () => {
     console.log("log out");
   };
@@ -77,13 +79,25 @@ export const Header: React.FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <Logo onClick={()=>navigate(Routes.HOME)}/>
+          <Logo onClick={() => navigate(Routes.HOME)} />
         </div>
-        <Tooltip title="Open settings">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-          </IconButton>
-        </Tooltip>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Wish List">
+            <IconButton
+              onClick={() => navigate(Routes.WISHLIST)}
+              sx={{ p: 0, color: "red", marginRight: "16px" }}
+              disableRipple
+              disableFocusRipple
+            >
+              <Favorite />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple disableFocusRipple>
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            </IconButton>
+          </Tooltip>
+        </div>
         {DropdownMenu}
       </Toolbar>
     </AppBar>

@@ -5,6 +5,7 @@ import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
+import WishList from "../pages/wishlist/WishList"; // Import the WishList component
 
 export enum Routes {
   HOME = "/",
@@ -13,7 +14,8 @@ export enum Routes {
   VENDORS = "/vendors",
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
-  USERS_EDIT = "/users/register/:userId"
+  USERS_EDIT = "/users/register/:userId",
+  WISHLIST = "/wishlist", // Add the WISHLIST route
 }
 
 export const publicRoutes = [
@@ -39,18 +41,24 @@ export const publicRoutes = [
   },
   {
     path: Routes.USERS_REGISTER,
-    element: <UserRegistration />
+    element: <UserRegistration />,
   },
   {
     path: Routes.USERS_EDIT,
-    element: <EditUser />, 
+    element: <EditUser />,
+  },
+  {
+    path: Routes.WISHLIST, // Add the WishList route to publicRoutes
+    name: "wishlist",
+    element: <WishList />,
   },
 ];
+
 export const privateRoutes = [
   {
-    path:Routes.SETTINGS,
-    name:"settings",
-    element:<Settings />
+    path: Routes.SETTINGS,
+    name: "settings",
+    element: <Settings />,
   },
 ];
 
