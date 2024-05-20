@@ -1,7 +1,6 @@
-// VendorList.tsx
 import React, { useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Snackbar, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Snackbar, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Vendor, Deal } from './Types';
@@ -14,7 +13,7 @@ const initialVendors: Vendor[] = [
     website: 'https://vendorone.com',
     phoneNumber: '123-456-7890',
     email: 'contact@vendorone.com',
-    coverPhoto: null,
+    coverPhoto: 'https://images.rest.co.il/Customers/80343403/f098693bec9a47d88489b3df59a06ab2.jpg',
     deal: {
       _id: 'd1',
       vendorId: '1',
@@ -27,7 +26,7 @@ const initialVendors: Vendor[] = [
     tags: ['tag1', 'tag2'],
     rate: 4.5,
     location: 'Location One',
-  },
+    },
   // Add more vendors as needed
 ];
 
@@ -155,6 +154,7 @@ const VendorList: React.FC = () => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Cover Photo</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Website</TableCell>
@@ -168,6 +168,15 @@ const VendorList: React.FC = () => {
             <TableRow key={vendor._id}>
               {editingVendorId === vendor._id ? (
                 <>
+                  <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ width: '150px', height: '150px' }}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>
                     <TextField
                       name="name"
@@ -214,9 +223,22 @@ const VendorList: React.FC = () => {
                 </>
               ) : (
                 <>
+                  <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ height: '100px', width: '150px' }}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>{vendor.name}</TableCell>
                   <TableCell>{vendor.type}</TableCell>
-                  <TableCell><a href={vendor.website} target="_blank" rel="noopener noreferrer">{vendor.website}</a></TableCell>
+                  <TableCell>
+                    <a href={vendor.website} target="_blank" rel="noopener noreferrer">
+                      {vendor.website}
+                    </a>
+                  </TableCell>
                   <TableCell>{vendor.phoneNumber}</TableCell>
                   <TableCell>{vendor.email}</TableCell>
                   <TableCell>
@@ -227,7 +249,7 @@ const VendorList: React.FC = () => {
                       <DeleteIcon />
                     </IconButton>
                     <IconButton onClick={() => handleAddDeals(vendor)}>
-                      <AddIcon />
+                      <Button variant="text">Vendor deals</Button>
                     </IconButton>
                   </TableCell>
                 </>
