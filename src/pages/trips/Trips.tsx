@@ -22,11 +22,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
-import { Order, getComparator, stableSort } from "../../components/utilities/sortUtils";
+import {
+  Order,
+  getComparator,
+  stableSort,
+} from "../../components/utilities/sortUtils";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "../../routes/routes";
-
+import Favorite from "@mui/icons-material/Favorite";
 
 interface Trip {
   title: string;
@@ -38,6 +42,7 @@ interface Trip {
   budget: number;
   destination: string;
   id: string;
+  favorite: boolean;
 }
 
 interface HeadCell {
@@ -96,8 +101,13 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Image",
   },
+  {
+    id: "favorite",
+    numeric: true,
+    disablePadding: false,
+    label: "add to favorite",
+  },
 ];
-
 
 interface EnhancedTableProps {
   numSelected: number;
@@ -139,31 +149,40 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) =>
+          headCell.id !== "favorite" ? (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
             >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ) : (
+            <TableCell key={headCell.id}>
+              <IconButton sx={{ cursor: "auto" }}>
+                <Favorite />
+              </IconButton>
+            </TableCell>
+          )
+        )}
       </TableRow>
     </TableHead>
-    );
+  );
 }
 
 interface EnhancedTableToolbarProps {
@@ -179,7 +198,12 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme: { palette: { primary: { main: string; }; action: { activatedOpacity: number; }; }; }) =>
+          bgcolor: (theme: {
+            palette: {
+              primary: { main: string };
+              action: { activatedOpacity: number };
+            };
+          }) =>
             alpha(
               theme.palette.primary.main,
               theme.palette.action.activatedOpacity
@@ -208,17 +232,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <>
-        <Tooltip title="Edit">
-          <IconButton>
-            <EditIcon />
-           </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-        
+          <Tooltip title="Edit">
+            <IconButton>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ) : (
         <Tooltip title="Filter list">
@@ -240,21 +263,19 @@ export default function EnhancedTable() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
-useEffect(() => {
-    setLoading(true)
-    fetch('http://localhost:8080/trips', {
+  useEffect(() => {
+    setLoading(true);
+    fetch("http://localhost:8080/trips", {
       method: "GET",
       headers: {
-        "content-type": "application/json"
-      }
+        "content-type": "application/json",
+      },
     })
-    .then(response => response.json()
-    .then(json => setTrips(json)))
-    .finally(()=>{
-      setLoading(false);
-    })
-  },[])
+      .then((response) => response.json().then((json) => setTrips(json)))
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -267,7 +288,7 @@ useEffect(() => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = trips.map((n: { id: any; }) => n.id);
+      const newSelected = trips.map((n: { id: any }) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -323,10 +344,12 @@ useEffect(() => {
     [order, orderBy, page, rowsPerPage, trips]
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Box sx={{ width: "100%" }}>
-      <Button onClick={()=>navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</Button>
+      <Button onClick={() => navigate(Routes.TRIPS_ADD_TRIP)}>
+        Add new trip
+      </Button>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -344,7 +367,7 @@ useEffect(() => {
               rowCount={trips.length}
             />
             <TableBody>
-              {visibleRows.map((trip:any, index: any) => {
+              {visibleRows.map((trip: any, index: any) => {
                 const isItemSelected = isSelected(trip.title);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -377,13 +400,20 @@ useEffect(() => {
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell key={trip.description} align="right">{trip.description}</TableCell>
+                    <TableCell key={trip.description} align="right">
+                      {trip.description}
+                    </TableCell>
                     <TableCell align="right">{trip.destination}</TableCell>
                     <TableCell align="right">{trip.category}</TableCell>
                     <TableCell align="right">{trip.startDate}</TableCell>
                     <TableCell align="right">{trip.endDate}</TableCell>
                     <TableCell align="right">{trip.budget}</TableCell>
                     <TableCell align="right">{trip.image}</TableCell>
+                    <TableCell align="right">
+                      <IconButton onClick={() => console.log(trip.id)}>
+                        <Favorite />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })}
