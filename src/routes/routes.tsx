@@ -3,19 +3,26 @@ import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
-import EditUser from "../pages/users/userEdit/EditUser";
 import { Settings } from "../pages/settings/Settings";
 import WishList from "../pages/wishlist/WishList"; // Import the WishList component
+
+import Login from "../pages/users/login/login";
+import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
+import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 
 export enum Routes {
   HOME = "/",
   TRIPS = "/trips",
+  TRIP = "/trips/:tripId",
   TRIPS_ADD_TRIP = "/trips/add-trips",
   VENDORS = "/vendors",
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
-  USERS_EDIT = "/users/register/:userId",
+  LOGIN = "/login",
+  PARTNER_SEARCH = "/users/partners-search",
+  USERS_EDIT = "/users/:userId",
   WISHLIST = "/wishlist", // Add the WISHLIST route
+
 }
 
 export const publicRoutes = [
@@ -30,6 +37,11 @@ export const publicRoutes = [
     element: <Trips />,
   },
   {
+    path: Routes.TRIP,
+    name:"trip",
+    element:<ViewTrip />
+  },
+  {
     path: Routes.VENDORS,
     name: "vendors",
     element: <VendorManager />,
@@ -41,24 +53,26 @@ export const publicRoutes = [
   },
   {
     path: Routes.USERS_REGISTER,
-    element: <UserRegistration />,
+    element: <UserRegistration />
+  },
+  {
+    path: Routes.PARTNER_SEARCH,
+    element: <PartnerSearch />
   },
   {
     path: Routes.USERS_EDIT,
-    element: <EditUser />,
+    element: <UserRegistration />, 
   },
   {
-    path: Routes.WISHLIST, // Add the WishList route to publicRoutes
-    name: "wishlist",
-    element: <WishList />,
+    path: Routes.LOGIN,
+    element: <Login />,
   },
 ];
-
 export const privateRoutes = [
   {
-    path: Routes.SETTINGS,
-    name: "settings",
-    element: <Settings />,
+    path:Routes.SETTINGS,
+    name:"settings",
+    element:<Settings />
   },
 ];
 

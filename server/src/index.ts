@@ -6,6 +6,7 @@ import { userRouter } from "./routes/user.router";
 import { vendorsRouter } from "./routes/vendors.router";
 import { tripsRouter } from "./routes/trips.router";
 import { tagsRouter } from "./routes/tags.router";
+import { dealsRouter } from "./routes/deals.router";
 
 dotenv.config();
 
@@ -14,10 +15,12 @@ const app: Express = express();
 app.use(bodyParser.json());
 const port = process.env.port || 8080; // default port to listen
 
-const cors = require('cors');
-app.use(cors({
-    origin: 'http://127.0.0.1:5173' // Only allow this origin to access your API
-}));
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Only allow this origin to access your API
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Serverrrr");
@@ -27,8 +30,9 @@ connectToDatabase()
   .then(() => {
     app.use("/vendors", vendorsRouter);
     app.use("/trips", tripsRouter);
-    app.use("/user", userRouter);
+    app.use("/users", userRouter);
     app.use("/tags", tagsRouter);
+    app.use("/deals", dealsRouter);
 
     app.get("/", (req, res) => {
       res.send("hello");

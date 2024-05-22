@@ -15,9 +15,10 @@ const uwConfig = {
 
 interface CLoudinaryUploadWidgetProps {
   setPublicId: (publicId: string) => void;
+  buttonLabel?: string; // Optional button label prop
 }
 
-function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
+function CloudinaryUploadWidget({ setPublicId,  buttonLabel = 'Upload' }: CLoudinaryUploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
   const [publicId, setPublicIdInner] = useState('');
 
@@ -48,7 +49,9 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
     }
   }, [loaded]);
 
-  const initializeCloudinaryWidget = () => {
+
+  const initializeCloudinaryWidget = (e: any) => {
+    e.preventDefault();
     if (loaded) {
       var widget = (window as any).cloudinary.createUploadWidget(
         uwConfig,
@@ -79,7 +82,7 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
           className="cloudinary-button"
           onClick={initializeCloudinaryWidget}
         >
-          Upload
+           {buttonLabel} {/* Use the prop value as the button label */}
         </Button>
         <div style={{ display: !publicId ? 'none' : 'flex' }} className="thumbnail">
           <AdvancedImage
@@ -88,9 +91,9 @@ function CloudinaryUploadWidget({ setPublicId }: CLoudinaryUploadWidgetProps) {
             plugins={[responsive(), placeholder()]}
           />
 
-         <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
-          <Close />
-        </IconButton> 
+          <IconButton style={{ backgroundColor: 'white', position: 'absolute', top: 5, right: 5, zIndex: 1200, height: 15, width: 15 }} onClick={onRemove}>
+            <Close />
+          </IconButton>
         </div>
       </div>
     </CloudinaryScriptContext.Provider>

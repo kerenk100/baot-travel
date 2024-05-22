@@ -7,19 +7,18 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Favorite from "@mui/icons-material/Favorite";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Routes } from "../../../routes/routes";
 import { Logo } from "./components/Logo/Logo";
-import styles from './Header.module.scss';
+import styles from './Header.module.scss'
+import { useAppContext } from "../../../App.context";
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    console.log("log out");
-  };
+  const {isLoggedIn, logout, user} = useAppContext();
 
   const USER_MENU = [
     {
@@ -28,7 +27,11 @@ export const Header: React.FC = () => {
     },
     {
       name: "Log out",
-      onClick: handleLogout,
+      onClick: () => {
+        logout();
+        navigate("/");
+        setIsMenuOpen(false);
+      },
     },
   ];
 
@@ -81,6 +84,13 @@ export const Header: React.FC = () => {
         >
           <Logo onClick={() => navigate(Routes.HOME)} />
         </div>
+        {isLoggedIn ? 
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
+          </IconButton>
+        </Tooltip>
+       : <Link to="/login">LOGIN</Link> }
         <div style={{ display: "flex", alignItems: "center" }}>
           <Tooltip title="Wish List">
             <IconButton

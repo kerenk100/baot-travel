@@ -1,0 +1,30 @@
+/* Add this CSS to your stylesheet */
+
+/* For TextField and Select */
+.MuiInputBase-root.Mui-focused .MuiInputBase-input,
+.MuiSelect-root.Mui-focused + .MuiInputBase-root .MuiInputBase-input {
+  color: inherit; /* Ensures the text color remains when focused */
+}
+
+/* For TextField */
+.MuiInputLabel-root.Mui-focused {
+  color: inherit;
+}
+
+/* For Select */
+.MuiInputLabel-outlined
+  + .MuiSelect-root
+  .MuiSelect-nativeInput
+  + .MuiInputBase-input {
+  padding-top: 14px; /* Adjust as needed */
+}
+
+.form-vendor {
+  margin-top: 30px;
+}
+
+.uploadButtonContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
