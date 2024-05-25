@@ -90,12 +90,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Budget",
   },
-  {
-    id: "image",
-    numeric: true,
-    disablePadding: false,
-    label: "Image",
-  },
 ];
 
 
@@ -377,13 +371,12 @@ useEffect(() => {
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell key={trip.description} align="right">{trip.description}</TableCell>
-                    <TableCell align="right">{trip.destination}</TableCell>
-                    <TableCell align="right">{trip.category}</TableCell>
-                    <TableCell align="right">{trip.startDate}</TableCell>
-                    <TableCell align="right">{trip.endDate}</TableCell>
-                    <TableCell align="right">{trip.budget}</TableCell>
-                    <TableCell align="right">{trip.image}</TableCell>
+                    <TableCell key={trip.description} align="left">{trip.description}</TableCell>
+                    <TableCell align="left">{trip.destination}</TableCell>
+                    <TableCell align="left">{trip.category}</TableCell>
+                    <TableCell align="left">{trip.startDate}</TableCell>
+                    <TableCell align="left">{trip.endDate}</TableCell>
+                    <TableCell align="left">{trip.budget}</TableCell>
                   </TableRow>
                 );
               })}

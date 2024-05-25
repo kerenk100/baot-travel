@@ -8,6 +8,7 @@ import {
   MenuItem,
   InputLabel,
   Checkbox,
+  Snackbar,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -20,6 +21,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { LocationFormItem } from "../../../../components/utilities/formUtils/LocationFromItem/LocationFormItem";
 import { Trip } from "../../types";
 import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -48,6 +50,10 @@ export const AddTrips = () => {
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [trip, setTrip] = useState(initialState);  
   const [publicId, setPublicId] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [snackBarOpen,setSnackBarOpen] = useState(false)
+  const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
+  const navigate = useNavigate();
 
 
   const handleSubmit = async (event: any) => {
@@ -56,7 +62,7 @@ export const AddTrips = () => {
     if (publicId) {
       data.image = publicId;
     }
-    await fetch('http://localhost:8080/trips', {
+    const response = await fetch('http://localhost:8080/trips', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -64,8 +70,34 @@ export const AddTrips = () => {
       body: JSON.stringify(data)
     });
 
-    setTrip(initialState);
+    
+    
+    const resultText = await response.text();
+    if (response.ok) {
+      setTrip(initialState);
+      console.log('Success:', resultText);
+      setIsSubmitted(true);
+      setSnackBarOpen(true);
+      setSnackBarText("The trip was added succesfully!");
+      
+    }
+    else{
+        console.error('There was a problem with adding a trip');
+        setSnackBarOpen(true);
+        setSnackBarText("Error! There was a problem! Please try again");
+    }
+
+   
+    
   };
+
+   if (isSubmitted) {
+        return <div className="userFormSuccess">
+            <h2>{'Trip was added successfully!' }</h2>
+            <Button variant="contained" onClick={() => navigate('/trips')}>Display Trips</Button>
+        </div>;
+    }
+
 
   const handleChange = (event: any) => {
     setTrip({
@@ -141,8 +173,16 @@ export const AddTrips = () => {
           <Button type="submit" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
+          <Snackbar
+            open={snackBarOpen}
+            autoHideDuration={5000}
+            onClose={()=>{setSnackBarOpen(false)}}
+            message={snackBarText}
+        />
         </form>
       </header>
     </div>
   );
 };
+
+
