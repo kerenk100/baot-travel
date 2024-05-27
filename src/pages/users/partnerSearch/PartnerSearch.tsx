@@ -28,7 +28,7 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
     fetchPartnerUsers = async () => {
         this.setState({ isLoading: true, error: null });
         try {
-            const response = await fetch('http://localhost:3000/users/partners-search');
+            const response = await fetch('http://localhost:8080/users/partners-search');
             if (!response.ok) {
                 throw new Error(`Failed to fetch partner users! Status: ${response.status}`);
             }

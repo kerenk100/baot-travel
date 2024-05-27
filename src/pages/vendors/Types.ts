@@ -11,6 +11,7 @@ export type Vendor = {
   tags: string[];
   rate: number;
   location: string;
+  owner: string
 };
 
 export type Deal = {

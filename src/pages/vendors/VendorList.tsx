@@ -26,6 +26,7 @@ const initialVendors: Vendor[] = [
     tags: ['tag1', 'tag2'],
     rate: 4.5,
     location: 'Location One',
+    owner: "6654d6642ff1ab4d0784daba",
     },
   // Add more vendors as needed
 ];
@@ -149,6 +150,11 @@ const VendorList: React.FC = () => {
     setOpenSnackbar(false);
   };
 
+  const hasEditPermission = (vendor: Vendor) => {
+    const user = JSON.parse(localStorage.getItem("user")!);
+    return vendor.owner === user.id;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -242,12 +248,12 @@ const VendorList: React.FC = () => {
                   <TableCell>{vendor.phoneNumber}</TableCell>
                   <TableCell>{vendor.email}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(vendor._id)}>
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleEdit(vendor._id)}>
                       <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(vendor._id)}>
+                    </IconButton>}
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleDelete(vendor._id)}>
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton>}
                     <IconButton onClick={() => handleAddDeals(vendor)}>
                       <Button variant="text">Vendor deals</Button>
                     </IconButton>
