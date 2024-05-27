@@ -1,9 +1,8 @@
 .sidebar {
     width: 250px;
-    height: 100vh;
+    height: -webkit-fill-available;
     color: black;
     background: var(--cyan);
-    margin-top: 64px;
 }
 
 .sidebar ul {
