@@ -1,4 +1,5 @@
 import Trips from "../pages/trips/Trips";
+import TripsList from "../pages/trips/TripsList";
 import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
