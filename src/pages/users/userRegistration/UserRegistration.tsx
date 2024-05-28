@@ -4,6 +4,7 @@ import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
+import { position } from '@cloudinary/url-gen/qualifiers/timeline';
 
 interface UserFormState {
     firstName: string;
@@ -144,8 +145,21 @@ const UserForm = () => {
 
     return (
         <>
+        
             <h3>{userId ? 'Edit User Data' : 'User Registration'}</h3>
+            <Snackbar
+                    open={snackBarOpen}
+                    autoHideDuration={5000}
+                    onClose={()=>{setSnackBarOpen(false)}}
+                    message={snackBarText}
+                    sx={{
+                        position: 'static',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                />
             <form className="userForm" onSubmit={handleSubmit}>
+                
                 {/* Common form fields for registration and edit */}
                 <TextField id="firstName" label="First Name" variant="outlined" color="secondary"
                     value={user.firstName} onChange={handleChange('firstName')} required />
@@ -194,12 +208,7 @@ const UserForm = () => {
                 </Select>
                 <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
 
-                <Snackbar
-                    open={snackBarOpen}
-                    autoHideDuration={5000}
-                    onClose={()=>{setSnackBarOpen(false)}}
-                    message={snackBarText}
-                />
+                
                 
             </form>
         </>
