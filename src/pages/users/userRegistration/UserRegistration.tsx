@@ -42,6 +42,16 @@ const UserForm = () => {
     const navigate = useNavigate();
     const [snackBarOpen,setSnackBarOpen] = useState(false)
     const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleFocus = () => {
+      setIsFocused(true);
+    };
+  
+    const handleBlur = () => {
+      setIsFocused(false);
+    };
+  
 
     // Load user data if userId is present
     useEffect(() => {
@@ -145,8 +155,23 @@ const UserForm = () => {
                     value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
                     helperText={user.errors.email || user.errors.emailExists}
                     onChange={handleEmailChange} required />}
-                <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
-                    value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
+                      <TextField
+      id="dateOfBirth"
+      label={isFocused ? "Date of Birth" : ""}
+      variant="outlined"
+      color="secondary"
+      type="date"
+      value={user.dateOfBirth}
+      onChange={handleChange('dateOfBirth')}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      placeholder={isFocused ? "mm/dd/yyyy" : "Date of Birth"}
+      InputLabelProps={{
+        shrink: isFocused,
+      }}
+    />
+
+
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
                     value={user.address} onChange={handleChange('address')} />
                 <LocationFormItem type='country' id='country' value={user.country} handleChange={handleChange('country')}/>
