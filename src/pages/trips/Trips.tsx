@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { Edit as EditIcon, Add as AddIcon } from "@mui/icons-material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
@@ -26,7 +26,6 @@ import { Order, getComparator, stableSort } from "../../components/utilities/sor
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "../../routes/routes";
-
 
 interface Trip {
   title: string;
@@ -98,7 +97,6 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
@@ -111,60 +109,7 @@ interface EnhancedTableProps {
   rowCount: number;
 }
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler =
-    (property: keyof Trip) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
 
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all trips",
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-    );
-}
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
@@ -240,7 +185,6 @@ export default function EnhancedTable() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
 useEffect(() => {
     setLoading(true)
     fetch('http://localhost:8080/trips', {
@@ -256,43 +200,6 @@ useEffect(() => {
     })
   },[])
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Trip
-  ) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = trips.map((n: { id: any; }) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -306,6 +213,11 @@ useEffect(() => {
 
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDense(event.target.checked);
+  };
+
+  const handleViewTrip = (tripId: string) => {
+    console.log(tripId);
+    navigate(`/trips/${tripId}`);
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -328,62 +240,46 @@ useEffect(() => {
     <Box sx={{ width: "100%" }}>
       <Button onClick={()=>navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</Button>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={trips.length}
-            />
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Destination</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Start Date</TableCell>
+                <TableCell>End Date</TableCell>
+                <TableCell>Budget</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            
             <TableBody>
               {visibleRows.map((trip:any, index: any) => {
                 const isItemSelected = isSelected(trip.title);
-                const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, trip.title)}
-                    role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={trip.id}
-                    selected={isItemSelected}
+                    //selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      key={trip.id}
-                      scope="trip"
-                      padding="none"
-                    >
-                      {trip.title}
-                    </TableCell>
-                    <TableCell align="right">{trip.description && trip.description.substring(0, 50)}</TableCell>
-                    <TableCell align="right">{trip.destination}</TableCell>
-                    <TableCell align="right">{trip.category}</TableCell>
-                    <TableCell align="right">{trip.startDate}</TableCell>
-                    <TableCell align="right">{trip.endDate}</TableCell>
-                    <TableCell align="right">{trip.budget}</TableCell>
-                    <TableCell align="right">{trip.image}</TableCell>
+                    <TableCell align="left">{trip.title}</TableCell>
+                    <TableCell align="left">{trip.description && trip.description.substring(0, 50)}</TableCell>
+                    <TableCell align="left">{trip.destination}</TableCell>
+                    <TableCell align="left">{trip.category}</TableCell>
+                    <TableCell align="left">{trip.startDate}</TableCell>
+                    <TableCell align="left">{trip.endDate}</TableCell>
+                    <TableCell align="left">{trip.budget}</TableCell>
+                    <TableCell align="left"><IconButton  onClick={() => handleViewTrip(trip._id)}>< AddIcon /></IconButton></TableCell>
                   </TableRow>
                 );
               })}
