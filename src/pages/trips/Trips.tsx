@@ -268,7 +268,9 @@ useEffect(() => {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: number, tripId: string) => {
+    navigate(`/trips/${tripId}`);
+    
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
@@ -345,7 +347,7 @@ useEffect(() => {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, trip.title)}
+                    onClick={(event) => handleClick(event, trip.title, trip._id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -371,7 +373,7 @@ useEffect(() => {
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell key={trip.description} align="left">{trip.description}</TableCell>
+                    <TableCell align="left">{trip.description && trip.description.substring(0, 50)}</TableCell>
                     <TableCell align="left">{trip.destination}</TableCell>
                     <TableCell align="left">{trip.category}</TableCell>
                     <TableCell align="left">{trip.startDate}</TableCell>
