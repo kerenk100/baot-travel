@@ -43,6 +43,7 @@ interface Trip {
   destination: string;
   id: string;
   favorite: boolean;
+  tags: string[];
 }
 
 interface HeadCell {
@@ -58,6 +59,12 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: true,
     label: "Title",
+  },
+  {
+    id: "tags",
+    numeric: false,
+    disablePadding: false,
+    label: "Tags",
   },
   {
     id: "description",
@@ -339,8 +346,11 @@ export default function EnhancedTable() {
       ),
     [order, orderBy, page, rowsPerPage, trips]
   );
-
-  const navigate = useNavigate();
+  
+  const navigate = useNavigate()
+  const onRowClick=React.useCallback((e:any, trip:Trip)=>{
+    navigate(`/trips/${trip.id}`);
+  },[])
   return (
     <Box sx={{ width: "100%" }}>
       <Button onClick={() => navigate(Routes.TRIPS_ADD_TRIP)}>
@@ -370,7 +380,7 @@ export default function EnhancedTable() {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, trip.title, trip._id)}
+                    onClick={(e)=>onRowClick(e,trip)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -397,6 +407,7 @@ export default function EnhancedTable() {
                       {trip.title}
                     </TableCell>
                     <TableCell align="left">{trip.description && trip.description.substring(0, 50)}</TableCell>
+                    <TableCell align="left">{trip.tags?.join(", ")}</TableCell>
                     <TableCell align="left">{trip.destination}</TableCell>
                     <TableCell align="left">{trip.category}</TableCell>
                     <TableCell align="left">{trip.startDate}</TableCell>

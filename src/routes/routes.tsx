@@ -7,7 +7,7 @@ import { Settings } from "../pages/settings/Settings";
 import WishList from "../pages/wishlist/WishList"; // Import the WishList component
 
 import Login from "../pages/users/login/login";
-import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
+import ViewTrip from "../pages/trips/ViewTrip/ViewTrip";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 
 export enum Routes {

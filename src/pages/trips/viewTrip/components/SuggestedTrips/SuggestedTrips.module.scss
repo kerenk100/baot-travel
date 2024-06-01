@@ -1,0 +1,13 @@
+.suggestions{
+    display: flex;
+    flex-direction: row;
+    gap:8px;
+    cursor: pointer;
+
+    .trip{
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+    
+}
