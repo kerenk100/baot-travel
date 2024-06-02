@@ -7,8 +7,9 @@ export const collections: {
   vendors?: mongoDB.Collection,
   deals?:mongoDB.Collection,
   trips?: mongoDB.Collection,
-  users?: mongoDB.Collection
-  tags?: mongoDB.Collection
+  users?: mongoDB.Collection,
+  tags?: mongoDB.Collection,
+  wishlist?: mongoDB.Collection
 } = {};
 
 // Initialize Connection
@@ -28,7 +29,10 @@ export async function connectToDatabase() {
     process.env.DEALS_COLLECTION_NAME || 'deals');
   const tripsCollection: mongoDB.Collection = db.collection(
     process.env.TRIPS_COLLECTION_NAME || 'trips'
-  ); 
+  );
+  const wishlistCollection: mongoDB.Collection = db.collection(
+      process.env.WISHLIST_COLLECTION_NAME || 'wishlist'
+  );
   const usersCollection: mongoDB.Collection = db.collection(
     process.env.USERS_COLLECTION_NAME || 'users'
   );
@@ -42,12 +46,14 @@ export async function connectToDatabase() {
   collections.trips = tripsCollection;
   collections.users = usersCollection;
   collections.tags = tagsCollection;
+  collections.wishlist = wishlistCollection;
 
   console.log(`Successfully connected to database: ${db.databaseName} 
   and collections:
   ${vendorsCollection.collectionName},
   ${dealsCollection.collectionName}, 
-  ${tripsCollection.collectionName},);
+  ${tripsCollection.collectionName}
   ${usersCollection.collectionName},
-  ${tagsCollection.collectionName}`);
+  ${tagsCollection.collectionName},
+  ${wishlistCollection.collectionName}`);
 }
