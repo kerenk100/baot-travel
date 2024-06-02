@@ -3,10 +3,6 @@ import Button from "@mui/material/Button";
 import {
   FormControl,
   FormControlLabel,
-  FormLabel,
-  Select,
-  MenuItem,
-  InputLabel,
   Checkbox,
   Snackbar,
 } from "@mui/material";
@@ -35,7 +31,7 @@ export const TRIP_TAGS_OPTIONS = [
 ];
 
 export const AddTrips = () => {
-  const initialState : Trip = {
+  const initialState : Omit<Trip,"_id"> = {
     title: "",
     country: "",
     description: "",

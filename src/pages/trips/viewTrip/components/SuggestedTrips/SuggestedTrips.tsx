@@ -46,7 +46,6 @@ export const SuggestedTrips: React.FC<SuggestedTripsProps> = (props) => {
     <>Loading...</>
   ) : (
     <>
-      <hr />
       <p>Suggested for you:</p>
       <div className={styles.suggestions}>
         {suggestions.map((suggestion) => (

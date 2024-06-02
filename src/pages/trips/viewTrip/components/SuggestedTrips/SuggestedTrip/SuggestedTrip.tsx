@@ -4,7 +4,6 @@ import { useCallback } from "react";
 import styles from "../SuggestedTrips.module.scss";
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Chip,
@@ -15,7 +14,7 @@ import { Cloudinary } from "@cloudinary/url-gen/index";
 import { uwConfig } from "../../../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 
 export const SuggestedTrip: React.FC<Trip> = (props) => {
-  const { _id, title, country, description, image, tags } = props;
+  const { _id, title, country, image, tags } = props;
   const navigate = useNavigate();
   const onSuggestionClick = useCallback((id: string) => {
     navigate(`/trips/${id}`);
@@ -28,13 +27,13 @@ export const SuggestedTrip: React.FC<Trip> = (props) => {
   });
   const displayedImage = image && cld.image(image).createCloudinaryURL();
   return     <Card sx={{ maxWidth: 345 }}  className={styles.trip} onClick={() => onSuggestionClick(_id)}>
-  <CardActionArea>
     <CardMedia
       component="img"
       height="140"
       image={displayedImage}
     />
     <CardContent>
+      <div className={styles.content}>
       <Typography gutterBottom variant="h5" component="div">
       {`${title ? title : ""} ${
           country ? Country.getCountryByCode(country)?.flag : ""
@@ -47,10 +46,7 @@ export const SuggestedTrip: React.FC<Trip> = (props) => {
               ))}
             </span>
       </div>}
-      <Typography variant="body2" color="text.secondary">
-        {description}
-      </Typography>
+      </div>
     </CardContent>
-  </CardActionArea>
 </Card>
 };
