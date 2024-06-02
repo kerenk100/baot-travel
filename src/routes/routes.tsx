@@ -35,7 +35,7 @@ export const publicRoutes = [
   {
     path: Routes.TRIPS,
     name: "trips",
-    element: <Trips />,
+    element: <TripsList /> ,//change to <TripsList/>
   },
   {
     path: Routes.TRIP,

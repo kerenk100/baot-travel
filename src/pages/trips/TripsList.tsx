@@ -17,12 +17,14 @@ import {
   Save as SaveIcon,
   Cancel as CancelIcon,
   Close as CloseIcon,
+  Favorite as FavoriteIcon,
+  FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
 
 interface Trip {
   title: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | null;
+  endDate: Date | null;
   category: string[];
   description: string;
   image: string;
@@ -40,7 +42,6 @@ const TripsList: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    console.log("hiiiiiiiiiiiiiiiii");
     setLoading(true);
     fetch("http://localhost:8080/trips", {
       method: "GET",
@@ -52,12 +53,10 @@ const TripsList: React.FC = () => {
         response.json().then((json) => {
           const parsedTrips = json.map((trip: any) => ({
             ...trip,
-            startDate: new Date(trip.startDate),
-            endDate: new Date(trip.endDate),
+            startDate: parseDate(trip.startDate),
+            endDate: parseDate(trip.endDate),
             category: JSON.parse(trip.category),
           }));
-          console.log("parsed trips ");
-          console.log(parsedTrips);
           setTrips(parsedTrips);
         })
       )
@@ -65,6 +64,17 @@ const TripsList: React.FC = () => {
         setLoading(false);
       });
   }, []);
+
+  const parseDate = (dateString: string): Date | null => {
+    const parts = dateString.split('/');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // months are 0-based in JavaScript
+      const year = parseInt(parts[2], 10);
+      return new Date(year, month, day);
+    }
+    return null;
+  };
 
   const handleEdit = (tripId: string) => {
     const tripToEdit = trips.find((trip) => trip.id === tripId);
@@ -95,7 +105,13 @@ const TripsList: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (editingTrip) {
       const { name, value } = e.target;
-      setEditingTrip({ ...editingTrip, [name]: value });
+      let newValue: any = value;
+
+      if (name === "startDate" || name === "endDate") {
+        newValue = new Date(value);
+      }
+
+      setEditingTrip({ ...editingTrip, [name]: newValue });
     }
   };
 
@@ -113,6 +129,10 @@ const TripsList: React.FC = () => {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+
+  const formatDate = (date: Date | null) => {
+    return date ? date.toISOString().split("T")[0] : "";
   };
 
   return (
@@ -146,7 +166,7 @@ const TripsList: React.FC = () => {
                     <TextField
                       name="startDate"
                       type="date"
-                      value={editingTrip?.startDate.toISOString().split("T")[0] || ""}
+                      value={formatDate(editingTrip?.startDate)}
                       onChange={handleInputChange}
                     />
                   </TableCell>
@@ -154,7 +174,7 @@ const TripsList: React.FC = () => {
                     <TextField
                       name="endDate"
                       type="date"
-                      value={editingTrip?.endDate.toISOString().split("T")[0] || ""}
+                      value={formatDate(editingTrip?.endDate)}
                       onChange={handleInputChange}
                     />
                   </TableCell>
@@ -199,8 +219,8 @@ const TripsList: React.FC = () => {
               ) : (
                 <>
                   <TableCell>{trip.title}</TableCell>
-                  <TableCell>{trip.startDate.toLocaleDateString()}</TableCell>
-                  <TableCell>{trip.endDate.toLocaleDateString()}</TableCell>
+                  <TableCell>{trip.startDate?.toLocaleDateString()}</TableCell>
+                  <TableCell>{trip.endDate?.toLocaleDateString()}</TableCell>
                   <TableCell>{trip.category.join(", ")}</TableCell>
                   <TableCell>{trip.description}</TableCell>
                   <TableCell>{trip.budget}</TableCell>
@@ -212,11 +232,9 @@ const TripsList: React.FC = () => {
                     <IconButton onClick={() => handleDelete(trip.id)}>
                       <DeleteIcon />
                     </IconButton>
-                    <input
-                      type="checkbox"
-                      checked={trip.favorite}
-                      onChange={() => handleFavorite(trip.id)}
-                    />
+                    <IconButton onClick={() => handleFavorite(trip.id)}>
+                      {trip.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    </IconButton>
                   </TableCell>
                 </>
               )}
