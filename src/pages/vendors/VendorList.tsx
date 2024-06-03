@@ -1,37 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Snackbar, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Vendor, Deal } from './Types';
 
-const initialVendors: Vendor[] = [
-  {
-    _id: '1',
-    name: 'Vendor One',
-    type: 'Type A',
-    website: 'https://vendorone.com',
-    phoneNumber: '123-456-7890',
-    email: 'contact@vendorone.com',
-    coverPhoto: 'https://images.rest.co.il/Customers/80343403/f098693bec9a47d88489b3df59a06ab2.jpg',
-    deal: {
-      _id: 'd1',
-      vendorId: '1',
-      description: 'Special Deal 1',
-      link: 'https://vendorone.com/deal1',
-      startDate: '2023-01-01',
-      endDate: '2023-12-31',
-    },
-    photos: [],
-    tags: ['tag1', 'tag2'],
-    rate: 4.5,
-    location: 'Location One',
-    owner: "6654d6642ff1ab4d0784daba",
-    },
-  // Add more vendors as needed
-];
-
-const VendorList: React.FC = () => {
+const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
+  console.log('initialVendors', initialVendors);
   const [vendors, setVendors] = useState<Vendor[]>(initialVendors);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
@@ -43,6 +18,8 @@ const VendorList: React.FC = () => {
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [newDeal, setNewDeal] = useState<Deal | null>(null);
   const [currentVendorId, setCurrentVendorId] = useState<string | null>(null);
+  useEffect(() => setVendors(initialVendors), [initialVendors]);
+
 
   const handleEdit = (vendorId: string) => {
     const vendorToEdit = vendors.find(vendor => vendor._id === vendorId);
