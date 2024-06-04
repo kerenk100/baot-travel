@@ -135,7 +135,7 @@ export const AddTrips = () => {
             placeholder="Enter a short description of your trip..."
             multiline
             onChange={handleChange}
-            maxRows={6}
+            rows={6}
             value={trip.description}
             required
           /> 
