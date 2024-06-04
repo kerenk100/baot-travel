@@ -74,6 +74,13 @@ export const AddTrips = () => {
     });
   };
 
+  const handleTagsChange  = (tags: string[]) => {
+    setTrip({
+      ...trip,
+      tags
+    });
+  }
+
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTrip({
       ...trip,
@@ -108,10 +115,9 @@ export const AddTrips = () => {
             required
           /> 
           <MultipleSelectTags
-            name={"tags"}
             label={"Tags"}
             options={TRIP_TAGS_OPTIONS}
-            saveState={handleChange}
+            saveState={handleTagsChange}
             tags={trip.tags}
           />
           <FormControlLabel 
