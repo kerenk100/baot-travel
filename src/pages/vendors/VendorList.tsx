@@ -5,8 +5,8 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Vendor, Deal } from './Types';
 
-const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
-  console.log('initialVendors', initialVendors);
+const VendorList: React.FC<{initialVendors: Vendor[], onSave: (vendor: Vendor) => Promise<void>, onDelete: (id:string) => Promise<void>}> = 
+({initialVendors, onSave, onDelete}) => {
   const [vendors, setVendors] = useState<Vendor[]>(initialVendors);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
@@ -32,6 +32,7 @@ const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
   const handleSave = () => {
     if (editingVendorId && editingVendor) {
       setVendors(vendors.map(vendor => vendor._id === editingVendorId ? editingVendor : vendor));
+      onSave(editingVendor);
       setEditingVendorId(null);
       setEditingVendor(null);
     }
@@ -51,6 +52,7 @@ const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
 
   const handleDelete = (vendorId: string) => {
     setVendors(vendors.filter(vendor => vendor._id !== vendorId));
+    onDelete(vendorId);
   };
 
   const handleAddDeals = (vendor: Vendor) => {
