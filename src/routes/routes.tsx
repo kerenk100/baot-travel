@@ -38,6 +38,11 @@ export const publicRoutes = [
     element: <TripsList /> ,//change to <TripsList/>
   },
   {
+    path: Routes.WISHLIST,
+    name: "wishlist",
+    element: <WishList /> ,//change to <TripsList/>
+  },
+  {
     path: Routes.TRIP,
     name:"trip",
     element:<ViewTrip />
