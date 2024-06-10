@@ -119,12 +119,41 @@ const TripsList: React.FC = () => {
     setTrips(trips.filter((trip) => trip.id !== tripId));
   };
 
-  const handleFavorite = (tripId: string) => {
+  // const handleFavorite = (tripId: string) => {
+  //   setTrips(
+  //       trips.map((trip) =>
+  //           trip.id === tripId ? { ...trip, favorite: !trip.favorite } : trip
+  //       )
+  //   );
+  // };
+
+  const handleFavoriteChanged = async (tripId: string) => {
+
+    const selectedTrip: Trip = trips.filter(trip => trip.id === tripId)[0];
+    const isAddedToWishList: boolean = !selectedTrip.favorite;
+
     setTrips(
       trips.map((trip) =>
-        trip.id === tripId ? { ...trip, favorite: !trip.favorite } : trip
+        trip.id === tripId ? { ...trip, favorite: isAddedToWishList } : trip
       )
     );
+
+    console.log(selectedTrip);
+    console.log(tripId);
+
+    if (isAddedToWishList) {
+      await fetch('http://localhost:8080/wishlist', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedTrip)
+      });
+    } else {
+      await fetch(`http://localhost:8080/wishlist/${tripId}`, { //TODO: Fix the id issue... currently it sends undefined and fails.
+        method: 'DELETE'
+      });
+    }
   };
 
   const handleCloseSnackbar = () => {
@@ -232,7 +261,7 @@ const TripsList: React.FC = () => {
                     <IconButton onClick={() => handleDelete(trip.id)}>
                       <DeleteIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleFavorite(trip.id)}>
+                    <IconButton onClick={() => handleFavoriteChanged(trip.id)}>
                       {trip.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                     </IconButton>
                   </TableCell>

@@ -1,4 +1,3 @@
-import Trips from "../pages/trips/Trips";
 import TripsList from "../pages/trips/TripsList";
 import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
@@ -22,8 +21,7 @@ export enum Routes {
   LOGIN = "/login",
   PARTNER_SEARCH = "/users/partners-search",
   USERS_EDIT = "/users/:userId",
-  WISHLIST = "/wishlist", // Add the WISHLIST route
-
+  WISHLIST = "/wishlist"
 }
 
 export const publicRoutes = [
@@ -35,7 +33,7 @@ export const publicRoutes = [
   {
     path: Routes.TRIPS,
     name: "trips",
-    element: <TripsList /> ,//change to <TripsList/>
+    element: <TripsList />
   },
   {
     path: Routes.WISHLIST,
@@ -72,6 +70,11 @@ export const publicRoutes = [
   {
     path: Routes.LOGIN,
     element: <Login />,
+  },
+  {
+    path: Routes.WISHLIST,
+    name: "wishlist",
+    element: <WishList />
   },
 ];
 export const privateRoutes = [
