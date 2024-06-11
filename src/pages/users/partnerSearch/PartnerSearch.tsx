@@ -31,24 +31,26 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
       error: null,
       newEmail: '',
       snackbarOpen: false,
-      snackbarMessage: '',
+      snackbarMessage: ''
+      };
+    }
+
+    fetchPartnerUsers = async () => {
+        this.setState({ isLoading: true, error: null });
+        try {
+            const response = await fetch('http://localhost:8080/users/partners-search');
+            if (!response.ok) {
+                throw new Error(`Failed to fetch partner users! Status: ${response.status}`);
+            }
+            const partnerUsersData: User[] = await response.json();
+            console.log("Fetched data:", partnerUsersData);  // Debugging line
+            this.setState({ partnerUsers: partnerUsersData, isLoading: false });
+        } catch (error: any) {
+            console.error('Error fetching partner users:', error);  // More detailed error log
+            this.setState({ error: error.message, isLoading: false });
+        }
     };
   }
-
-  fetchPartnerUsers = async () => {
-    this.setState({ isLoading: true, error: null });
-    try {
-      const response = await fetch('http://localhost:8080/users/partners-search');
-      if (!response.ok) {
-        throw new Error(`Failed to fetch partner users! Status: ${response.status}`);
-      }
-      const partnerUsersData: User[] = await response.json();
-      this.setState({ partnerUsers: partnerUsersData, isLoading: false });
-    } catch (error: any) {
-      console.error('Error fetching partner users:', error);
-      this.setState({ error: error.message, isLoading: false });
-    }
-  };
 
   componentDidMount() {
     this.fetchPartnerUsers();

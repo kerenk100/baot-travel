@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Vendor } from './Types';
 import VendorList from './VendorList';
 import VendorForm from './VendorForm';
+import { useAppContext } from '../../App.context';
 
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
   
   useEffect(() => {
-    fetch('http://localhost:3000/vendors/')
+    fetch('http://localhost:8080/vendors/')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -51,22 +52,19 @@ function VendorManager() {
     }
   };
 
-  const enterEditVendorMode = async (id: string) => {
-    const vendor: Vendor | undefined = vendors.find(vendor => vendor._id == id)
-    if (!vendor) {
-      console.error("Vendor not found with ID:", id);
-      return; // Early return if the vendor is not found
-    }
-    setCurrVendor(vendor);
-  };
-
   const saveVendor = async (updatedVendor: Vendor) => {
+    const user = JSON.parse(localStorage.getItem("user")!);
     console.log('updated vendor', updatedVendor);
 
     const newVendor: boolean = updatedVendor._id === "";
     // Determine the method based on whether the vendor is new or existing
     const method = newVendor ? 'POST' : 'PUT';
     const url = newVendor ? 'http://localhost:8080/vendors/' : `http://localhost:8080/vendors/${updatedVendor._id}`;
+
+    if (newVendor) {
+      // Set the owner of the new vendor to the current user
+      updatedVendor.owner = user?.id;
+    }
  
     try {
       const response = await fetch(url, {
@@ -84,6 +82,7 @@ function VendorManager() {
         if (newVendor) {
                     // If new vendor, add it to the list with a new ID (assumed returned by server or managed client-side)
           setVendors([...vendors, {...updatedVendor, _id: message.split(' ')[7]}]); // Extract ID from message
+
         } else {
           // If updating, modify the existing vendor in the list
           setVendors(vendors.map(vendor => vendor._id === updatedVendor._id ? updatedVendor : vendor));
@@ -110,7 +109,7 @@ function VendorManager() {
       phoneNumber: '',
       location: '',
       email: '',
-      coverPhoto: null,
+      coverPhoto: '',
       deal: {
         _id: new Object(),
         vendorId: '',
@@ -121,7 +120,8 @@ function VendorManager() {
       },
       photos: [],
       tags: [],
-      rate: 0
+      rate: 0,
+      owner: ''
     };
 
     setCurrVendor(newVendor);
@@ -131,9 +131,9 @@ function VendorManager() {
     
     <div className="App">
 
-      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
-      {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
-      {!currVendor && <VendorList />}
+      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor} />}
+      {<button onClick={() => onCreateNew()}>Add new vendor</button>}
+      {<VendorList initialVendors={vendors} onSave={saveVendor} onDelete={deleteVendor}/>}
     </div>
   );
 }
