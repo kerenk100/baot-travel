@@ -4,6 +4,7 @@ import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
+import { position } from '@cloudinary/url-gen/qualifiers/timeline';
 
 interface UserFormState {
     firstName: string;
@@ -42,6 +43,16 @@ const UserForm = () => {
     const navigate = useNavigate();
     const [snackBarOpen,setSnackBarOpen] = useState(false)
     const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleFocus = () => {
+      setIsFocused(true);
+    };
+  
+    const handleBlur = () => {
+      setIsFocused(false);
+    };
+  
 
     // Load user data if userId is present
     useEffect(() => {
@@ -134,8 +145,21 @@ const UserForm = () => {
 
     return (
         <>
+        
             <h3>{userId ? 'Edit User Data' : 'User Registration'}</h3>
+            <Snackbar
+                    open={snackBarOpen}
+                    autoHideDuration={5000}
+                    onClose={()=>{setSnackBarOpen(false)}}
+                    message={snackBarText}
+                    sx={{
+                        position: 'static',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                />
             <form className="userForm" onSubmit={handleSubmit}>
+                
                 {/* Common form fields for registration and edit */}
                 <TextField id="firstName" label="First Name" variant="outlined" color="secondary"
                     value={user.firstName} onChange={handleChange('firstName')} required />
@@ -145,8 +169,23 @@ const UserForm = () => {
                     value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
                     helperText={user.errors.email || user.errors.emailExists}
                     onChange={handleEmailChange} required />}
-                <TextField id="dateOfBirth" label="Date of Birth" variant="outlined" color="secondary" type="date"
-                    value={user.dateOfBirth} onChange={handleChange('dateOfBirth')} />
+                      <TextField
+      id="dateOfBirth"
+      label={isFocused ? "Date of Birth" : ""}
+      variant="outlined"
+      color="secondary"
+      type="date"
+      value={user.dateOfBirth}
+      onChange={handleChange('dateOfBirth')}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      placeholder={isFocused ? "mm/dd/yyyy" : "Date of Birth"}
+      InputLabelProps={{
+        shrink: isFocused,
+      }}
+    />
+
+
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
                     value={user.address} onChange={handleChange('address')} />
                 <LocationFormItem type='country' id='country' value={user.country} handleChange={handleChange('country')}/>
@@ -169,12 +208,7 @@ const UserForm = () => {
                 </Select>
                 <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
 
-                <Snackbar
-                    open={snackBarOpen}
-                    autoHideDuration={5000}
-                    onClose={()=>{setSnackBarOpen(false)}}
-                    message={snackBarText}
-                />
+                
                 
             </form>
         </>

@@ -20,7 +20,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { LocationFormItem } from "../../../../components/utilities/formUtils/LocationFromItem/LocationFormItem";
 import { Trip } from "../../types";
-import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
+
+import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
 export const TRIP_TAGS_OPTIONS = [

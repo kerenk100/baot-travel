@@ -1,32 +1,53 @@
 // VendorList.tsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Snackbar, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions
-} from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
-import { Vendor, Deal } from './Types';
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Snackbar,
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Close as CloseIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+} from "@mui/icons-material";
+import { Vendor, Deal } from "./Types";
 
 const initialVendors: Vendor[] = [
   {
-    _id: '1',
-    name: 'Vendor One',
-    type: 'Type A',
-    website: 'https://vendorone.com',
-    phoneNumber: '123-456-7890',
-    email: 'contact@vendorone.com',
-    coverPhoto: null,
+    _id: "1",
+    name: "Vendor One",
+    type: "Type A",
+    website: "https://vendorone.com",
+    phoneNumber: "123-456-7890",
+    email: "contact@vendorone.com",
+    coverPhoto: "",
     deal: {
-      _id: 'd1',
-      vendorId: '1',
-      description: 'Special Deal 1',
-      link: 'https://vendorone.com/deal1',
-      startDate: '2023-01-01',
-      endDate: '2023-12-31',
+      _id: "d1",
+      vendorId: "1",
+      description: "Special Deal 1",
+      link: "https://vendorone.com/deal1",
+      startDate: "2023-01-01",
+      endDate: "2023-12-31",
     },
     photos: [],
-    tags: ['tag1', 'tag2'],
+    tags: ["tag1", "tag2"],
     rate: 4.5,
-    location: 'Location One',
+    location: "Location One",
   },
   // Add more vendors as needed
 ];
@@ -43,9 +64,11 @@ const VendorList: React.FC = () => {
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [newDeal, setNewDeal] = useState<Deal | null>(null);
   const [currentVendorId, setCurrentVendorId] = useState<string | null>(null);
+  useEffect(() => setVendors(initialVendors), [initialVendors]);
+
 
   const handleEdit = (vendorId: string) => {
-    const vendorToEdit = vendors.find(vendor => vendor._id === vendorId);
+    const vendorToEdit = vendors.find((vendor) => vendor._id === vendorId);
     if (vendorToEdit) {
       setEditingVendorId(vendorId);
       setEditingVendor({ ...vendorToEdit });
@@ -55,6 +78,7 @@ const VendorList: React.FC = () => {
   const handleSave = () => {
     if (editingVendorId && editingVendor) {
       setVendors(vendors.map(vendor => vendor._id === editingVendorId ? editingVendor : vendor));
+      onSave(editingVendor);
       setEditingVendorId(null);
       setEditingVendor(null);
     }
@@ -74,6 +98,7 @@ const VendorList: React.FC = () => {
 
   const handleDelete = (vendorId: string) => {
     setVendors(vendors.filter(vendor => vendor._id !== vendorId));
+    onDelete(vendorId);
   };
 
   const handleAddDeals = (vendor: Vendor) => {
@@ -90,7 +115,7 @@ const VendorList: React.FC = () => {
   };
 
   const handleDealEdit = (dealId: string) => {
-    const dealToEdit = currentVendorDeals.find(deal => deal._id === dealId);
+    const dealToEdit = currentVendorDeals.find((deal) => deal._id === dealId);
     if (dealToEdit) {
       setEditingDealId(dealId);
       setEditingDeal({ ...dealToEdit });
@@ -99,7 +124,11 @@ const VendorList: React.FC = () => {
 
   const handleDealSave = () => {
     if (editingDealId && editingDeal) {
-      setCurrentVendorDeals(currentVendorDeals.map(deal => deal._id === editingDealId ? editingDeal : deal));
+      setCurrentVendorDeals(
+        currentVendorDeals.map((deal) =>
+          deal._id === editingDealId ? editingDeal : deal
+        )
+      );
       setEditingDealId(null);
       setEditingDeal(null);
     }
@@ -121,7 +150,9 @@ const VendorList: React.FC = () => {
   };
 
   const handleDealDelete = (dealId: string) => {
-    setCurrentVendorDeals(currentVendorDeals.filter(deal => deal._id !== dealId));
+    setCurrentVendorDeals(
+      currentVendorDeals.filter((deal) => deal._id !== dealId)
+    );
   };
 
   const handleAddNewDeal = () => {
@@ -130,10 +161,10 @@ const VendorList: React.FC = () => {
       const newDeal: Deal = {
         _id: newDealId,
         vendorId: currentVendorId,
-        description: '',
-        link: '',
-        startDate: '',
-        endDate: '',
+        description: "",
+        link: "",
+        startDate: "",
+        endDate: "",
       };
       setNewDeal(newDeal);
     }
@@ -150,11 +181,17 @@ const VendorList: React.FC = () => {
     setOpenSnackbar(false);
   };
 
+  const hasEditPermission = (vendor: Vendor) => {
+    const user = JSON.parse(localStorage.getItem("user")!);
+    return vendor.owner === user.id;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Cover Photo</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Website</TableCell>
@@ -169,37 +206,46 @@ const VendorList: React.FC = () => {
               {editingVendorId === vendor._id ? (
                 <>
                   <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ width: '150px', height: '150px' }}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <TextField
                       name="name"
-                      value={editingVendor?.name || ''}
+                      value={editingVendor?.name || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
                   <TableCell>
                     <TextField
                       name="type"
-                      value={editingVendor?.type || ''}
+                      value={editingVendor?.type || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
                   <TableCell>
                     <TextField
                       name="website"
-                      value={editingVendor?.website || ''}
+                      value={editingVendor?.website || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
                   <TableCell>
                     <TextField
                       name="phoneNumber"
-                      value={editingVendor?.phoneNumber || ''}
+                      value={editingVendor?.phoneNumber || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
                   <TableCell>
                     <TextField
                       name="email"
-                      value={editingVendor?.email || ''}
+                      value={editingVendor?.email || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
@@ -214,20 +260,33 @@ const VendorList: React.FC = () => {
                 </>
               ) : (
                 <>
+                  <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ height: '100px', width: '150px' }}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>{vendor.name}</TableCell>
                   <TableCell>{vendor.type}</TableCell>
-                  <TableCell><a href={vendor.website} target="_blank" rel="noopener noreferrer">{vendor.website}</a></TableCell>
+                  <TableCell>
+                    <a href={vendor.website} target="_blank" rel="noopener noreferrer">
+                      {vendor.website}
+                    </a>
+                  </TableCell>
                   <TableCell>{vendor.phoneNumber}</TableCell>
                   <TableCell>{vendor.email}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(vendor._id)}>
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleEdit(vendor._id)}>
                       <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(vendor._id)}>
+                    </IconButton>}
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleDelete(vendor._id)}>
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton>}
                     <IconButton onClick={() => handleAddDeals(vendor)}>
-                      <AddIcon />
+                      <Button variant="text">Vendor deals</Button>
                     </IconButton>
                   </TableCell>
                 </>
@@ -237,7 +296,12 @@ const VendorList: React.FC = () => {
         </TableBody>
       </Table>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="md">
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogTitle>Vendor Deals</DialogTitle>
         <DialogContent>
           <TableContainer component={Paper}>
@@ -259,28 +323,28 @@ const VendorList: React.FC = () => {
                         <TableCell>
                           <TextField
                             name="description"
-                            value={editingDeal?.description || ''}
+                            value={editingDeal?.description || ""}
                             onChange={handleDealInputChange}
                           />
                         </TableCell>
                         <TableCell>
                           <TextField
                             name="link"
-                            value={editingDeal?.link || ''}
+                            value={editingDeal?.link || ""}
                             onChange={handleDealInputChange}
                           />
                         </TableCell>
                         <TableCell>
                           <TextField
                             name="startDate"
-                            value={editingDeal?.startDate || ''}
+                            value={editingDeal?.startDate || ""}
                             onChange={handleDealInputChange}
                           />
                         </TableCell>
                         <TableCell>
                           <TextField
                             name="endDate"
-                            value={editingDeal?.endDate || ''}
+                            value={editingDeal?.endDate || ""}
                             onChange={handleDealInputChange}
                           />
                         </TableCell>
@@ -296,14 +360,24 @@ const VendorList: React.FC = () => {
                     ) : (
                       <>
                         <TableCell>{deal.description}</TableCell>
-                        <TableCell><a href={deal.link} target="_blank" rel="noopener noreferrer">{deal.link}</a></TableCell>
+                        <TableCell>
+                          <a
+                            href={deal.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {deal.link}
+                          </a>
+                        </TableCell>
                         <TableCell>{deal.startDate}</TableCell>
                         <TableCell>{deal.endDate}</TableCell>
                         <TableCell>
                           <IconButton onClick={() => handleDealEdit(deal._id)}>
                             <EditIcon />
                           </IconButton>
-                          <IconButton onClick={() => handleDealDelete(deal._id)}>
+                          <IconButton
+                            onClick={() => handleDealDelete(deal._id)}
+                          >
                             <DeleteIcon />
                           </IconButton>
                         </TableCell>
@@ -374,9 +448,17 @@ const VendorList: React.FC = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        message={selectedDeal ? `${selectedDeal.description}: ${selectedDeal.link}` : ''}
+        message={
+          selectedDeal
+            ? `${selectedDeal.description}: ${selectedDeal.link}`
+            : ""
+        }
         action={
-          <IconButton size="small" color="inherit" onClick={handleCloseSnackbar}>
+          <IconButton
+            size="small"
+            color="inherit"
+            onClick={handleCloseSnackbar}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
         }
