@@ -96,12 +96,6 @@ const headCells: readonly HeadCell[] = [
     label: "Budget",
   },
   {
-    id: "image",
-    numeric: true,
-    disablePadding: false,
-    label: "Image",
-  },
-  {
     id: "favorite",
     numeric: true,
     disablePadding: false,
@@ -259,7 +253,7 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -295,7 +289,9 @@ export default function EnhancedTable() {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: number, tripId: string) => {
+    navigate(`/trips/${tripId}`);
+    
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
@@ -374,7 +370,7 @@ export default function EnhancedTable() {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, trip.title)}
+                    onClick={(event) => handleClick(event, trip.title, trip._id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -400,15 +396,12 @@ export default function EnhancedTable() {
                     >
                       {trip.title}
                     </TableCell>
-                    <TableCell key={trip.description} align="right">
-                      {trip.description}
-                    </TableCell>
-                    <TableCell align="right">{trip.destination}</TableCell>
-                    <TableCell align="right">{trip.category}</TableCell>
-                    <TableCell align="right">{trip.startDate}</TableCell>
-                    <TableCell align="right">{trip.endDate}</TableCell>
-                    <TableCell align="right">{trip.budget}</TableCell>
-                    <TableCell align="right">{trip.image}</TableCell>
+                    <TableCell align="left">{trip.description && trip.description.substring(0, 50)}</TableCell>
+                    <TableCell align="left">{trip.destination}</TableCell>
+                    <TableCell align="left">{trip.category}</TableCell>
+                    <TableCell align="left">{trip.startDate}</TableCell>
+                    <TableCell align="left">{trip.endDate}</TableCell>
+                    <TableCell align="left">{trip.budget}</TableCell>
                     <TableCell align="right">
                       <IconButton onClick={() => console.log(trip.id)}>
                         <Favorite />
@@ -430,7 +423,7 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 20]}
           component="div"
           count={trips.length}
           rowsPerPage={rowsPerPage}
@@ -439,10 +432,6 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }
