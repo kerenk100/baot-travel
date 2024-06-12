@@ -141,7 +141,7 @@ function VendorManager() {
     <div className="App">
 
       {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
-      {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
+      {!currVendor && <button id="addNewVendor" onClick={() => onCreateNew()}>Add new vendor</button>}
       {!currVendor && <VendorList initialVendors={vendors} />}
     </div>
   );

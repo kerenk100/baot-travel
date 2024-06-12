@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Snackbar, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon, Save as SaveIcon, Cancel as CancelIcon, Tune } from '@mui/icons-material';
 import { Vendor, Deal } from './Types';
+import { uwConfig } from '../../components/utilities/uploadWidget/CloudinaryUploadWidget';
 
 const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
   console.log('initialVendors', initialVendors);
@@ -129,7 +130,7 @@ const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
 
   const hasEditPermission = (vendor: Vendor) => {
     const user = JSON.parse(localStorage.getItem("user")!);
-    return vendor.owner === user.id;
+    return user != null && vendor.owner === user.id;
   }
 
   return (
@@ -209,9 +210,9 @@ const VendorList: React.FC<{initialVendors: Vendor[]}> = ({initialVendors}) => {
                   <TableCell>
                     {vendor.coverPhoto && (
                       <img
-                        src={vendor.coverPhoto}
+                        src={vendor.coverPhoto.startsWith('http') ? vendor.coverPhoto : `https://res.cloudinary.com/${uwConfig.cloudName}/image/upload/${encodeURIComponent(vendor.coverPhoto)}`}
                         alt={`${vendor.name} cover`}
-                        style={{ height: '100px', width: '150px' }}
+                        style={{ height: '100px', width: '150px', borderRadius: '5px' }}
                       />
                     )}
                   </TableCell>
