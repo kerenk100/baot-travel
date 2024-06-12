@@ -20,9 +20,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { LocationFormItem } from "../../../../components/utilities/formUtils/LocationFromItem/LocationFormItem";
 import { Trip } from "../../types";
-
-import CloudinaryUploadWidget from "../../../../components/utilities/UploadWidget/CloudinaryUploadWidget";
+import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 import { Link, useParams, useNavigate } from 'react-router-dom';
+
 
 export const TRIP_TAGS_OPTIONS = [
   "Families",
@@ -107,6 +107,13 @@ export const AddTrips = () => {
     });
   };
 
+  const handleTagsChange  = (tags: string[]) => {
+    setTrip({
+      ...trip,
+      tags
+    });
+  }
+
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTrip({
       ...trip,
@@ -141,10 +148,9 @@ export const AddTrips = () => {
             required
           /> 
           <MultipleSelectTags
-            name={"tags"}
             label={"Tags"}
             options={TRIP_TAGS_OPTIONS}
-            saveState={handleChange}
+            saveState={handleTagsChange}
             tags={trip.tags}
           />
           <FormControlLabel 
