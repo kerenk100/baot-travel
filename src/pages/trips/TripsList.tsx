@@ -10,6 +10,7 @@ import {
   IconButton,
   Snackbar,
   TextField,
+  Box,
 } from "@mui/material";
 import {
   Edit as EditIcon,
@@ -20,6 +21,8 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
+import { Routes } from "../../routes/routes";
+import { useNavigate } from "react-router-dom";
 
 interface Trip {
   title: string;
@@ -55,7 +58,6 @@ const TripsList: React.FC = () => {
             ...trip,
             startDate: parseDate(trip.startDate),
             endDate: parseDate(trip.endDate),
-            category: JSON.parse(trip.category),
           }));
           setTrips(parsedTrips);
         })
@@ -164,7 +166,12 @@ const TripsList: React.FC = () => {
     return date ? date.toISOString().split("T")[0] : "";
   };
 
+const navigate = useNavigate();
   return (
+        <Box sx={{ width: "100%" }}>
+      <button onClick={() => navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</button>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+       
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -250,8 +257,8 @@ const TripsList: React.FC = () => {
                   <TableCell>{trip.title}</TableCell>
                   <TableCell>{trip.startDate?.toLocaleDateString()}</TableCell>
                   <TableCell>{trip.endDate?.toLocaleDateString()}</TableCell>
-                  <TableCell>{trip.category.join(", ")}</TableCell>
-                  <TableCell>{trip.description}</TableCell>
+                  <TableCell>{trip.category}</TableCell>
+                  <TableCell>{trip.description && trip.description.substring(0, 50)}</TableCell>
                   <TableCell>{trip.budget}</TableCell>
                   <TableCell>{trip.destination}</TableCell>
                   <TableCell>
@@ -288,6 +295,8 @@ const TripsList: React.FC = () => {
         }
       />
     </TableContainer>
+    </Paper>
+    </Box>
   );
 };
 
