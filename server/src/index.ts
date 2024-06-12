@@ -7,6 +7,7 @@ import { vendorsRouter } from "./routes/vendors.router";
 import { tripsRouter } from "./routes/trips.router";
 import { tagsRouter } from "./routes/tags.router";
 import { dealsRouter } from "./routes/deals.router";
+import {wishlistRouter} from "./routes/wishlist.router";
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ connectToDatabase()
     app.use("/users", userRouter);
     app.use("/tags", tagsRouter);
     app.use("/deals", dealsRouter);
+    app.use("/wishlist", wishlistRouter);
 
     app.get("/", (req, res) => {
       res.send("hello");

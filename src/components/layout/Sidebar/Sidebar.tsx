@@ -5,6 +5,7 @@ import HikingOutlinedIcon from '@mui/icons-material/HikingOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { ReactElement } from 'react';
 
 export interface SidebarMenuItem {
@@ -29,6 +30,10 @@ const SidebarMenuItems: SidebarMenuItem[] = [{
     icon: <Diversity3Icon />,
     to: '/users/partners-search',
     title: 'Partner search'
+}, {
+    icon: <FavoriteBorderIcon />,
+    to: '/wishlist',
+    title: 'Wishlist'
 }, {
     icon: <SettingsOutlinedIcon />,
     to: '/settings',

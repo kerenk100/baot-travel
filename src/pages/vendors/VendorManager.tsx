@@ -52,15 +52,6 @@ function VendorManager() {
     }
   };
 
-  const enterEditVendorMode = async (id: string) => {
-    const vendor: Vendor | undefined = vendors.find(vendor => vendor._id == id)
-    if (!vendor) {
-      console.error("Vendor not found with ID:", id);
-      return; // Early return if the vendor is not found
-    }
-    setCurrVendor(vendor);
-  };
-
   const saveVendor = async (updatedVendor: Vendor) => {
     const user = JSON.parse(localStorage.getItem("user")!);
     console.log('updated vendor', updatedVendor);
@@ -140,9 +131,9 @@ function VendorManager() {
     
     <div className="App">
 
-      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor}/>}
-      {!currVendor && <button onClick={() => onCreateNew()}>Add new vendor</button>}
-      {!currVendor && <VendorList initialVendors={vendors} />}
+      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor} />}
+      {<button onClick={() => onCreateNew()}>Add new vendor</button>}
+      {<VendorList initialVendors={vendors} onSave={saveVendor} onDelete={deleteVendor}/>}
     </div>
   );
 }
