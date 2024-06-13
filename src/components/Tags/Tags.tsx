@@ -1,62 +1,41 @@
 import React from "react";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
 
+import { Autocomplete, TextField, Chip, FormControl} from "@mui/material";
 export interface MultipleSelectTagsProps {
   options: string[];
   label: string;
-  name?: string;
-  saveState: (event: any) => void;
+  saveState: (tage: string[]) => void;
   tags: string[];
 }
 export const MultipleSelectTags: React.FC<MultipleSelectTagsProps> = ({
   options,
-  name,
   label,
   saveState,
   tags,
 }) => {
-  const [selectedTags, setSelectedTags] = React.useState<string[]>(tags);
 
-  const handleChange = (event: SelectChangeEvent<typeof selectedTags>) => {
-    const value = event.target.value;
-    setSelectedTags(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-    saveState(event);
+  const handleChange = (_event: React.SyntheticEvent, value: string[], _reason: string) => {
+    saveState(value);
   };
 
   return (
     <FormControl>
-      <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-      <Select
-        label={label}
-        name={name}
-        labelId="multiple-tags-label"
-        id="multiple-tag"
+      <Autocomplete
         multiple
-        value={selectedTags}
+        id="multiple-tag"
+        options={options}
+        freeSolo
         onChange={handleChange}
-        input={<OutlinedInput id="select-multiple-chip" label="Tag" />}
-        renderValue={(selected) => (
-          <div>
-            {selected.map((value) => (
-              <Chip key={value} label={value} />
-            ))}
-          </div>
+        value={tags}
+        renderTags={(value: readonly string[], getTagProps) =>
+          value.map((option: string, index: number) => (
+            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField {...params} id="select-multiple-chip" label={label} />
         )}
-      >
-        {options.map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
-          </MenuItem>
-        ))}
-      </Select>
+      />
     </FormControl>
   );
 };

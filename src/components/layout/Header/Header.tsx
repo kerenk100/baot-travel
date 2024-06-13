@@ -6,6 +6,7 @@ import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Favorite from "@mui/icons-material/Favorite";
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Routes } from "../../../routes/routes";
@@ -16,6 +17,7 @@ import { useAppContext } from "../../../App.context";
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const {isLoggedIn, logout, user} = useAppContext();
 
   const USER_MENU = [
@@ -84,7 +86,7 @@ export const Header: React.FC = () => {
             justifyContent: "space-between",
           }}
         >
-          <Logo onClick={()=>navigate(Routes.HOME)}/>
+          <Logo onClick={() => navigate(Routes.HOME)} />
         </div>
         {isLoggedIn ? 
         <Tooltip title="Open settings">
@@ -93,6 +95,23 @@ export const Header: React.FC = () => {
           </IconButton>
         </Tooltip>
        : <Link to="/login">LOGIN</Link> }
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Wish List">
+            <IconButton
+              onClick={() => navigate(Routes.WISHLIST)}
+              sx={{ p: 0, color: "red", marginRight: "16px" }}
+              disableRipple
+              disableFocusRipple
+            >
+              <Favorite />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple disableFocusRipple>
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            </IconButton>
+          </Tooltip>
+        </div>
         {DropdownMenu}
       </Toolbar>
     </AppBar>

@@ -1,9 +1,11 @@
-import Trips from "../pages/trips/Trips";
+import TripsList from "../pages/trips/TripsList";
 import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
 import UserRegistration from "../pages/users/userRegistration/UserRegistration";
 import { Settings } from "../pages/settings/Settings";
+import WishList from "../pages/wishlist/WishList"; // Import the WishList component
+
 import Login from "../pages/users/login/login";
 import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
@@ -20,7 +22,8 @@ export enum Routes {
   USERS_REGISTER = "/users/register",
   LOGIN = "/login",
   PARTNER_SEARCH = "/users/partners-search",
-  USER_EDIT = "/users/userEdit"
+  USERS_EDIT = "/users/:userId",
+  WISHLIST = "/wishlist"
 }
 
 export const publicRoutes = [
@@ -32,7 +35,7 @@ export const publicRoutes = [
   {
     path: Routes.TRIPS,
     name: "trips",
-    element: <Trips />,
+    element: <TripsList />
   },
   {
     path: Routes.TRIP,
@@ -66,9 +69,10 @@ export const publicRoutes = [
     element: <Login />,
   },
   {
-    path: Routes.TRIPS_TRIP_MAP,
-    element: <TripMap  />, 
-  }
+    path: Routes.WISHLIST,
+    name: "wishlist",
+    element: <WishList />
+  },
 ];
 export const privateRoutes = [
   {
