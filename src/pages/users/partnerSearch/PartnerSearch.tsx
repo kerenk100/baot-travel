@@ -50,7 +50,7 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
             this.setState({ error: error.message, isLoading: false });
         }
     };
-  }
+
 
   componentDidMount() {
     this.fetchPartnerUsers();

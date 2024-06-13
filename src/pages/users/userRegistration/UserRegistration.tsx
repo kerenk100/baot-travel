@@ -5,6 +5,10 @@ import { validateEmail } from "../../../utils/validations";
 import { Link, useNavigate } from 'react-router-dom';
 import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
 import { position } from '@cloudinary/url-gen/qualifiers/timeline';
+import { useAppContext } from '../../../App.context';
+
+
+
 
 interface UserFormState {
     firstName: string;
@@ -24,6 +28,9 @@ interface UserFormState {
 }
 
 const UserForm = () => {
+    const {user:systemUser} = useAppContext();
+    const userId = systemUser?.id;
+    
     const [user, setUser] = useState<UserFormState>({
         firstName: "",
         lastName: "",

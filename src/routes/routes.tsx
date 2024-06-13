@@ -38,6 +38,11 @@ export const publicRoutes = [
     element: <TripsList />
   },
   {
+    path: Routes.TRIPS_TRIP_MAP,
+    name: "tripMap",
+    element: <TripMap />
+  },
+  {
     path: Routes.TRIP,
     name:"trip",
     element:<ViewTrip />
@@ -61,7 +66,7 @@ export const publicRoutes = [
     element: <PartnerSearch />
   },
   {
-    path: Routes.USER_EDIT,
+    path: Routes.USERS_EDIT,
     element: <UserRegistration />, 
   },
   {
