@@ -64,6 +64,8 @@ const VendorList: React.FC = () => {
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [newDeal, setNewDeal] = useState<Deal | null>(null);
   const [currentVendorId, setCurrentVendorId] = useState<string | null>(null);
+  useEffect(() => setVendors(initialVendors), [initialVendors]);
+
 
   const handleEdit = (vendorId: string) => {
     const vendorToEdit = vendors.find((vendor) => vendor._id === vendorId);
@@ -75,11 +77,8 @@ const VendorList: React.FC = () => {
 
   const handleSave = () => {
     if (editingVendorId && editingVendor) {
-      setVendors(
-        vendors.map((vendor) =>
-          vendor._id === editingVendorId ? editingVendor : vendor
-        )
-      );
+      setVendors(vendors.map(vendor => vendor._id === editingVendorId ? editingVendor : vendor));
+      onSave(editingVendor);
       setEditingVendorId(null);
       setEditingVendor(null);
     }
@@ -98,7 +97,8 @@ const VendorList: React.FC = () => {
   };
 
   const handleDelete = (vendorId: string) => {
-    setVendors(vendors.filter((vendor) => vendor._id !== vendorId));
+    setVendors(vendors.filter(vendor => vendor._id !== vendorId));
+    onDelete(vendorId);
   };
 
   const handleAddDeals = (vendor: Vendor) => {
@@ -181,11 +181,17 @@ const VendorList: React.FC = () => {
     setOpenSnackbar(false);
   };
 
+  const hasEditPermission = (vendor: Vendor) => {
+    const user = JSON.parse(localStorage.getItem("user")!);
+    return vendor.owner === user.id;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Cover Photo</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Website</TableCell>
@@ -199,6 +205,15 @@ const VendorList: React.FC = () => {
             <TableRow key={vendor._id}>
               {editingVendorId === vendor._id ? (
                 <>
+                  <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ width: '150px', height: '150px' }}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>
                     <TextField
                       name="name"
@@ -245,28 +260,33 @@ const VendorList: React.FC = () => {
                 </>
               ) : (
                 <>
+                  <TableCell>
+                    {vendor.coverPhoto && (
+                      <img
+                        src={vendor.coverPhoto}
+                        alt={`${vendor.name} cover`}
+                        style={{ height: '100px', width: '150px' }}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell>{vendor.name}</TableCell>
                   <TableCell>{vendor.type}</TableCell>
                   <TableCell>
-                    <a
-                      href={vendor.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a href={vendor.website} target="_blank" rel="noopener noreferrer">
                       {vendor.website}
                     </a>
                   </TableCell>
                   <TableCell>{vendor.phoneNumber}</TableCell>
                   <TableCell>{vendor.email}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(vendor._id)}>
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleEdit(vendor._id)}>
                       <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(vendor._id)}>
+                    </IconButton>}
+                    {hasEditPermission(vendor) && <IconButton onClick={() => handleDelete(vendor._id)}>
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton>}
                     <IconButton onClick={() => handleAddDeals(vendor)}>
-                      <AddIcon />
+                      <Button variant="text">Vendor deals</Button>
                     </IconButton>
                   </TableCell>
                 </>
