@@ -40,6 +40,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
   const VendorTypes = {
     HOTELS: "Hotel",
     RESTAURANTS: "Restaurant",
+    OTHER: 'Other'
   };
 
   const handleSimpleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +58,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
   };
 
   const [tags, setTags] = useState<string[]>([]);
+  const [otherVendorType, setOtherVendorType] = useState('')
 
   const handleAddTag = (tag: string) => {
     setTags([...tags, tag]);
@@ -72,6 +74,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     //TODO- add the tags state- to the vendor
+    vendor.type = vendor.type === VendorTypes.OTHER ? otherVendorType : vendor.type;
     onSave(vendor);
     console.log("Form submitted:", vendor);
   };
@@ -123,7 +126,15 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
           >
             <MenuItem value={VendorTypes.HOTELS}>HOTEL</MenuItem>
             <MenuItem value={VendorTypes.RESTAURANTS}>RESTAURANT</MenuItem>
+            <MenuItem value={VendorTypes.OTHER}>OTHER</MenuItem>
           </Select>
+          {vendor.type === VendorTypes.OTHER && 
+          <TextField
+            label="Custom vendor type:"
+            type="text"
+            value={otherVendorType}
+            onChange={(e) => setOtherVendorType(e.target.value)}
+          />}
         </FormControl>
 
         <TextField
