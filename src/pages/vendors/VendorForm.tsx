@@ -34,7 +34,7 @@ const VendorForm: React.FC<VendorFormProps> = ({ initialVendor, onSave }) => {
       vendor.coverPhoto = coverPhotoPublicId;
   }
    if (additionalPhotosPublicIds) {
-      vendor.photos = additionalPhotosPublicIds;
+      vendor.photos = [additionalPhotosPublicIds];
   }
 
   const VendorTypes = {

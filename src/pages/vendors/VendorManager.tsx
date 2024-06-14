@@ -128,13 +128,11 @@ function VendorManager() {
   }
 
   return (
-
-      <div className="App">
-
-        {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor} />}
-        {<button onClick={() => onCreateNew()}>Add new vendor</button>}
-        {<VendorList initialVendors={vendors} onSave={saveVendor} onDelete={deleteVendor}/>}
-      </div>
+ <div className="App">
+      {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor} />}
+      {<button onClick={() => onCreateNew()}>Add new vendor</button>}
+      {<VendorList initialVendors={vendors} onSave={saveVendor} onDelete={deleteVendor}/>}
+    </div>
   );
 }
 

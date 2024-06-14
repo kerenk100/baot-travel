@@ -23,7 +23,6 @@ import { Trip } from "../../types";
 import CloudinaryUploadWidget from "../../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
-
 export const TRIP_TAGS_OPTIONS = [
   "Families",
   "Friends",
