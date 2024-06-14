@@ -2,7 +2,7 @@ import React, { ChangeEventHandler, useState } from "react";
 import { Vendor } from "./Types";
 import "./VendorForm.css";
 import TagInput from "../../components/Tags/TagInput";
-import CloudinaryUploadWidget from "../../components/utilities/UploadWidget/CloudinaryUploadWidget";
+import CloudinaryUploadWidget from "../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 import {
   Button,
   FormControl,

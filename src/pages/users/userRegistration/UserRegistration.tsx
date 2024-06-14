@@ -4,7 +4,7 @@ import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
-import { position } from '@cloudinary/url-gen/qualifiers/timeline';
+import CloudinaryUploadWidget from '../../../components/utilities/uploadWidget/CloudinaryUploadWidget';
 
 interface UserFormState {
     firstName: string;
@@ -15,12 +15,15 @@ interface UserFormState {
     city: string;
     country: string;
     password: string;
+    phoneNumber: string;
     errors: {
         email?: string;
         emailExists?: string;
+        phoneNumber?: string;
     };
     connectedUsers: string[];
     partnerSearch: string;
+    image: string;
 }
 
 const UserForm = () => {
@@ -33,28 +36,29 @@ const UserForm = () => {
         city: "",
         country: "",
         password: "",
+        phoneNumber: "",
         errors: {},
         connectedUsers: [],
-        partnerSearch: ""
+        partnerSearch: "",
+        image: ""
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { userId } = useParams();
     const navigate = useNavigate();
-    const [snackBarOpen,setSnackBarOpen] = useState(false)
-    const [snackBarText,setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.")
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarText, setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.");
     const [isFocused, setIsFocused] = useState(false);
+    const [publicId, setPublicId] = useState("");
 
     const handleFocus = () => {
-      setIsFocused(true);
+        setIsFocused(true);
     };
-  
-    const handleBlur = () => {
-      setIsFocused(false);
-    };
-  
 
-    // Load user data if userId is present
+    const handleBlur = () => {
+        setIsFocused(false);
+    };
+
     useEffect(() => {
         if (!userId) return;
 
@@ -78,6 +82,16 @@ const UserForm = () => {
         });
     };
 
+    const handlePhoneNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const phoneNumber = event.target.value;
+        const isValid = /^\d+(-\d+)*$/.test(phoneNumber); // Validation for phone number
+        setUser({
+            ...user,
+            phoneNumber,
+            errors: { ...user.errors, phoneNumber: isValid ? undefined : 'Phone number format is incorrect!' }
+        });
+    };
+
     const handleConnectedUsersChange = (event: ChangeEvent<HTMLInputElement>) => {
         const emails = event.target.value.split(',').map(email => email.trim());
         setUser({
@@ -92,14 +106,28 @@ const UserForm = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!userId && user.errors.email) {
-            console.error("Form submission blocked due to validation errors.");
+
+        const isEmailValid = validateEmail(user.email);
+        const isPhoneNumberValid = /^\d+(-\d+)*$/.test(user.phoneNumber);
+
+        if (!isEmailValid || !isPhoneNumberValid) {
+            setUser({
+                ...user,
+                errors: {
+                    email: isEmailValid ? undefined : 'Email format is incorrect!',
+                    phoneNumber: isPhoneNumberValid ? undefined : 'Phone number format is incorrect!'
+                }
+            });
+            setSnackBarOpen(true);
+            setSnackBarText("Please correct the errors before submitting.");
             return;
         }
 
         const endpoint = userId ? `http://localhost:8080/users/${userId}/edit` : 'http://localhost:8080/users/register';
         const method = userId ? "PUT" : "POST";
-
+        if (publicId) {
+            user.image = publicId;
+        }
         try {
             const response = await fetch(endpoint, {
                 method: method,
@@ -111,21 +139,20 @@ const UserForm = () => {
 
             const resultText = await response.text();
             if (!response.ok) {
-                // Handling specific error based on the text response
                 if (resultText.toLowerCase().includes('user already exists')) {
                     setUser(prevState => ({
                         ...prevState,
                         errors: { ...prevState.errors, emailExists: 'Email already exists!' }
                     }));
                     setSnackBarOpen(true);
-                    setSnackBarText("Ops! user is already exists!");
+                    setSnackBarText("Ops! user already exists!");
                 }
-                throw new Error(resultText); // Use the text from the response in the error
+                throw new Error(resultText);
             }
             console.log('Success:', resultText);
             setIsSubmitted(true);
             setSnackBarOpen(true);
-            setSnackBarText("The user was added succesfully!");
+            setSnackBarText("The user was added successfully!");
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
             setSnackBarOpen(true);
@@ -145,55 +172,62 @@ const UserForm = () => {
 
     return (
         <>
-        
             <h3>{userId ? 'Edit User Data' : 'User Registration'}</h3>
+            {publicId && (
+                      <img
+                        src={publicId.startsWith('http') ? publicId: `https://res.cloudinary.com/dwsypp6ma/image/upload/${encodeURIComponent(publicId)}`}
+                        alt="bbb"
+                        style={{ height: '100px', width: '150px', borderRadius: '5px' }}
+                      />
+                    )}
             <Snackbar
-                    open={snackBarOpen}
-                    autoHideDuration={5000}
-                    onClose={()=>{setSnackBarOpen(false)}}
-                    message={snackBarText}
-                    sx={{
-                        position: 'static',
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}
-                />
+                open={snackBarOpen}
+                autoHideDuration={5000}
+                onClose={() => { setSnackBarOpen(false); }}
+                message={snackBarText}
+                sx={{
+                    position: 'static',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            />
             <form className="userForm" onSubmit={handleSubmit}>
-                
-                {/* Common form fields for registration and edit */}
                 <TextField id="firstName" label="First Name" variant="outlined" color="secondary"
-                    value={user.firstName} onChange={handleChange('firstName')} required />
+                    value={user.firstName} onChange={handleChange('firstName')} required className="formField" />
                 <TextField id="lastName" label="Last Name" variant="outlined" color="secondary"
-                    value={user.lastName} onChange={handleChange('lastName')} required />
-                { !userId && <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
+                    value={user.lastName} onChange={handleChange('lastName')} required className="formField" />
+                {!userId && <TextField id="email" label="Email" variant="outlined" color="secondary" type="email"
                     value={user.email} error={!!user.errors.email || !!user.errors.emailExists}
                     helperText={user.errors.email || user.errors.emailExists}
-                    onChange={handleEmailChange} required />}
-                      <TextField
-      id="dateOfBirth"
-      label={isFocused ? "Date of Birth" : ""}
-      variant="outlined"
-      color="secondary"
-      type="date"
-      value={user.dateOfBirth}
-      onChange={handleChange('dateOfBirth')}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      placeholder={isFocused ? "mm/dd/yyyy" : "Date of Birth"}
-      InputLabelProps={{
-        shrink: isFocused,
-      }}
-    />
-
-
+                    onChange={handleEmailChange} required className="formField" />}
+                <TextField
+                    id="dateOfBirth"
+                    label={isFocused ? "Date of Birth" : ""}
+                    variant="outlined"
+                    color="secondary"
+                    type="date"
+                    value={user.dateOfBirth}
+                    onChange={handleChange('dateOfBirth')}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    placeholder={isFocused ? "mm/dd/yyyy" : "Date of Birth"}
+                    InputLabelProps={{
+                        shrink: isFocused,
+                    }}
+                    className="formField"
+                />
                 <TextField id="address" label="Address" variant="outlined" color="secondary"
-                    value={user.address} onChange={handleChange('address')} />
-                <LocationFormItem type='country' id='country' value={user.country} handleChange={handleChange('country')}/>
-                <LocationFormItem type='city' id='city' value={user.city} handleChange={handleChange('city')} parentLocation={user.country}/>
-                { !userId && <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
-                    value={user.password} onChange={handleChange('password')} required />}
+                    value={user.address} onChange={handleChange('address')} className="formField" />
+                <TextField id="phoneNumber" label="Phone Number" variant="outlined" color="secondary"
+                    value={user.phoneNumber} error={!!user.errors.phoneNumber}
+                    helperText={user.errors.phoneNumber}
+                    onChange={handlePhoneNumberChange} className="formField" />
+                <LocationFormItem type='country' id='country' value={user.country} handleChange={handleChange('country')} className="formField" />
+                <LocationFormItem type='city' id='city' value={user.city} handleChange={handleChange('city')} parentLocation={user.country} className="formField" />
+                {!userId && <TextField id="password" label="Password" variant="outlined" color="secondary" type="password"
+                    value={user.password} onChange={handleChange('password')} required className="formField" />}
                 <TextField id="connectedUsers" label="Connected Users emails" variant="outlined" color="secondary"
-                    value={user.connectedUsers} onChange={handleConnectedUsersChange} />
+                    value={user.connectedUsers} onChange={handleConnectedUsersChange} className="formField" />
                 <InputLabel id="partnerSearch">Partner Search</InputLabel>
                 <Select
                     id="partnerSearch"
@@ -202,14 +236,13 @@ const UserForm = () => {
                     color="secondary"
                     value={user.partnerSearch}
                     onChange={handlePartnerSearchChange}
+                    className="formField"
                 >
                     <MenuItem value={"yes"}>Yes</MenuItem>
                     <MenuItem value={"no"}>No</MenuItem>
                 </Select>
-                <Button type="submit" variant="contained">{userId ? 'Update' : 'Register'}</Button>
-
-                
-                
+                <CloudinaryUploadWidget setPublicId={setPublicId}/>
+                <Button type="submit" variant="contained" className="submitButton">{userId ? 'Update' : 'Register'}</Button>
             </form>
         </>
     );
