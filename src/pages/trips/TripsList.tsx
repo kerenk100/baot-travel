@@ -123,7 +123,7 @@ const TripsList: React.FC = () => {
     navigate(`/trips/${tripId}`);
   };
 
-  const hasEditPermission = (trip: Trip) => {
+  const isCurrentUserIsOwner = (trip: Trip) => {
     const user = JSON.parse(localStorage.getItem("user")!);
     return user != null && trip.owner === user.id;
   }
@@ -273,10 +273,10 @@ const navigate = useNavigate();
                   <TableCell>{trip.budget}</TableCell>
                   <TableCell>{trip.destination}</TableCell>
                   <TableCell>
-                    {hasEditPermission(trip) && <IconButton onClick={() => handleEdit(trip._id)}>
+                    {isCurrentUserIsOwner(trip) && <IconButton onClick={() => handleEdit(trip._id)}>
                       <EditIcon />
                     </IconButton>}
-                    {hasEditPermission(trip) && <IconButton onClick={() =>handleDelete(trip._id)}>
+                    {isCurrentUserIsOwner(trip) && <IconButton onClick={() =>handleDelete(trip._id)}>
                       <DeleteIcon />
                     </IconButton>}
                     <IconButton onClick={() => handleFavoriteChanged(trip.id)}>
