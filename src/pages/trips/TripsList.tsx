@@ -10,6 +10,7 @@ import {
   IconButton,
   Snackbar,
   TextField,
+  Box,
 } from "@mui/material";
 import {
   Edit as EditIcon,
@@ -20,18 +21,22 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Routes } from "../../routes/routes";
+import { useNavigate } from "react-router-dom";
 
 interface Trip {
   title: string;
   startDate: Date | null;
   endDate: Date | null;
-  category: string[];
+  tags: [],
   description: string;
   image: string;
   budget: number;
   destination: string;
   id: string;
   favorite: boolean;
+  owner: string
 }
 
 const TripsList: React.FC = () => {
@@ -53,9 +58,6 @@ const TripsList: React.FC = () => {
         response.json().then((json) => {
           const parsedTrips = json.map((trip: any) => ({
             ...trip,
-            startDate: parseDate(trip.startDate),
-            endDate: parseDate(trip.endDate),
-            category: JSON.parse(trip.category),
           }));
           setTrips(parsedTrips);
         })
@@ -77,7 +79,7 @@ const TripsList: React.FC = () => {
   };
 
   const handleEdit = (tripId: string) => {
-    const tripToEdit = trips.find((trip) => trip.id === tripId);
+    const tripToEdit = trips.find((trip) => trip._id === tripId);
     if (tripToEdit) {
       setEditingTripId(tripId);
       setEditingTrip({ ...tripToEdit });
@@ -115,8 +117,19 @@ const TripsList: React.FC = () => {
     }
   };
 
+  const handleViewTrip = (tripId: string, tags:[]) => {
+    console.log(tripId);
+    console.log(tags);
+    navigate(`/trips/${tripId}`);
+  };
+
+  const hasEditPermission = (trip: Trip) => {
+    const user = JSON.parse(localStorage.getItem("user")!);
+    return user != null && trip.owner === user.id;
+  }
+
   const handleDelete = (tripId: string) => {
-    setTrips(trips.filter((trip) => trip.id !== tripId));
+    setTrips(trips.filter((trip) => trip._id !== tripId));
   };
 
   // const handleFavorite = (tripId: string) => {
@@ -164,7 +177,12 @@ const TripsList: React.FC = () => {
     return date ? date.toISOString().split("T")[0] : "";
   };
 
+const navigate = useNavigate();
   return (
+        <Box sx={{ width: "100%" }}>
+      <button onClick={() => navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</button>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+       
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -209,8 +227,8 @@ const TripsList: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <TextField
-                      name="category"
-                      value={editingTrip?.category.join(", ") || ""}
+                      name="tags"
+                      value={editingTrip?.tags || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
@@ -248,22 +266,23 @@ const TripsList: React.FC = () => {
               ) : (
                 <>
                   <TableCell>{trip.title}</TableCell>
-                  <TableCell>{trip.startDate?.toLocaleDateString()}</TableCell>
-                  <TableCell>{trip.endDate?.toLocaleDateString()}</TableCell>
-                  <TableCell>{trip.category.join(", ")}</TableCell>
-                  <TableCell>{trip.description}</TableCell>
+                  <TableCell>{trip.startDate}</TableCell>
+                  <TableCell>{trip.endDate}</TableCell>
+                  <TableCell>{trip?.tags?.join(', ')}</TableCell>
+                  <TableCell>{trip.description && trip.description.substring(0, 50)+"..."}</TableCell>
                   <TableCell>{trip.budget}</TableCell>
                   <TableCell>{trip.destination}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleEdit(trip.id)}>
+                    {hasEditPermission(trip) && <IconButton onClick={() => handleEdit(trip._id)}>
                       <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(trip.id)}>
+                    </IconButton>}
+                    {hasEditPermission(trip) && <IconButton onClick={() =>handleDelete(trip._id)}>
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton>}
                     <IconButton onClick={() => handleFavoriteChanged(trip.id)}>
                       {trip.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                     </IconButton>
+                    <IconButton  onClick={() => handleViewTrip(trip._id,trip.tags)}>< VisibilityIcon /></IconButton>
                   </TableCell>
                 </>
               )}
@@ -288,6 +307,8 @@ const TripsList: React.FC = () => {
         }
       />
     </TableContainer>
+    </Paper>
+    </Box>
   );
 };
 

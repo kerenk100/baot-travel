@@ -44,6 +44,7 @@ export const AddTrips = () => {
     budget: 0,
     startDate: "",
     endDate: "",
+    owner:""
   };
   
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
@@ -59,6 +60,8 @@ export const AddTrips = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     let data = trip;
+    const user = JSON.parse(localStorage.getItem("user")!);
+    data.owner = user.id; 
     if (publicId) {
       data.image = publicId;
     }
