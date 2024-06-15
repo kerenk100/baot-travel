@@ -33,6 +33,10 @@ export const Header: React.FC = () => {
         setIsMenuOpen(false);
       },
     },
+    {
+      name: "Edit user",
+      onClick: () => navigate(Routes.USERS_EDIT , {}),
+    }
   ];
 
   const handleOpenUserMenu = () => {
