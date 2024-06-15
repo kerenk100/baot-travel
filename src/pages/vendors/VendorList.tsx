@@ -210,13 +210,15 @@ const VendorList: React.FC<{initialVendors: Vendor[], onSave: (vendor: Vendor) =
               ) : (
                 <>
                   <TableCell>
-                    {vendor.coverPhoto && (
+                    {
                       <img
-                        src={vendor.coverPhoto.startsWith('http') ? vendor.coverPhoto : `https://res.cloudinary.com/${uwConfig.cloudName}/image/upload/${encodeURIComponent(vendor.coverPhoto)}`}
+                        src= { vendor.coverPhoto ?
+                         (vendor.coverPhoto.startsWith('http') ? vendor.coverPhoto : `https://res.cloudinary.com/${uwConfig.cloudName}/image/upload/${encodeURIComponent(vendor.coverPhoto)}`) :
+                         'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'}
                         alt={`${vendor.name} cover`}
                         style={{ height: '100px', width: '150px', borderRadius: '5px' }}
                       />
-                    )}
+                    }
                   </TableCell>
                   <TableCell>{vendor.name}</TableCell>
                   <TableCell>{vendor.type}</TableCell>

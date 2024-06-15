@@ -34,10 +34,6 @@ const SidebarMenuItems: SidebarMenuItem[] = [{
     icon: <FavoriteBorderIcon />,
     to: '/wishlist',
     title: 'Wishlist'
-}, {
-    icon: <SettingsOutlinedIcon />,
-    to: '/settings',
-    title: 'Settings'
 }]
 
 const Sidebar = () => {
