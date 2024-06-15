@@ -7,32 +7,32 @@ import { useAppContext } from '../../App.context';
 function VendorManager() {
   const [currVendor, setCurrVendor] = useState<Vendor | null>()
   const [vendors, setVendors] = useState<Vendor[]>([]);
-  
+
   useEffect(() => {
     fetch('http://localhost:8080/vendors/')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
         })
         .then(data => {
-            setVendors(data); // Set fetched data into state
+          setVendors(data); // Set fetched data into state
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+          console.error('There was a problem with the fetch operation:', error);
         });
-}, []);
+  }, []);
 
   // Function to handle deleting a vendor
   const deleteVendor = async (id: string) => {
-    
+
     try {
       // Send DELETE request to the server
       const response = await fetch(`http://localhost:8080/vendors/${id}`, {
         method: 'DELETE'
       });
-  
+
       // Check if the DELETE was actually successful
       if (!response.ok) {
         // If the DELETE was not successful, handle the error
@@ -65,7 +65,7 @@ function VendorManager() {
       // Set the owner of the new vendor to the current user
       updatedVendor.owner = user?.id;
     }
- 
+
     try {
       const response = await fetch(url, {
         method: method,
@@ -74,13 +74,13 @@ function VendorManager() {
         },
         body: JSON.stringify(updatedVendor)
       });
-  
+
       if (response.ok) {
         const message = await response.text();
 
         // Update the local state accordingly
         if (newVendor) {
-                    // If new vendor, add it to the list with a new ID (assumed returned by server or managed client-side)
+          // If new vendor, add it to the list with a new ID (assumed returned by server or managed client-side)
           setVendors([...vendors, {...updatedVendor, _id: message.split(' ')[7]}]); // Extract ID from message
 
         } else {
@@ -128,9 +128,7 @@ function VendorManager() {
   }
 
   return (
-    
-    <div className="App">
-
+ <div className="App">
       {currVendor && <VendorForm initialVendor={currVendor} onSave={saveVendor} />}
       {<button onClick={() => onCreateNew()}>Add new vendor</button>}
       {<VendorList initialVendors={vendors} onSave={saveVendor} onDelete={deleteVendor}/>}

@@ -51,7 +51,6 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
         }
     };
 
-
   componentDidMount() {
     this.fetchPartnerUsers();
   }

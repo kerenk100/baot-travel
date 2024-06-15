@@ -8,7 +8,7 @@ import { Close } from "@mui/icons-material";
 const CloudinaryScriptContext = createContext({ loaded: false });
 
 
-const uwConfig = {
+export const uwConfig = {
   cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '',
   uploadPreset: import.meta.env.VITE_CLOUDINARY_PRESET || ''
 }

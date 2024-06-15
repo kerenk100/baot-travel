@@ -20,6 +20,7 @@ body{
   flex-direction: column;
   flex-wrap: nowrap;
 }
+
 .MuiFormControl-root {
   display: flex;
   flex-direction: column;
@@ -40,6 +41,15 @@ button {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+#addNewVendor {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#addNewVendor:hover {
+  background-color: rgb(228, 228, 228);
 }
 
 @media (prefers-color-scheme: light) {
