@@ -86,6 +86,7 @@ const TripsList: React.FC = () => {
     }
   };
 
+
   const handleSave = () => {
     if (editingTripId && editingTrip) {
       setTrips(
@@ -130,6 +131,34 @@ const TripsList: React.FC = () => {
 
   const handleDelete = (tripId: string) => {
     setTrips(trips.filter((trip) => trip._id !== tripId));
+    deleteTrip(tripId);
+  };
+
+  const deleteTrip = async (id: string) => {
+
+    try {
+      // Send DELETE request to the server
+      const response = await fetch(`http://localhost:8080/trips/${id}`, {
+        method: 'DELETE'
+      });
+
+      // Check if the DELETE was actually successful
+      if (!response.ok) {
+        // If the DELETE was not successful, handle the error
+        const message = await response.text(); // or response.json() if the server sends JSON
+        console.error(`Failed to delete trip: ${message}`);
+        throw new Error(message); // Re-throw to handle it outside or for further error handling logic
+      } else {
+        setTrips(trips.filter(trip => trip._id !== id));
+        console.log(`Trip deleted successfully with ID: ${id}`);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error making DELETE request:', error.message);
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
   };
 
   // const handleFavorite = (tripId: string) => {
