@@ -22,10 +22,6 @@ export const Header: React.FC = () => {
 
   const USER_MENU = [
     {
-      name: "Settings",
-      onClick: () => navigate(Routes.SETTINGS),
-    },
-    {
       name: "Log out",
       onClick: () => {
         logout();
