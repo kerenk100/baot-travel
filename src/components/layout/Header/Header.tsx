@@ -84,13 +84,6 @@ export const Header: React.FC = () => {
         >
           <Logo onClick={() => navigate(Routes.HOME)} />
         </div>
-        {isLoggedIn ? 
-        <Tooltip title="Open settings">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
-          </IconButton>
-        </Tooltip>
-       : <Link to="/login">LOGIN</Link> }
         <div style={{ display: "flex", alignItems: "center" }}>
           <Tooltip title="Wish List">
             <IconButton
@@ -102,11 +95,12 @@ export const Header: React.FC = () => {
               <Favorite />
             </IconButton>
           </Tooltip>
+          {isLoggedIn ? 
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple disableFocusRipple>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
             </IconButton>
-          </Tooltip>
+          </Tooltip>: <Link to="/login">LOGIN</Link> }
         </div>
         {DropdownMenu}
       </Toolbar>
