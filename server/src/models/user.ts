@@ -15,5 +15,6 @@ export class User {
     public partnerSearch: string,
     public hash?: string,
     public salt?: string,
+    public image?:string
   ) {}
 }
