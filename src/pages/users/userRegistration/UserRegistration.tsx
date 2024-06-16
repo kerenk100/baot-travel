@@ -1,9 +1,14 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, SelectChangeEvent, Snackbar } from '@mui/material';
 import './UserRegistration.css';
 import { validateEmail } from "../../../utils/validations";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LocationFormItem } from '../../../components/utilities/formUtils/LocationFromItem/LocationFormItem';
+import { position } from '@cloudinary/url-gen/qualifiers/timeline';
+import { useAppContext } from '../../../App.context';
+
+
+
 import CloudinaryUploadWidget from '../../../components/utilities/uploadWidget/CloudinaryUploadWidget';
 
 interface UserFormState {
@@ -27,6 +32,9 @@ interface UserFormState {
 }
 
 const UserForm = () => {
+    const {user:systemUser} = useAppContext();
+    const userId = systemUser?.id;
+    
     const [user, setUser] = useState<UserFormState>({
         firstName: "",
         lastName: "",
@@ -44,7 +52,6 @@ const UserForm = () => {
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const { userId } = useParams();
     const navigate = useNavigate();
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarText, setSnackBarText] = useState("This Snackbar will be dismissed in 5 seconds.");
