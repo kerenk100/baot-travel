@@ -22,10 +22,6 @@ export const Header: React.FC = () => {
 
   const USER_MENU = [
     {
-      name: "Settings",
-      onClick: () => navigate(Routes.SETTINGS),
-    },
-    {
       name: "Log out",
       onClick: () => {
         logout();
@@ -33,6 +29,10 @@ export const Header: React.FC = () => {
         setIsMenuOpen(false);
       },
     },
+    {
+      name: "Edit user",
+      onClick: () => navigate(Routes.USERS_EDIT , {}),
+    }
   ];
 
   const handleOpenUserMenu = () => {

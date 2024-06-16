@@ -9,12 +9,14 @@ import WishList from "../pages/wishlist/WishList"; // Import the WishList compon
 import Login from "../pages/users/login/login";
 import ViewTrip from "../pages/trips/viewTrip/ViewTrip";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
+import TripMap from "../pages/trips/components/TripMap/TripMap";
 
 export enum Routes {
   HOME = "/",
   TRIPS = "/trips",
   TRIP = "/trips/:tripId",
   TRIPS_ADD_TRIP = "/trips/add-trips",
+  TRIPS_TRIP_MAP = "/trips/:tripId/tripMap",
   VENDORS = "/vendors",
   SETTINGS = "/settings",
   USERS_REGISTER = "/users/register",
@@ -34,6 +36,11 @@ export const publicRoutes = [
     path: Routes.TRIPS,
     name: "trips",
     element: <TripsList />
+  },
+  {
+    path: Routes.TRIPS_TRIP_MAP,
+    name: "tripMap",
+    element: <TripMap />
   },
   {
     path: Routes.TRIP,
