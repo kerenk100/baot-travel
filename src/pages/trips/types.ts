@@ -9,4 +9,5 @@ export type Trip = {
     startDate: string;
     endDate: string;
     owner:string;
+    _id: string
 }

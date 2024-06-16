@@ -39,9 +39,10 @@ tripsRouter.post("/", async (req: Request, res: Response) => {
     try {
         const newTrip = req.body as Trip;
         const result = await collections.trips.insertOne(newTrip);
+        const insertedTrip = await collections.trips.findOne({ _id: result.insertedId });
 
         result
-            ? res.status(201).send(`Successfully created a new trip with id ${result.insertedId}`)
+            ? res.status(201).send(insertedTrip)
             : res.status(500).send("Failed to create a new trip.");
     } catch (error) {
         console.error(error);
@@ -87,4 +88,52 @@ tripsRouter.delete("/:id", async (req: Request, res: Response) => {
         console.error(error.message);
         res.status(400).send(error.message);
     }
+});
+
+tripsRouter.get("/:id/suggested_trips", async (req: Request, res: Response) => {
+  try {
+    const id = new ObjectId(req?.params?.id);
+    const currentTrip = await collections.trips.findOne({ _id: id });
+
+    let suggestedTripsQuery: object[];
+    const tags = currentTrip.tags ?? [];
+    const country = currentTrip.country;
+
+    const tagQuery = { $match: { tags: { $in: tags } } };
+    const countryQuery = { $match: { country: country } };
+    const randomQuery = { $sample: { size: 3 } };
+    const excludeQuery = { $match: { _id: { $ne: id } } }; // Exclude documents with the given ID
+
+    suggestedTripsQuery = [
+      {
+        $facet: {
+          tagResults: [tagQuery, { $sample: { size: 3 } }, excludeQuery],
+          countryResults: [
+            countryQuery,
+            { $sample: { size: 3 } },
+            excludeQuery,
+          ],
+          randomResults: [randomQuery, excludeQuery],
+        },
+      },
+      {
+        $project: {
+          suggestions: {
+            $setUnion: ["$tagResults", "$countryResults", "$randomResults"],
+          },
+        },
+      },
+      { $unwind: "$suggestions" },
+      { $sample: { size: 3 } },
+      { $replaceRoot: { newRoot: "$suggestions" } },
+    ];
+
+    const suggestedTrips = await collections.trips
+      .aggregate(suggestedTripsQuery)
+      .toArray();
+
+    res.status(200).send(suggestedTrips);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });

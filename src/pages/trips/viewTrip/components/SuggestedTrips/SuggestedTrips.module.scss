@@ -1,0 +1,24 @@
+.suggestions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    cursor: pointer;
+
+    & [class*=MuiCard-root] {
+        position: relative;
+        
+        &.trip {
+            box-sizing: content-box;
+            width: 100%;
+            aspect-ratio: 1/1;
+            [class*=MuiCardContent-root] {
+                padding:0;
+                height: calc(100% - 140px);
+                .content{
+                    padding:12px;
+                }
+            }
+        }
+    }
+
+}
