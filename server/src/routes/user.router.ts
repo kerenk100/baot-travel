@@ -84,6 +84,7 @@ userRouter.post("/register", async (req: Request, res: Response) => {
       req.body.country,
       req.body.connectedUsers,
       req.body.partnerSearch,
+      req.body.image
     );
 
 
