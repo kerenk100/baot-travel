@@ -46,7 +46,7 @@ export default function ViewTrip() {
       .finally(() => {
         setLoading(false);
       })
-  }, [trip, tripId])
+  }, [tripId])
 
 
    const img = (
