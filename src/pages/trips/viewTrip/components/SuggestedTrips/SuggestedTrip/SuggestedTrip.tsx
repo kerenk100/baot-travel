@@ -25,12 +25,19 @@ export const SuggestedTrip: React.FC<Trip> = (props) => {
       cloudName: uwConfig.cloudName,
     },
   });
+  
   const displayedImage = image && cld.image(image).createCloudinaryURL();
   return     <Card sx={{ maxWidth: 345 }}  className={styles.trip} onClick={() => onSuggestionClick(_id)}>
     <CardMedia
       component="img"
       height="140"
-      image={displayedImage}
+      image={image
+        ? image.startsWith("http")
+          ? image
+          : `https://res.cloudinary.com/${
+              uwConfig.cloudName
+            }/image/upload/${encodeURIComponent(image)}`
+        : "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"}
     />
     <CardContent>
       <div className={styles.content}>
@@ -39,13 +46,12 @@ export const SuggestedTrip: React.FC<Trip> = (props) => {
           country ? Country.getCountryByCode(country)?.flag : ""
         }`}
       </Typography>
-      {tags && <div>
-            <span>
+      {tags &&
+            <span className={styles.tagList}>
               {tags.map((tag) => (
-                <Chip key={tag} label={tag} />
+                <Chip key={tag} label={tag}/>
               ))}
-            </span>
-      </div>}
+            </span>}
       </div>
     </CardContent>
 </Card>

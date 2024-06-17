@@ -23,6 +23,7 @@ export const SuggestedTrips: React.FC<SuggestedTripsProps> = (props) => {
       startDate: "2020/02/29",
       tags: ["Family"],
       title: "Week in Las Vegas with my family",
+      owner:"123",
     },
   ]);
   const { tripId } = useParams();

@@ -6,7 +6,7 @@ import { Country } from "country-state-city";
 import styles from "./ViewTrip.module.scss";
 import { Cloudinary } from "@cloudinary/url-gen/index";
 import { uwConfig } from "../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
-import { AdvancedImage, placeholder, responsive } from "@cloudinary/react";
+// import { AdvancedImage, placeholder, responsive } from "@cloudinary/react";
 import { Chip, Divider } from "@mui/material";
 import { formatDate } from "../TripsList";
 
@@ -28,6 +28,21 @@ export default function ViewTrip() {
         setLoading(false);
       });
   }, [tripId]);
+
+   const img = (
+     <img
+       src={
+         trip?.image
+           ? trip?.image.startsWith("http")
+             ? trip?.image
+             : `https://res.cloudinary.com/${
+                 uwConfig.cloudName
+               }/image/upload/${encodeURIComponent(trip?.image)}`
+           : "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"
+       }
+       alt={`${trip?.title} cover`}
+     />
+   );
   const cld = new Cloudinary({
     cloud: {
       cloudName: uwConfig.cloudName,
@@ -66,7 +81,7 @@ export default function ViewTrip() {
             </>
           )}
         </div>
-        {image && (
+        {/* {image && (
           <div>
             <AdvancedImage
               style={{ maxWidth: "350px" }}
@@ -74,7 +89,8 @@ export default function ViewTrip() {
               plugins={[responsive(), placeholder()]}
             />
           </div>
-        )}
+        )} */}
+        {img}
         {trip.description && <div>{trip.description}</div>}
       </div>
       <Divider />

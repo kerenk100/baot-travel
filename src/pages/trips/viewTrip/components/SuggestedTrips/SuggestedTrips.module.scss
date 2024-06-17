@@ -17,6 +17,11 @@
                 .content{
                     padding:12px;
                 }
+                .tagList{
+                    display: flex;
+                    flex-direction: row;
+                    gap:4px;
+                }
             }
         }
     }
