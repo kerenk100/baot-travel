@@ -5,13 +5,15 @@ interface AppStore {
     logout: () => void;
     login: (value: string) => void;
     user?: User;
+    handleSetUser:(user: User | undefined )=> void;
 }
 
 export const AppContext = createContext<AppStore>({
     isLoggedIn: true,
     logout: () => {},
     login: () => {},
-    user: undefined
+    user: undefined,
+    handleSetUser: (user: User | undefined) => {}
 });
 
 export interface User {
@@ -21,7 +23,7 @@ export interface User {
 
 export const useAppContext = () => useContext(AppContext);
 
-export const AppContextProvider = ({children}) => {
+export const AppContextProvider = ({children}: {children:React.ReactNode}) => {
     const userFromLS = localStorage.getItem("user");
     const [user, setUser] = useState<User | undefined>(userFromLS ? JSON.parse(userFromLS): undefined);
     const [isLoggedIn,setLoggedIn] = useState(!!userFromLS);
@@ -38,13 +40,17 @@ export const AppContextProvider = ({children}) => {
         setUser(JSON.parse(value));
     },[isLoggedIn]);
 
+    const handleSetUser=(user:User | undefined)=>{
+        setUser(user)
+    }
+
     return (
         <AppContext.Provider value={{
             isLoggedIn,
             logout,
             login,
             user,
-            setUser
+            handleSetUser
         }}>
         {children}
         </AppContext.Provider>

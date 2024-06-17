@@ -36,7 +36,6 @@ export const LocationFormItem: React.FC<LocationFormItemProps> = ({
   }, []);
 
   const cityMenuItems = useMemo(() => {
-    console.log({ parentLocation });
     const cities = parentLocation
       ? City.getCitiesOfCountry(parentLocation)
       : [];

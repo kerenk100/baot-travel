@@ -21,6 +21,7 @@ export const Index = () => {
           const key: string = pageName.toUpperCase();
           return (
             <Card
+              key={key}
               className={styles.pageCard}
               onClick={() => navigate(Routes[key as keyof typeof Routes])}
             >
