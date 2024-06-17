@@ -1,4 +1,3 @@
-import TripsList from "../pages/trips/TripsList";
 import VendorManager from "../pages/vendors/VendorManager";
 import { AddTrips } from "../pages/trips/components/AddTrip/AddTrips";
 import { Index } from "../pages/index/Index";
@@ -10,6 +9,7 @@ import Login from "../pages/users/login/login";
 import ViewTrip from "../pages/trips/ViewTrip/ViewTrip";
 import PartnerSearch from "../pages/users/partnerSearch/PartnerSearch";
 import TripMap from "../pages/trips/components/TripMap/TripMap";
+import TripsPage from "../pages/trips/TripsPage";
 
 export enum Routes {
   HOME = "/",
@@ -35,7 +35,7 @@ export const publicRoutes = [
   {
     path: Routes.TRIPS,
     name: "trips",
-    element: <TripsList />
+    element: <TripsPage />
   },
   {
     path: Routes.TRIPS_TRIP_MAP,

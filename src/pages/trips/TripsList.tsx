@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,11 +6,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   IconButton,
   Snackbar,
   TextField,
-  Box,
 } from "@mui/material";
 import {
   Edit as EditIcon,
@@ -22,64 +20,30 @@ import {
   FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Routes } from "../../routes/routes";
 import { useNavigate } from "react-router-dom";
+import { Trip } from "./types";
 
-interface Trip {
-  title: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  tags: [],
-  description: string;
-  image: string;
-  budget: number;
-  destination: string;
-  id: string;
-  _id: string;
-  favorite: boolean;
-  owner: string
+
+export interface TripsListProps{
+  trips:Trip[]
+  setTrips:React.Dispatch<React.SetStateAction<Trip[]>>
+  handleRemoveLike:(trip:Trip)=>void,
+  loading:boolean,
 }
+export const formatDate = (date: string | null) => {
+  return date?.replaceAll("-","/")
+};
 
-const TripsList: React.FC = () => {
-  const [trips, setTrips] = useState<Trip[]>([]);
-  const [loading, setLoading] = useState(false);
+const TripsList: React.FC<TripsListProps> = ({trips, setTrips, handleRemoveLike}) => {
+
   const [editingTripId, setEditingTripId] = useState<string | null>(null);
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch("http://localhost:8080/trips", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((response) =>
-        response.json().then((json) => {
-          const parsedTrips = json.map((trip: any) => ({
-            ...trip,
-            startDate: parseDate(trip.startDate),
-            endDate: parseDate(trip.endDate),
-          }));
-          setTrips(parsedTrips);
-        })
-      )
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  const parseDate = (dateString: string): Date | null => {
-    const parts = dateString.split('/');
-    if (parts.length === 3) {
-      const day = parseInt(parts[0], 10);
-      const month = parseInt(parts[1], 10) - 1; // months are 0-based in JavaScript
-      const year = parseInt(parts[2], 10);
-      return new Date(year, month, day);
-    }
-    return null;
-  };
+  let userId = null
+  const user =  localStorage.getItem("user")
+  if (user){
+    userId = JSON.parse(user).id
+  }
 
   const handleEdit = (tripId: string) => {
     const tripToEdit = trips.find((trip) => trip._id === tripId);
@@ -94,7 +58,7 @@ const TripsList: React.FC = () => {
     if (editingTripId && editingTrip) {
       setTrips(
         trips.map((trip) =>
-          trip.id === editingTripId ? editingTrip : trip
+          trip._id === editingTripId ? editingTrip : trip
         )
       );
       setEditingTripId(null);
@@ -121,9 +85,7 @@ const TripsList: React.FC = () => {
     }
   };
 
-  const handleViewTrip = (tripId: string, tags:[]) => {
-    console.log(tripId);
-    console.log(tags);
+  const handleViewTrip = (tripId: string) => {
     navigate(`/trips/${tripId}`);
   };
 
@@ -164,58 +126,48 @@ const TripsList: React.FC = () => {
     }
   };
 
-  // const handleFavorite = (tripId: string) => {
-  //   setTrips(
-  //       trips.map((trip) =>
-  //           trip.id === tripId ? { ...trip, favorite: !trip.favorite } : trip
-  //       )
-  //   );
-  // };
+  
+  const handleFavoriteChanged = async (trip: Trip) => {
 
-  const handleFavoriteChanged = async (tripId: string) => {
+    const isAddedToWishList: boolean = !!trip.wishId;
 
-    const selectedTrip: Trip = trips.filter(trip => trip.id === tripId)[0];
-    const isAddedToWishList: boolean = !selectedTrip.favorite;
+    try {
+      if (isAddedToWishList) {
+        await fetch(`http://localhost:8080/wishlist/${trip.wishId}`, {
+          method: 'DELETE'
+        }).then(() =>
+          handleRemoveLike(trip)
+        );
+      } else {
+        await fetch(`http://localhost:8080/wishlist/${trip._id}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+            ...userId ? {"authorization":userId} : {}
+          },
+        }).then((response) =>
+          response.json().then((json) => {
+            setTrips((prevTrips)=>{
+              return prevTrips.map((tripItem)=>{
+                return trip._id === tripItem._id ? { ...trip, wishId: json } : tripItem
+              })
+            })
+          })
+        );
+      }
 
-    setTrips(
-      trips.map((trip) =>
-        trip.id === tripId ? { ...trip, favorite: isAddedToWishList } : trip
-      )
-    );
-
-    console.log(selectedTrip);
-    console.log(tripId);
-
-    if (isAddedToWishList) {
-      await fetch('http://localhost:8080/wishlist', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedTrip)
-      });
-    } else {
-      await fetch(`http://localhost:8080/wishlist/${tripId}`, { //TODO: Fix the id issue... currently it sends undefined and fails.
-        method: 'DELETE'
-      });
-    }
+  }catch(error){
+    console.log("Failed to like a trip")
+  }
   };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
-  const formatDate = (date: Date | null) => {
-    return date ? date.toISOString().split("T")[0] : "";
-  };
-
 const navigate = useNavigate();
   return (
-        <Box sx={{ width: "100%" }}>
-      <button onClick={() => navigate(Routes.TRIPS_ADD_TRIP)}>Add new trip</button>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-       
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -231,8 +183,8 @@ const navigate = useNavigate();
         </TableHead>
         <TableBody>
           {trips.map((trip) => (
-            <TableRow key={trip.id}>
-              {editingTripId === trip.id ? (
+            <TableRow key={trip._id}>
+              {editingTripId === trip._id ? (
                 <>
                   <TableCell>
                     <TextField
@@ -281,8 +233,8 @@ const navigate = useNavigate();
                   </TableCell>
                   <TableCell>
                     <TextField
-                      name="destination"
-                      value={editingTrip?.destination || ""}
+                      name="country"
+                      value={editingTrip?.country || ""}
                       onChange={handleInputChange}
                     />
                   </TableCell>
@@ -298,12 +250,12 @@ const navigate = useNavigate();
               ) : (
                 <>
                   <TableCell>{trip.title}</TableCell>
-                  <TableCell>{trip.startDate?.toLocaleDateString()}</TableCell>
-                  <TableCell>{trip.endDate?.toLocaleDateString()}</TableCell>
+                  <TableCell>{formatDate(trip.startDate)}</TableCell>
+                  <TableCell>{formatDate(trip.endDate)}</TableCell>
                   <TableCell>{trip?.tags?.join(', ')}</TableCell>
-                  <TableCell>{trip.description && trip.description.substring(0, 50)+"..."}</TableCell>
+                  <TableCell>{trip.description && trip.description.length > 50 ? trip.description.substring(0, 50)+"..." : trip.description}</TableCell>
                   <TableCell>{trip.budget}</TableCell>
-                  <TableCell>{trip.destination}</TableCell>
+                  <TableCell>{trip.country}</TableCell>
                   <TableCell>
                     {isCurrentUserIsOwner(trip) && <IconButton onClick={() => handleEdit(trip._id)}>
                       <EditIcon />
@@ -311,10 +263,10 @@ const navigate = useNavigate();
                     {isCurrentUserIsOwner(trip) && <IconButton onClick={() =>handleDelete(trip._id)}>
                       <DeleteIcon />
                     </IconButton>}
-                    <IconButton onClick={() => handleFavoriteChanged(trip.id)}>
-                      {trip.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                    <IconButton  onClick={() => handleViewTrip(trip._id,trip.tags)}>< VisibilityIcon /></IconButton>
+                    {!isCurrentUserIsOwner(trip) &&<IconButton onClick={() => handleFavoriteChanged(trip)}>
+                      {!!trip.wishId ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    </IconButton>}
+                    <IconButton  onClick={() => handleViewTrip(trip._id)}>< VisibilityIcon /></IconButton>
                   </TableCell>
                 </>
               )}
@@ -339,8 +291,6 @@ const navigate = useNavigate();
         }
       />
     </TableContainer>
-    </Paper>
-    </Box>
   );
 };
 

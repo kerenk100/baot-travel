@@ -10,4 +10,5 @@ export type Trip = {
     endDate: string;
     owner:string;
     _id: string
+    wishId?:string | null
 }

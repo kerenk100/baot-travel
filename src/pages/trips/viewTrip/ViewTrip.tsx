@@ -8,6 +8,7 @@ import { Cloudinary } from "@cloudinary/url-gen/index";
 import { uwConfig } from "../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
 import { AdvancedImage, placeholder, responsive } from "@cloudinary/react";
 import { Chip, Divider } from "@mui/material";
+import { formatDate } from "../TripsList";
 
 export default function ViewTrip() {
   const [loading, setLoading] = useState(true);
@@ -48,7 +49,7 @@ export default function ViewTrip() {
         <div className={styles.subtitle}>
           {trip.startDate && trip.endDate && (
             <div>
-              {trip.startDate}-{trip.endDate}
+              {formatDate(trip.startDate)}-{formatDate(trip.endDate)}
             </div>
           )}
           {trip.tags && (
