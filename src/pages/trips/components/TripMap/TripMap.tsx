@@ -1,36 +1,24 @@
 "use client";
-import { AdvancedMarker, Map as GoogleMap, useMap } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, Map as GoogleMap } from "@vis.gl/react-google-maps";
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Trip } from "../../types";
 import { Country } from "country-state-city";
 
 const env = import.meta.env;
 const MAP_ID = env.VITE_TRIP_MAP_ID;
 
-const TripMap = () => {
+export interface TripMapProps{
+  trip:Trip
+}
+const TripMap:React.FC<TripMapProps> = ({trip}) => {
     const [coordinates, setCoordinates] = useState({lat:0, lng:0});
-    const { tripId } = useParams();
-    const [trip, setTrip] = useState<Trip | undefined>(undefined);
 
-    const map = useMap();
-
-  useEffect(() => {
-    fetch(`http://localhost:8080/trips/${tripId}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(response => response.json()
-        .then(json => {
-            setTrip(json);
-            setMapToCountry(json.country);
-        }))
-      .finally(() => {
-      })
-  }, [map,trip])
+  useEffect(()=>{
+    if(trip?.country){
+      setMapToCountry(trip?.country)
+    }
+  },[trip])
 
     async function setMapToCountry(countryCode:string){
         const countryName = Country.getCountryByCode(countryCode)?.name;
@@ -51,10 +39,11 @@ const TripMap = () => {
 return (
     <GoogleMap
     mapId={MAP_ID}
-    style={{width:'100%', height:'100%'}}
+    style={{width:270, height:270}}
     defaultZoom={8}
     defaultCenter={coordinates}
     disableDefaultUI={true}
+    fullscreenControl={true}
     center={coordinates}>
       <AdvancedMarker position={{...coordinates}} />
     </GoogleMap>);
