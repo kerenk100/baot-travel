@@ -10,9 +10,9 @@ export const tripsRouter = express.Router();
 tripsRouter.use(express.json());
 // GET
 tripsRouter.get("/", async (_req: Request, res: Response) => {
-  const currentUserId = _req.headers ? _req.headers.authorization : null; 
+  const currentUserId = _req.headers ? _req.headers.authorization : null;
   if (currentUserId) {
-    console.log("yes user")
+    console.log("yes user");
     try {
       const trips = (await collections.trips
         .aggregate([
@@ -21,24 +21,25 @@ tripsRouter.get("/", async (_req: Request, res: Response) => {
               from: process.env.WISHLIST_COLLECTION_NAME,
               localField: "_id",
               foreignField: "tripId",
-              as: "wishDetails"
-            }
+              as: "wishDetails",
+            },
           },
           {
             $unwind: {
-              path:"$wishDetails",
-              preserveNullAndEmptyArrays: true
-            }
+              path: "$wishDetails",
+              preserveNullAndEmptyArrays: true,
+            },
           },
           {
-            $addFields:{wishId:"$wishDetails._id"}
+            $addFields: { wishId: "$wishDetails._id" },
           },
           {
-            $project:{
-              wishDetails:0
-            }
-          }
-        ]).toArray()) as (Trip & { wishId: string })[];
+            $project: {
+              wishDetails: 0,
+            },
+          },
+        ])
+        .toArray()) as (Trip & { wishId: string })[];
       res.status(200).send(trips);
     } catch (error) {
       res.status(500).send(error.message);
@@ -60,7 +61,7 @@ tripsRouter.get("/", async (_req: Request, res: Response) => {
 tripsRouter.get("/:id", async (req: Request, res: Response) => {
   const id = req?.params?.id;
 
-  try { 
+  try {
     const query = { _id: new ObjectId(id) };
     const trip = (await collections.trips.findOne<Trip>(query)) as Trip;
 
@@ -94,19 +95,19 @@ tripsRouter.post("/", async (req: Request, res: Response) => {
 
 // PUT
 tripsRouter.put("/:id", async (req: Request, res: Response) => {
-  const id = req?.params?.id;
+  const currentId = req?.params?.id;
 
   try {
     const updatedTrip: Trip = req.body as Trip;
-    const query = { _id: new ObjectId(id) };
-
+    const query = { _id: new ObjectId(currentId) };
+    const { _id, ...updatedTripWithoutId } = updatedTrip;
     const result = await collections.trips.updateOne(query, {
-      $set: updatedTrip,
+      $set: updatedTripWithoutId,
     });
 
     result
-      ? res.status(200).send(`Successfully updated trip with id ${id}`)
-      : res.status(304).send(`trip with id: ${id} not updated`);
+      ? res.status(200).send(result.upsertedId)
+      : res.status(304).send(`trip with id: ${currentId} not updated`);
   } catch (error) {
     console.error(error.message);
     res.status(400).send(error.message);
