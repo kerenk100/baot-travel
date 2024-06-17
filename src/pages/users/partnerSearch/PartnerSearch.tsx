@@ -51,9 +51,10 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
         }
     };
 
+
   componentDidMount() {
     this.fetchPartnerUsers();
-  }
+  };
 
   handleDelete = (index: number) => {
     const updatedUsers = [...this.state.partnerUsers];
@@ -151,7 +152,7 @@ class PartnerSearch extends React.Component<PartnerSearchProps, PartnerSearchSta
         />
       </div>
     );
-  }
+  };
 }
 
 export default PartnerSearch;

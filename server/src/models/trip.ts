@@ -11,7 +11,7 @@ export default class Trip {
         public budget: number,
         public country: string,
         public isPublic: boolean,
-        public id?: ObjectId,
+        public _id?: ObjectId,
         public tags?: string[]
     ) {}
 }
