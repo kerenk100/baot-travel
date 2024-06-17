@@ -91,7 +91,7 @@ export default function ViewTrip() {
           </div>
         )} */}
         {img}
-        {trip.description && <div>{trip.description}</div>}
+        {trip.description && <div className={styles.tripDescription}>{trip.description}</div>}
       </div>
       <Divider />
       {trip && <SuggestedTrips trip={trip} />}
