@@ -40,7 +40,7 @@ const TripsList: React.FC<TripsListProps> = ({
 }) => {
   const [editingTripId, setEditingTripId] = useState<string | null>(null);
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackBarProps, setSnackBarProps] = useState({open:false, message:""});
   let userId = null;
   const user = localStorage.getItem("user");
   if (user) {
@@ -81,7 +81,7 @@ const TripsList: React.FC<TripsListProps> = ({
       updateTrip(editingTrip)
       setEditingTripId(null);
       setEditingTrip(null);
-      setOpenSnackbar(true);
+      setSnackBarProps({open:true, message:"Trip Updated!"})
     }
   };
 
@@ -145,6 +145,9 @@ const TripsList: React.FC<TripsListProps> = ({
 
   const handleFavoriteChanged = async (trip: Trip) => {
     const isAddedToWishList: boolean = !!trip.wishId;
+    if(!userId){
+      setSnackBarProps({open:true, message:"Login to like trip"})
+    }
 
     try {
       if (isAddedToWishList) {
@@ -176,7 +179,7 @@ const TripsList: React.FC<TripsListProps> = ({
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setSnackBarProps({open:false, message:""})
   };
 
   const navigate = useNavigate();
@@ -306,10 +309,9 @@ const TripsList: React.FC<TripsListProps> = ({
       </Table>
 
       <Snackbar
-        open={openSnackbar}
+      {...snackBarProps}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        message="Trip updated"
         action={
           <IconButton
             size="small"

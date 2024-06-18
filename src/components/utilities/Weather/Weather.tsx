@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WeatherAPIService from '../../../Services/WeatherAPIService';
+import styles from './Weather.module.scss'
+import { Card } from '@mui/material';
 
 // Define the Weather component props
 interface WeatherProps {
@@ -83,11 +85,11 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-  if (!weatherData) return null;
+  if (!weatherData) return <></>
 
   return (
-    <div>
-      <h2>Weather in {weatherData.location.name}</h2>
+    <Card className={styles.weatherCard}>
+      <h3 className={styles.title}>Weather in {weatherData.location.name}</h3>
       <p>Temperature: {weatherData.current.temp_c}°C</p>
       <p>Feels Like: {weatherData.current.feelslike_c}°C</p>
       <p>Humidity: {weatherData.current.humidity}%</p>
@@ -96,7 +98,7 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
         src={`https:${weatherData.current.condition.icon}`}
         alt={weatherData.current.condition.text}
       />
-    </div>
+    </Card>
   );
 };
 

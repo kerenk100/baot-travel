@@ -3,9 +3,7 @@ import { useParams } from "react-router-dom";
 import { Trip } from "../types";
 import { SuggestedTrips } from "./components/SuggestedTrips/SuggestedTrips";
 import styles from "./ViewTrip.module.scss";
-import { Cloudinary } from "@cloudinary/url-gen/index";
 import { uwConfig } from "../../../components/utilities/uploadWidget/CloudinaryUploadWidget";
-// import { AdvancedImage, placeholder, responsive } from "@cloudinary/react";
 import { Chip, Divider } from "@mui/material";
 import { formatDate } from "../TripsList";
 import { APIProvider } from "@vis.gl/react-google-maps";
@@ -50,38 +48,31 @@ export default function ViewTrip() {
 
 
    const img = (
-     <img
+    trip?.image ? <img
        src={
-         trip?.image
-           ? trip?.image.startsWith("http")
+           trip?.image.startsWith("http")
              ? trip?.image
              : `https://res.cloudinary.com/${
                  uwConfig.cloudName
                }/image/upload/${encodeURIComponent(trip?.image)}`
-           : "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"
        }
        alt={`${trip?.title} cover`}
-     />
+     /> : <></>
    );
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName: uwConfig.cloudName,
-    },
-  });
-  const image = cld.image(trip?.image);
-  console.log({ trip });
+
   if (loading) <p>Loading...</p>;
   if (!trip) return <p>Whoops something wen't wrong</p>;
   return (
-    <div className={styles.flexContainer}>
-      <div className={styles.viewTrip}>
-        <div className={styles.trip}>
-          <div className={styles.title}>
+    <div className={styles.columnContainer}>
+      <div className={styles.title}>
             {trip.title && <span>{trip.title}</span>}{" "}
             {trip.country && (
               <span>{Country.getCountryByCode(trip.country)?.flag}</span>
             )}
           </div>
+    <div className={styles.flexContainer}>
+      <div className={styles.viewTrip}>
+        
           <div className={styles.subtitle}>
             {trip.startDate && trip.endDate && (
               <div>
@@ -104,18 +95,21 @@ export default function ViewTrip() {
           </div>
           {img}
           {trip.description && <div className={styles.tripDescription}>{trip.description}</div>}
-        </div>
-        <Divider />
-        {trip && <SuggestedTrips trip={trip} />}
+        
       </div>
-      <div className={styles.flexItem}>
-          <Weather city={city || ''}/>
-        </div>
-      <div className={styles.flexItem}>
+      <div className={styles.locationInfo}>
+      {city && <div className={styles.flexItem}>
+          <Weather city={city}/>
+        </div>}
+        {trip?.country && <div className={(styles.flexItem, styles.map)}>
         <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY} >
-          <TripMap ></TripMap>
+          <TripMap trip={trip}/>
         </APIProvider>
+      </div>}
       </div>
+    </div>
+    <Divider />
+        {trip && <SuggestedTrips trip={trip} />}
     </div>
   );
 }

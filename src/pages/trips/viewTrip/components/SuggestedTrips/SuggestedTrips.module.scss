@@ -16,6 +16,9 @@
                 height: calc(100% - 140px);
                 .content{
                     padding:12px;
+                    [class~=MuiTypography-root]{
+                    font-size: 1.2rem;
+                }
                 }
                 .tagList{
                     display: flex;
