@@ -39,7 +39,7 @@ const TripMap:React.FC<TripMapProps> = ({trip}) => {
 return (
     <GoogleMap
     mapId={MAP_ID}
-    style={{width:270, height:270}}
+    style={{width:270, height:270, borderRadius: "10px"}}
     defaultZoom={8}
     defaultCenter={coordinates}
     disableDefaultUI={true}
