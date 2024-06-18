@@ -98,7 +98,7 @@ export const Header: React.FC = () => {
           {isLoggedIn ? 
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple disableFocusRipple>
-            <Avatar>{user?.email.charAt(0).toUpperCase()}</Avatar>
+            <Avatar>{user?.email?.charAt(0).toUpperCase()}</Avatar>
             </IconButton>
           </Tooltip>: <Link to="/login">LOGIN</Link> }
         </div>
