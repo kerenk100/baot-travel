@@ -1,8 +1,36 @@
-.weatherCard{
-    padding:12px;
-    width: 250px;
-    min-width: fit-content !important;
-    .title{
-        margin:0;
-    }
-}
+.weatherCard {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 400px;
+    background-color: #e3f2fd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    font-family:'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: large;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+    color: #1e88e5;
+  }
+  
+  .detail {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #424242;
+  }
+  
+  .icon {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+  }
+  
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  

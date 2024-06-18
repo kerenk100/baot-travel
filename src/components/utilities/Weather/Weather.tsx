@@ -94,7 +94,7 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
       <p>Feels Like: {weatherData.current.feelslike_c}°C</p>
       <p>Humidity: {weatherData.current.humidity}%</p>
       <p>Condition: {weatherData.current.condition.text}</p>
-      <img
+      <img className={styles.icon}
         src={`https:${weatherData.current.condition.icon}`}
         alt={weatherData.current.condition.text}
       />
